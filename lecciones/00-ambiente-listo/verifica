@@ -11,10 +11,10 @@ nota() { echo "ℹ️  $1"; }
 # --- 0.1 · La máquina sirve ---------------------------------------------------------------
 case "$(uname -s)" in
   Linux)
-    [ "$(uname -m)" = "x86_64" ] && si "Procesador x86_64" || no "Tu procesador es $(uname -m): Android Studio no funciona en Linux con ARM"
-    [ -e /dev/kvm ] && si "/dev/kvm existe (virtualización encendida)" || no "/dev/kvm no existe: enciende la virtualización en el BIOS"
+    [ "$(uname -m)" = "x86_64" ] && si "Procesador x86_64" || no "Tu procesador es $(uname -m): Android Studio no tiene soporte oficial en Linux con ARM"
+    [ -e /dev/kvm ] && si "/dev/kvm existe (virtualización encendida)" || no "/dev/kvm no existe: virtualización apagada en el BIOS/UEFI, estás dentro de otra máquina virtual o KVM no está instalado (paso 1)"
     id -nG | tr ' ' '\n' | grep -qx kvm && si "Tu usuario está en el grupo kvm" \
-      || no "Tu usuario no está en el grupo kvm: sudo gpasswd -a \$USER kvm, y vuelve a entrar a la sesión" ;;
+      || no "Tu usuario no está en el grupo kvm: pide permiso a quien administra el equipo para  sudo gpasswd -a \"\$USER\" kvm  y vuelve a entrar a la sesión (paso 1)" ;;
   Darwin)
     si "Mac ($(uname -m)); la aceleración la da Hypervisor.Framework" ;;
   *)
@@ -71,6 +71,8 @@ fi
 if [ -n "$dev" ]; then
   adb shell pm list packages mx.habil.ejemplo.tienda 2>/dev/null | grep -qx 'package:mx.habil.ejemplo.tienda' \
     && si "La app de la tienda está instalada" || no "La app no está instalada: en inicio/, corre  ./gradlew installDebug"
+  adb shell pidof mx.habil.ejemplo.tienda >/dev/null 2>&1 \
+    && si "La app de la tienda está abierta" || no "La app no está abierta: installDebug instala pero no abre; ábrela desde el cajón de apps (paso 5)"
 fi
 [ -f ../../respuestas/00.md ] && grep -q '[A-Za-z0-9_/.-]\+\.\(kts\|kt\|xml\|properties\|toml\):[0-9]\+' ../../respuestas/00.md \
   && si "Tu afirmación comprobada trae archivo y línea" \

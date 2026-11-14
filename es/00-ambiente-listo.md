@@ -46,7 +46,7 @@ de que te pasen, junto con los comandos que te dicen, en cada paso, si vas bien.
 |---|---|---|
 | Sistema | Ubuntu 26.04 en un procesador **x86_64**, o una Mac | Windows (la serie no lo cubre) · Linux en procesador ARM: Android Studio no tiene soporte oficial ahí |
 | Memoria | 16 GB de RAM para Android Studio con el emulador | Con 8 GB, usa tu teléfono en lugar del emulador (paso 3) |
-| Disco | [pendiente: medir el espacio que ocupa todo lo de esta lección] | |
+| Disco | 20 GB libres. En Mac ocupó unos 12 GB: Android Studio 3.3, SDK 4.5, dispositivo virtual 3.1 y Gradle 1.1 (medido el 13-nov-2026). Ubuntu [pendiente: medir en Ubuntu] | Menos: el dispositivo virtual crece al usarlo |
 | Red | Para las descargas de esta lección y de la primera compilación | |
 | Saber | Abrir una terminal y usar git | No se supone Kotlin ni Android |
 
@@ -113,7 +113,9 @@ El instalador de Android Studio tiene que ser el de tu procesador. En Mac la ace
 que viene con macOS: no hay que encender nada.
 
 **Lo demuestra:** el `verifica` de la precomprobación sale en verde o te dice qué falta (objetivo 0.1).
-[pendiente: `verifica` de la 00 en el repo de la serie]
+El `verifica` está en el repo de la serie. Desde su raíz: `./lecciones/00-ambiente-listo/verifica`. Solo lee, no
+instala ni cambia nada. La primera vez marca en rojo lo que todavía no haces (la app abierta, el ejercicio 0.5): es
+normal. Vuelve a correrlo al final de la lección.
 
 ---
 
@@ -300,7 +302,8 @@ pide una aclaración antes de seguir.
    decide el nombre de paquete».
 3. **Lee** su respuesta y elige **una** afirmación concreta (por ejemplo, «el `applicationId` está en
    `app/build.gradle.kts`»).
-4. **Compruébala tú** en los archivos: ábrelo y anota el archivo y la línea donde está. Si la afirmación era falsa,
+4. **Compruébala tú** en los archivos: ábrelo y anota en `respuestas/00.md` (en la raíz del repo) la
+   afirmación, el archivo y la línea donde está, por ejemplo `app/build.gradle.kts:8`. Si la afirmación era falsa,
    anótalo también: eso vale igual.
 5. **Corre el `verifica`** y **explica** en dos líneas qué comprobaste.
 
