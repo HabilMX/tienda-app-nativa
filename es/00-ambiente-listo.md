@@ -272,13 +272,13 @@ con tu contraseña o con el aviso que te llega al teléfono.
 
 ## Paso 5 · El proyecto de la tienda corre
 
-[pendiente: enlace al repo de la serie]
+El repo de la serie es público en GitHub: https://github.com/HabilMX/tienda-app-nativa
 
 **Predice primero.** ¿Cuánto crees que tarde la primera compilación, y por qué la segunda sería más rápida?
 
 ```bash
-git clone <repo de la serie>
-cd <repo>/lecciones/00-ambiente-listo/inicio
+git clone https://github.com/HabilMX/tienda-app-nativa.git
+cd tienda-app-nativa/lecciones/00-ambiente-listo/inicio
 ./gradlew -version          # Gradle 9.6.0 y la versión de Java
 ./gradlew installDebug      # compila y la INSTALA en el emulador o el teléfono; no la abre
 ```

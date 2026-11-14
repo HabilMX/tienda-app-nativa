@@ -1,8 +1,6 @@
 # Tu tienda en el bolsillo
 
-**Tu tienda en el bolsillo: app nativa para Android e iOS, del ambiente listo al inicio de sesión que no falla.**
-
-**Por Dorian Chávez, fundador de Hábil.**
+**Por Dorian Chávez, fundador de Hábil y arquitecto de integración.**
 
 **Para quién es:** quien ya programa en algún lenguaje, usa la terminal y git, y ha hecho al menos una interfaz, web o
 de escritorio. No hace falta saber Kotlin, Android ni OAuth: se aprenden aquí.
