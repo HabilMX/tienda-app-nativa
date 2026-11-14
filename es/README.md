@@ -1,0 +1,52 @@
+# Tu tienda en el bolsillo
+
+**Tu tienda en el bolsillo: app nativa para Android e iOS, del ambiente listo al inicio de sesión que no falla.**
+
+**Por Dorian Chávez, fundador de Hábil.**
+
+**Para quién es:** quien ya programa en algún lenguaje, usa la terminal y git, y ha hecho al menos una interfaz, web o
+de escritorio. No hace falta saber Kotlin, Android ni OAuth: se aprenden aquí.
+
+**Qué vas a terminar sabiendo:** construir con tus manos una app Android nativa, en Kotlin y Jetpack Compose, donde
+entras con tu cuenta de Google o de Microsoft; la app te da la bienvenida la primera vez y te recuerda al volver. Y
+explicar qué hizo Firebase por ti y qué hiciste tú.
+
+**Lo que necesitas antes de empezar:** Ubuntu 26.04 en un procesador x86_64, o una Mac, con 16 GB de RAM para el
+emulador (con menos, usas tu teléfono Android). Windows no está cubierto. La parte de iOS es solo en Mac.
+
+## El proyecto
+
+La misma tienda inventada de [«Ni una orden perdida»](https://github.com/HabilMX/ni-una-orden-perdida) ahora tiene
+app. En este primer tramo llegas hasta el inicio de sesión: el cliente entra con Google o con Microsoft y la app lo
+reconoce. En los siguientes, la app consume la API de la tienda y se pasa a iOS.
+
+## Cómo se trabaja con IA
+
+En todas las lecciones igual: **predices** qué va a pasar → le pides el cambio a Claude Code → **lees** lo que generó
+→ corres el `verifica` → **explicas** con tus palabras qué hace. Si no lo puedes explicar, no avanzas. Y en cada
+lección hay al menos un ejercicio que se hace sin IA.
+
+Cada lección trae un proyecto `inicio/` y un `verifica` que te dice, en rojo o en verde, si ya lo lograste. Tus
+respuestas escritas van en `respuestas/`. Cada quien usa su propio proyecto de Firebase: `google-services.json` nunca
+se sube.
+
+## Las lecciones
+
+Se hacen en orden: cada una parte de lo que dejó la anterior. Empieza por la [00](00-ambiente-listo.md), que deja
+listo tu ambiente.
+
+### Tramo 1 — Llegar al inicio de sesión (Android)
+
+| # | Lección |
+|---|---|
+| 00 | [Ambiente listo](00-ambiente-listo.md) |
+| 01 | Mi primera pantalla corre |
+| 02 | Pantallas que cambian |
+| 02-B | Catálogo de componentes de la tienda (práctica) |
+| 03 | La app conoce a Firebase |
+| 04 | Entrar con Google |
+| 05 | Entrar con Microsoft |
+| 06 | La sesión se queda |
+| 07 | La primera vez |
+
+Las lecciones sin enlace están en preparación y se publican en orden.
