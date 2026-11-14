@@ -1,0 +1,9 @@
+# Lo de cada quien no se sube
+google-services.json
+local.properties
+# Lo que genera Gradle
+.gradle/
+build/
+.kotlin/
+*.hprof
+*.log

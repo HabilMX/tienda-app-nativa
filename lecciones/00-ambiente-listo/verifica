@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# Comprueba la lección 00: la máquina sirve, el SDK y el emulador están, y la app de la tienda corre.
+# Solo lee: no instala ni cambia nada. Uso:  ./verifica
+set -uo pipefail
+cd "$(dirname "$0")"
+ok=0
+si() { echo "✅ $1"; }
+no() { echo "❌ $1"; ok=1; }
+nota() { echo "ℹ️  $1"; }
+
+# --- 0.1 · La máquina sirve ---------------------------------------------------------------
+case "$(uname -s)" in
+  Linux)
+    [ "$(uname -m)" = "x86_64" ] && si "Procesador x86_64" || no "Tu procesador es $(uname -m): Android Studio no funciona en Linux con ARM"
+    [ -e /dev/kvm ] && si "/dev/kvm existe (virtualización encendida)" || no "/dev/kvm no existe: enciende la virtualización en el BIOS"
+    id -nG | tr ' ' '\n' | grep -qx kvm && si "Tu usuario está en el grupo kvm" \
+      || no "Tu usuario no está en el grupo kvm: sudo gpasswd -a \$USER kvm, y vuelve a entrar a la sesión" ;;
+  Darwin)
+    si "Mac ($(uname -m)); la aceleración la da Hypervisor.Framework" ;;
+  *)
+    no "Sistema $(uname -s): la serie cubre Ubuntu y Mac" ;;
+esac
+
+# --- 0.2 · El SDK, con las versiones de la serie -------------------------------------------
+if [ -n "${ANDROID_HOME:-}" ] && [ -d "$ANDROID_HOME" ]; then
+  si "ANDROID_HOME apunta a una carpeta que existe"
+else
+  no "ANDROID_HOME no está definido o la carpeta no existe (paso 2)"
+fi
+SDKM=$(command -v sdkmanager || true)
+if [ -z "$SDKM" ]; then
+  no "No encuentro sdkmanager: instala las Command-line Tools y revisa tu PATH (paso 2)"
+else
+  inst=$("$SDKM" --list_installed 2>/dev/null)
+  for p in "platform-tools" "emulator" "platforms;android-37.0" "system-images;android-37.0;google_apis_playstore"; do
+    printf '%s\n' "$inst" | grep -F -- "$p" >/dev/null && si "Instalado: $p" || no "Falta: $p (pasos 2 y 3)"
+  done
+fi
+g=$(./inicio/gradlew -p inicio -version 2>/dev/null | awk '/^Gradle /{print $2}')
+[ "$g" = "9.6.0" ] && si "Gradle 9.6.0" || no "Gradle ${g:-no respondió}; la serie usa 9.6.0"
+
+# --- 0.3 · Emulador con aceleración, o tu teléfono ----------------------------------------
+if command -v emulator >/dev/null; then
+  emulator -accel-check 2>/dev/null | grep -qx accel && si "El emulador tiene aceleración (-accel-check dice «accel»)" \
+    || no "El emulador no tiene aceleración: corre  emulator -accel-check  y revisa el paso 1"
+else
+  no "No encuentro el comando emulator: revisa tu PATH (paso 2)"
+fi
+dev=$(adb devices 2>/dev/null | awk 'NR>1 && $2=="device"{print $1}')
+if [ -z "$dev" ]; then
+  no "No hay ningún emulador ni teléfono conectado: arranca  emulator -avd tienda37  o conecta tu teléfono"
+else
+  si "Conectado: $(echo $dev | tr '\n' ' ')"
+fi
+
+# --- 0.4 · Teclado y cuenta (solo si usas el emulador de la serie) -------------------------
+CFG="$HOME/.android/avd/tienda37.avd/config.ini"
+if [ -f "$CFG" ]; then
+  grep -qx 'hw.keyboard=yes' "$CFG" && si "El teclado de tu computadora está encendido en tienda37" \
+    || no "hw.keyboard no está en yes: con el emulador cerrado, cámbialo en $CFG (paso 4)"
+else
+  nota "No hay dispositivo tienda37: está bien si usas tu teléfono"
+fi
+if [ -n "$dev" ]; then
+  # Solo se cuenta cuántas cuentas de Google hay; el correo nunca se imprime
+  n=$(adb shell dumpsys account 2>/dev/null | grep -c 'type=com.google}' || true)
+  [ "${n:-0}" -ge 1 ] && si "Hay una cuenta de Google en el dispositivo" || no "No hay cuenta de Google: Ajustes › Google (paso 4)"
+fi
+
+# --- 0.5 · La app de la tienda corre ------------------------------------------------------
+if [ -n "$dev" ]; then
+  adb shell pm list packages mx.habil.ejemplo.tienda 2>/dev/null | grep -qx 'package:mx.habil.ejemplo.tienda' \
+    && si "La app de la tienda está instalada" || no "La app no está instalada: en inicio/, corre  ./gradlew installDebug"
+fi
+[ -f ../../respuestas/00.md ] && grep -q '[A-Za-z0-9_/.-]\+\.\(kts\|kt\|xml\|properties\|toml\):[0-9]\+' ../../respuestas/00.md \
+  && si "Tu afirmación comprobada trae archivo y línea" \
+  || no "Falta tu ejercicio 0.5: en respuestas/00.md, la afirmación, el archivo:línea donde la comprobaste y si era cierta"
+
+exit $ok
