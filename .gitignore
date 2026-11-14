@@ -7,3 +7,4 @@ build/
 .kotlin/
 *.hprof
 *.log
+.publicable-interno.txt
