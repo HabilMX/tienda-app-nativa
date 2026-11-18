@@ -1,7 +1,5 @@
 # Lección 01 — Mi primera pantalla corre
 
-**Por Dorian Chávez, fundador de Hábil y arquitecto de integración.**
-
 **Antes de leer, siete palabras.** Una línea cada una; las demás de la serie llegan en la lección donde se usan.
 
 - **Kotlin:** el lenguaje en que escribes la app. Sus archivos terminan en `.kt`.
