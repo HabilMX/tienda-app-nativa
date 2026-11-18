@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+# Comprueba la lección 01: la pantalla de bienvenida muestra nombre, lema y botón, y saluda al tocar «Entrar».
+# Nivel SIMULADO: corre las pruebas en tu computadora (./gradlew testDebugUnitTest), sin emulador.
+# Solo lee tu código: no lo cambia. Gradle escribe sus resultados en build/, que no se sube al repo.
+# Uso:  ./verifica             revisa tu trabajo en inicio/
+#       ./verifica solucion    revisa la solución de referencia
+set -uo pipefail
+cd "$(dirname "$0")"
+PROY="${1:-inicio}"
+ok=0
+si() { echo "✅ $1"; }
+no() { echo "❌ $1"; ok=1; }
+nota() { echo "ℹ️  $1"; }
+
+case "$PROY" in
+  inicio|solucion) ;;
+  *) echo "Uso: ./verifica [inicio|solucion]"; exit 2 ;;
+esac
+PRUEBA="app/src/test/java/mx/habil/ejemplo/tienda/BienvenidaTest.kt"
+XML="$PROY/app/build/test-results/testDebugUnitTest/TEST-mx.habil.ejemplo.tienda.BienvenidaTest.xml"
+echo "Revisando $PROY/ — nivel simulado (sin emulador)"
+
+# --- Andamiaje · lo que el proyecto ya trae -------------------------------------------------
+grep -q '^org.gradle.jvmargs=.*-Xmx4g' "$PROY/gradle.properties" 2>/dev/null \
+  && si "Andamiaje: gradle.properties le da 4 GB de memoria a Gradle (-Xmx4g)" \
+  || no "gradle.properties ya no trae -Xmx4g: regresa la línea  org.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8"
+if [ "$PROY" = "inicio" ]; then
+  cmp -s "inicio/$PRUEBA" "solucion/$PRUEBA" \
+    && si "Andamiaje: las pruebas son las de la lección, sin cambios" \
+    || no "BienvenidaTest.kt cambió: las pruebas no se tocan. Recupéralo con  git checkout -- inicio/$PRUEBA"
+fi
+if [ -z "${ANDROID_HOME:-}" ] && [ ! -f "$PROY/local.properties" ]; then
+  no "ANDROID_HOME no está definido: sin él Gradle no encuentra el SDK (lección 00, paso 2)"
+  echo; echo "Resultado: no se corrieron las pruebas."; exit 1
+fi
+
+# --- 1.2 · Las pruebas simuladas -----------------------------------------------------------
+# --rerun obliga a correr las pruebas aunque nada haya cambiado: así el resultado es de ESTA corrida.
+marca=$(mktemp)
+salida=$(mktemp)
+echo "Corriendo las pruebas… (la primera vez tarda y necesita red)"
+"./$PROY/gradlew" -p "$PROY" -q testDebugUnitTest --rerun >"$salida" 2>&1
+rc=$?
+
+if [ ! -f "$XML" ] || [ ! "$XML" -nt "$marca" ]; then
+  no "Las pruebas no llegaron a correr: casi siempre es que el código no compila. Esto dijo Gradle:"
+  grep -E '^e: |error:|What went wrong|SDK location|Java heap' "$salida" | head -8 | sed 's/^/     /'
+  nota "Para ver todo:  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+  rm -f "$marca" "$salida"
+  echo; echo "Resultado: 0 pruebas corridas."; exit 1
+fi
+rm -f "$marca" "$salida"
+
+# El conteo se lee del informe de resultados (XML), no del código de salida de Gradle.
+attr() { sed -n 's/.*<testsuite [^>]*[[:space:]]'"$1"'="\([0-9]*\)".*/\1/p' "$XML" | head -1; }
+total=$(attr tests); fallas=$(attr failures); errores=$(attr errors); saltadas=$(attr skipped)
+total=${total:-0}; fallas=${fallas:-0}; errores=${errores:-0}; saltadas=${saltadas:-0}
+verdes=$((total - fallas - errores - saltadas))
+
+# estado <nombre de la prueba> → paso | fallo | falta
+estado() {
+  awk -v n="$1" '
+    /<testcase / { enc = (index($0, "name=\"" n "\"") > 0); if (enc) { visto = 1; if ($0 ~ /\/>[[:space:]]*$/) { print "paso"; fin = 1; exit } } next }
+    enc && /<(failure|error|skipped)/ { print "fallo"; fin = 1; exit }
+    enc && /<\/testcase>/ { print "paso"; fin = 1; exit }
+    END { if (!fin) print (visto ? "fallo" : "falta") }' "$XML"
+}
+revisa() { # nombre · qué demostró · qué falta
+  case "$(estado "$1")" in
+    paso)  si "$2" ;;
+    fallo) no "$3" ;;
+    *)     no "La prueba $1 no corrió: revisa que BienvenidaTest.kt esté completo" ;;
+  esac
+}
+revisa muestraElNombreDeLaTienda \
+  "Simulado: la pantalla muestra el nombre «La tienda»" \
+  "No encontré el texto «La tienda»: escríbelo tal cual en un Text (paso 3)"
+revisa muestraElLema \
+  "Simulado: la pantalla muestra el lema «Tus órdenes, en tu bolsillo»" \
+  "No encontré el lema «Tus órdenes, en tu bolsillo»: revisa acentos, coma y mayúsculas (paso 3)"
+revisa tieneElBotonEntrar \
+  "Simulado: hay un botón «Entrar» que se puede tocar" \
+  "No encontré un botón «Entrar»: un Text suelto no cuenta, tiene que ser un Button (paso 3)"
+revisa alTocarEntrarSaluda \
+  "Simulado: al tocar «Entrar» aparece «¡Hola!», y antes de tocar no estaba" \
+  "Al tocar «Entrar» no aparece «¡Hola!» (o ya estaba desde antes): ese cambio lo pides en el paso 4"
+
+[ "$total" -eq 4 ] || no "Esperaba 4 pruebas y el informe trae $total"
+[ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+
+# --- 1.1, 1.3 y 1.4 · Lo que escribes tú ---------------------------------------------------
+if [ "$PROY" = "inicio" ]; then
+  R=../../respuestas/01.md
+  n=0; [ -f "$R" ] && n=$(grep -o 'Bienvenida\.kt:[0-9][0-9]*' "$R" | sort -u | wc -l | tr -d ' ')
+  [ "$n" -ge 5 ] && si "Escrito: tu ejercicio 1.3 liga cinco bloques a su línea (Bienvenida.kt:N)" \
+    || no "Falta tu ejercicio 1.3: en respuestas/01.md, cinco bloques con su línea, así: Bienvenida.kt:23 (llevas $n)"
+else
+  nota "Los ejercicios escritos (respuestas/01.md) solo se revisan sobre inicio/"
+fi
+
+echo
+echo "Resultado: $verdes de $total pruebas en verde ($fallas en rojo, $errores con error, $saltadas saltadas), leído de"
+echo "  $XML"
+nota "Esto es el nivel simulado: demuestra lo que la pantalla muestra y cómo responde al toque."
+nota "No demuestra cómo se ve en un teléfono (colores, tamaños, márgenes): eso lo ves tú con installDebug."
+exit $ok
