@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
-# Comprueba la lección 01: la pantalla de bienvenida muestra nombre, lema y botón, y saluda al tocar «Entrar».
-# Nivel SIMULADO: corre las pruebas en tu computadora (./gradlew testDebugUnitTest), sin emulador.
+# Revisa la lección 01 en el nivel SIMULADO: corre las pruebas en tu computadora (./gradlew testDebugUnitTest),
+# sin emulador, y lee el conteo del informe de resultados (XML).
+# SÍ revisa: que existan los textos del nombre y del lema; que haya un elemento «Entrar» con acción de toque y
+#   rol de botón; que «¡Hola!» aparezca solo después de tocarlo; y que respuestas/01.md traiga al menos cinco
+#   referencias con formato Bienvenida.kt:N.
+# NO revisa: tamaños, márgenes, centrado ni el orden en que se ven las cosas (eso lo comparas tú con el boceto,
+#   en la app instalada); tampoco califica tus predicciones (1.1), tus explicaciones (1.3) ni el repaso (1.4).
 # Solo lee tu código: no lo cambia. Gradle escribe sus resultados en build/, que no se sube al repo.
 # Uso:  ./verifica             revisa tu trabajo en inicio/
 #       ./verifica solucion    revisa la solución de referencia
@@ -79,28 +84,29 @@ revisa muestraElLema \
   "Simulado: la pantalla muestra el lema «Tus órdenes, en tu bolsillo»" \
   "No encontré el lema «Tus órdenes, en tu bolsillo»: revisa acentos, coma y mayúsculas (paso 3)"
 revisa tieneElBotonEntrar \
-  "Simulado: hay un botón «Entrar» que se puede tocar" \
-  "No encontré un botón «Entrar»: un Text suelto no cuenta, tiene que ser un Button (paso 3)"
+  "Simulado: hay un elemento «Entrar» con acción de toque y rol de botón" \
+  "No encontré un «Entrar» con acción de toque y rol de botón: un Text no cuenta, ni con clickable; usa Button (paso 3)"
 revisa alTocarEntrarSaluda \
   "Simulado: al tocar «Entrar» aparece «¡Hola!», y antes de tocar no estaba" \
-  "Al tocar «Entrar» no aparece «¡Hola!» (o ya estaba desde antes): ese cambio lo pides en el paso 4"
+  "Al tocar el botón «Entrar» no aparece «¡Hola!» (o ya estaba desde antes): ese cambio lo pides en el paso 4"
 
 [ "$total" -eq 4 ] || no "Esperaba 4 pruebas y el informe trae $total"
 [ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
 
-# --- 1.1, 1.3 y 1.4 · Lo que escribes tú ---------------------------------------------------
+# --- 1.3 · Presencia mínima de la evidencia escrita (no califica su contenido) -------------
 if [ "$PROY" = "inicio" ]; then
   R=../../respuestas/01.md
   n=0; [ -f "$R" ] && n=$(grep -o 'Bienvenida\.kt:[0-9][0-9]*' "$R" | sort -u | wc -l | tr -d ' ')
-  [ "$n" -ge 5 ] && si "Escrito: tu ejercicio 1.3 liga cinco bloques a su línea (Bienvenida.kt:N)" \
-    || no "Falta tu ejercicio 1.3: en respuestas/01.md, cinco bloques con su línea, así: Bienvenida.kt:23 (llevas $n)"
+  [ "$n" -ge 5 ] && si "Escrito: respuestas/01.md trae $n referencias con formato Bienvenida.kt:N (no califico lo que explican)" \
+    || no "respuestas/01.md no trae cinco referencias con formato Bienvenida.kt:N, como Bienvenida.kt:23 (llevas $n)"
 else
-  nota "Los ejercicios escritos (respuestas/01.md) solo se revisan sobre inicio/"
+  nota "Las referencias de respuestas/01.md solo se cuentan sobre inicio/"
 fi
 
 echo
 echo "Resultado: $verdes de $total pruebas en verde ($fallas en rojo, $errores con error, $saltadas saltadas), leído de"
 echo "  $XML"
-nota "Esto es el nivel simulado: demuestra lo que la pantalla muestra y cómo responde al toque."
-nota "No demuestra cómo se ve en un teléfono (colores, tamaños, márgenes): eso lo ves tú con installDebug."
+nota "Nivel simulado: demuestra qué elementos existen y que el botón responde al toque."
+nota "No demuestra tamaños, márgenes, centrado ni orden: compáralo tú con el boceto, en la app instalada."
+nota "No califica tus predicciones, tus explicaciones ni el repaso: compáralos con «Compara tus respuestas»."
 exit $ok
