@@ -1,0 +1,187 @@
+#!/usr/bin/env bash
+# Revisa la lección 02 en el nivel SIMULADO: corre las pruebas en tu computadora (./gradlew testDebugUnitTest),
+# sin emulador, y lee el conteo del informe de resultados (XML).
+# SÍ revisa, corriendo las pruebas: que la app empiece en la bienvenida; que al tocar el botón «Entrar» quede la
+#   pantalla de entrada; que con EntradaFalsa (de pruebas) el botón «Continuar» lleve al inicio con el nombre que
+#   dio esa entrada; que con EntradaSinProveedor (la de la app) no se pase; y que la entrada solo se consulte al
+#   tocar «Continuar». «Botón» es un elemento con ese texto, acción de toque y rol de botón.
+# SÍ revisa, buscando texto en tus archivos (no los ejecuta): que exista `interface Entrada`; que `class
+#   EntradaFalsa` esté en src/test y no en src/main; que MainActivity.kt mencione `EntradaSinProveedor()`; que
+#   ningún otro archivo de la app nombre una implementación; y que respuestas/02.md traiga pegado el rojo del
+#   «Rompe uno a propósito». En los .kt, las líneas de comentario (//) no cuentan.
+# NO revisa: cómo se ven las pantallas, el botón «atrás» del teléfono ni qué pasa al girarlo; tampoco califica
+#   tus predicciones (2.1) ni tu explicación del «Rompe uno» (2.3). Y nada de Google, Firebase o la red: en esta
+#   lección no existen.
+# Solo lee tu código: no lo cambia. Gradle escribe sus resultados en build/, que no se sube al repo.
+# Uso:  ./verifica             revisa tu trabajo en inicio/
+#       ./verifica solucion    revisa la solución de referencia
+set -uo pipefail
+cd "$(dirname "$0")"
+PROY="${1:-inicio}"
+ok=0
+si() { echo "✅ $1"; }
+no() { echo "❌ $1"; ok=1; }
+nota() { echo "ℹ️  $1"; }
+
+case "$PROY" in
+  inicio|solucion) ;;
+  *) echo "Uso: ./verifica [inicio|solucion]"; exit 2 ;;
+esac
+PRUEBA="app/src/test/java/mx/habil/ejemplo/tienda/RecorridoTest.kt"
+MAIN="$PROY/app/src/main"
+TEST="$PROY/app/src/test"
+XML="$PROY/app/build/test-results/testDebugUnitTest/TEST-mx.habil.ejemplo.tienda.RecorridoTest.xml"
+echo "Revisando $PROY/ — nivel simulado (sin emulador)"
+
+# --- Andamiaje · lo que el proyecto ya trae -------------------------------------------------
+grep -q '^org.gradle.jvmargs=.*-Xmx4g' "$PROY/gradle.properties" 2>/dev/null \
+  && si "Andamiaje: gradle.properties le da 4 GB de memoria a Gradle (-Xmx4g)" \
+  || no "gradle.properties ya no trae -Xmx4g: regresa la línea  org.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8"
+if [ "$PROY" = "inicio" ]; then
+  cmp -s "inicio/$PRUEBA" "solucion/$PRUEBA" \
+    && si "Andamiaje: RecorridoTest.kt es el de la lección, sin cambios" \
+    || no "RecorridoTest.kt cambió: esas pruebas no se tocan. Recupéralo con  git checkout -- inicio/$PRUEBA"
+fi
+
+# --- 2.4 · Las piezas, buscadas como texto (no se ejecutan) ---------------------------------
+# hay <texto> <carpeta o archivo>: ¿algún .kt lo contiene en una línea que no sea comentario (//)?
+# Los comentarios no cuentan: una pieza nombrada en un comentario no existe, y tampoco estorba.
+hay() { grep -rh --include='*.kt' -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -qF -- "$1"; }
+piezas=0
+if hay 'interface Entrada' "$MAIN"; then
+  si "Texto: en src/main hay un «interface Entrada»"
+else
+  no "No encontré «interface Entrada» en src/main: sin ella las pruebas no compilan (paso 3)"; piezas=1
+fi
+if hay 'fun Tienda(' "$MAIN"; then
+  si "Texto: en src/main hay un «fun Tienda(»"
+else
+  no "No encontré «fun Tienda(» en src/main: es la función que guarda el estado (paso 2)"; piezas=1
+fi
+# El cero en src/main solo vale porque la misma búsqueda sí la encuentra en src/test.
+if hay 'class EntradaFalsa' "$TEST"; then
+  if hay 'EntradaFalsa' "$MAIN"; then
+    no "«EntradaFalsa» aparece en src/main: la entrada que deja pasar vive solo en src/test. Sácala de la app"
+  else
+    si "Texto: «class EntradaFalsa» está en src/test y src/main no la nombra"
+  fi
+else
+  no "No encontré «class EntradaFalsa» en src/test: la escribes tú en EntradaFalsa.kt (paso 3)"; piezas=1
+fi
+if [ -z "${ANDROID_HOME:-}" ] && [ ! -f "$PROY/local.properties" ]; then
+  no "ANDROID_HOME no está definido: sin él Gradle no encuentra el SDK (lección 00, paso 2)"
+  echo; echo "Resultado: no se corrieron las pruebas."; exit 1
+fi
+
+# --- 2.2 y 2.4 · Las pruebas simuladas ------------------------------------------------------
+# --rerun obliga a correr las pruebas aunque nada haya cambiado: así el resultado es de ESTA corrida.
+marca=$(mktemp)
+salida=$(mktemp)
+echo "Corriendo las pruebas… (la primera vez tarda y necesita red)"
+"./$PROY/gradlew" -p "$PROY" -q testDebugUnitTest --rerun >"$salida" 2>&1
+rc=$?
+
+if [ ! -f "$XML" ] || [ ! "$XML" -nt "$marca" ]; then
+  no "Las pruebas no llegaron a correr: casi siempre es que el código no compila. Esto dijo Gradle:"
+  grep -E '^e: |error:|What went wrong|SDK location|Java heap' "$salida" | sed 's|file://.*/||' | head -8 | sed 's/^/     /'
+  [ "$piezas" -eq 0 ] || nota "Arriba hay piezas que faltan: mientras falten, las pruebas no compilan. Es lo esperado antes del paso 3."
+  nota "Para ver todo:  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+  rm -f "$marca" "$salida"
+  echo; echo "Resultado: 0 pruebas corridas."; exit 1
+fi
+rm -f "$marca" "$salida"
+
+# El conteo se lee del informe de resultados (XML), no del código de salida de Gradle.
+attr() { sed -n 's/.*<testsuite [^>]*[[:space:]]'"$1"'="\([0-9]*\)".*/\1/p' "$XML" | head -1; }
+total=$(attr tests); fallas=$(attr failures); errores=$(attr errors); saltadas=$(attr skipped)
+total=${total:-0}; fallas=${fallas:-0}; errores=${errores:-0}; saltadas=${saltadas:-0}
+verdes=$((total - fallas - errores - saltadas))
+
+# estado <nombre de la prueba> → paso | fallo | falta
+estado() {
+  awk -v n="$1" '
+    /<testcase / { enc = (index($0, "name=\"" n "\"") > 0); if (enc) { visto = 1; if ($0 ~ /\/>[[:space:]]*$/) { print "paso"; fin = 1; exit } } next }
+    enc && /<(failure|error|skipped)/ { print "fallo"; fin = 1; exit }
+    enc && /<\/testcase>/ { print "paso"; fin = 1; exit }
+    END { if (!fin) print (visto ? "fallo" : "falta") }' "$XML"
+}
+revisa() { # nombre · qué demostró · qué falta
+  case "$(estado "$1")" in
+    paso)  si "$2" ;;
+    fallo) no "$3" ;;
+    *)     no "La prueba $1 no corrió: revisa que RecorridoTest.kt esté completo" ;;
+  esac
+}
+ROJO_CAMBIO="Al tocar el botón «Entrar» no aparece la pantalla de entrada"
+revisa empiezaEnLaBienvenida \
+  "Simulado: la app empieza en la bienvenida, con «La tienda» y el botón «Entrar», y sin nada de las otras dos" \
+  "Al abrir no encontré la bienvenida sola: «La tienda», un botón «Entrar» y ningún texto de las otras pantallas"
+revisa deLaBienvenidaPasaALaEntrada \
+  "Simulado: al tocar «Entrar» queda la pantalla de entrada («Entra a tu cuenta» y el botón «Continuar») y la bienvenida ya no está" \
+  "$ROJO_CAMBIO con «Entra a tu cuenta» y un botón «Continuar» (un Text con toque no cuenta), o la bienvenida sigue ahí: revisa el estado «pantalla» de Tienda (paso 2)"
+if [ "$(estado deLaBienvenidaPasaALaEntrada)" = "fallo" ]; then
+  # Las cuatro pruebas que siguen empiezan tocando «Entrar» y luego «Continuar»: si la marca anterior falló,
+  # su rojo no dice nada nuevo.
+  for p in conLaEntradaFalsaLlegaAlInicio elNombreLoPoneLaEntrada conLaEntradaDeLaAppNoSePasa laEntradaSeConsultaSoloAlTocarContinuar; do
+    case "$(estado "$p")" in
+      paso)  si "Simulado: $p pasó" ;;
+      fallo) no "$p quedó en rojo, pero depende de la marca anterior (llegar a la pantalla de entrada con su botón «Continuar»): arregla esa primero" ;;
+      *)     no "La prueba $p no corrió: revisa que RecorridoTest.kt esté completo" ;;
+    esac
+  done
+else
+  revisa conLaEntradaFalsaLlegaAlInicio \
+    "Simulado: con EntradaFalsa(\"Ana\"), tocar «Continuar» lleva al inicio y se ve «Hola, Ana»" \
+    "Con EntradaFalsa(\"Ana\") no llegué a «Hola, Ana» tocando «Entrar» y «Continuar» (paso 3)"
+  revisa elNombreLoPoneLaEntrada \
+    "Simulado: con otra EntradaFalsa(\"Luis\") el inicio dice «Hola, Luis»: el nombre sale de la entrada, no de la pantalla" \
+    "Con EntradaFalsa(\"Luis\") el inicio no dice «Hola, Luis»: el nombre debe salir de lo que regresa entrar() (paso 3)"
+  revisa conLaEntradaDeLaAppNoSePasa \
+    "Simulado: con EntradaSinProveedor (la de la app) no se pasa: sigue la pantalla de entrada y avisa «Todavía no se puede entrar»" \
+    "Con EntradaSinProveedor se pasó al inicio, o no apareció «Todavía no se puede entrar» después de tocar «Continuar» (paso 3)"
+  revisa laEntradaSeConsultaSoloAlTocarContinuar \
+    "Simulado: a la entrada se le pide entrar una sola vez, y solo al tocar «Continuar»" \
+    "A la entrada se le pidió entrar antes de tocar «Continuar» o más de una vez (entrar() va dentro del evento, no al dibujar), o no se llegó a «Hola, Ana» (paso 3)"
+fi
+
+[ "$total" -eq 6 ] || no "Esperaba 6 pruebas y el informe trae $total"
+[ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+
+# --- 2.4 · Quién nombra a las implementaciones (búsqueda de texto) --------------------------
+# El cero en las pantallas solo vale si la misma búsqueda sí encuentra el nombre en algún archivo de src/main.
+if hay 'EntradaSinProveedor' "$MAIN"; then
+  otros=""
+  while IFS= read -r f; do
+    case "$f" in */Entrada.kt|*/MainActivity.kt) continue ;; esac
+    if hay 'EntradaSinProveedor' "$f" || hay 'EntradaFalsa' "$f"; then otros="$otros${f##*/} "; fi
+  done < <(find "$MAIN" -name '*.kt' 2>/dev/null)
+  [ -z "$otros" ] \
+    && si "Texto: fuera de Entrada.kt y MainActivity.kt, ningún archivo de la app nombra una implementación de Entrada" \
+    || no "Estos archivos nombran una implementación de Entrada y solo deberían conocer la interfaz: $otros"
+  hay 'EntradaSinProveedor()' "$MAIN/java/mx/habil/ejemplo/tienda/MainActivity.kt" \
+    && si "Texto: MainActivity.kt menciona «EntradaSinProveedor()» (no revisé qué más hace ese archivo)" \
+    || no "MainActivity.kt no menciona «EntradaSinProveedor()»: la app debe arrancar con la entrada que no deja pasar (paso 3)"
+else
+  no "No encontré «EntradaSinProveedor» en src/main: no puedo revisar quién nombra a las implementaciones (paso 3)"
+fi
+
+# --- 2.3 · Presencia mínima de la evidencia escrita (no califica su contenido) -------------
+if [ "$PROY" = "inicio" ]; then
+  R=../../respuestas/02.md
+  if [ -f "$R" ] && grep -qF "$ROJO_CAMBIO" "$R"; then
+    si "Escrito: respuestas/02.md trae pegado el rojo del «Rompe uno a propósito» (no califico tu explicación)"
+  else
+    no "respuestas/02.md no trae pegada la línea roja del «Rompe uno a propósito» (paso 4): la que empieza con «$ROJO_CAMBIO»"
+  fi
+else
+  nota "El rojo pegado en respuestas/02.md solo se busca sobre inicio/"
+fi
+
+echo
+echo "Resultado: $verdes de $total pruebas en verde ($fallas en rojo, $errores con error, $saltadas saltadas), leído de"
+echo "  $XML"
+nota "Nivel simulado: demuestra qué pantalla queda después de cada toque, con dos implementaciones de Entrada."
+nota "Las marcas «Texto:» solo buscan palabras en tus archivos: no demuestran que el código haga lo que dicen."
+nota "No demuestra cómo se ven las pantallas, el botón «atrás» ni el giro del teléfono; ni nada de Google o Firebase."
+nota "No califica tus predicciones ni tu explicación: compáralas con «Compara tus respuestas»."
+exit $ok

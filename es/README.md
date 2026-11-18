@@ -39,7 +39,7 @@ listo tu ambiente.
 |---|---|
 | 00 | [Ambiente listo](00-ambiente-listo.md) |
 | 01 | [Mi primera pantalla corre](01-mi-primera-pantalla.md) |
-| 02 | Pantallas que cambian |
+| 02 | [Pantallas que cambian](02-pantallas-que-cambian.md) |
 | 02-B | Catálogo de componentes de la tienda (práctica) |
 | 03 | La app conoce a Firebase |
 | 04 | Entrar con Google |
