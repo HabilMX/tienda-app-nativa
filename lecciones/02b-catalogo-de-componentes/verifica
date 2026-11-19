@@ -1,0 +1,241 @@
+#!/usr/bin/env bash
+# Revisa la práctica 02-B en el nivel SIMULADO: todo corre en tu computadora, en la JVM, sin emulador.
+# Corre ./gradlew verifyRoborazziDebug, que ejecuta TODAS las pruebas del proyecto (las 7 de la lección 02
+# y las de captura) y compara cada captura con su imagen de referencia. El conteo se lee de los informes
+# de resultados (XML), no del código de salida de Gradle.
+# SÍ revisa, corriendo pruebas: que las 7 pruebas de la 02 (RecorridoTest y ArranqueTest) siguen en verde
+#   con los componentes ya puestos en la pantalla de inicio; que hay 11 pruebas de captura (una por
+#   variante de cada preview) y que las 11 coinciden con sus imágenes de referencia de app/src/test/capturas/.
+# SÍ revisa, en una COPIA temporal de tu proyecto (tu carpeta no se toca): que al cambiar a propósito el
+#   color VerdeTienda las capturas se ponen en rojo y dejan su imagen de diferencia (_compare.png), y que al
+#   regresarlo vuelven a verde. Si tus capturas no detectan un color cambiado, no sirven, aunque pasen.
+# SÍ revisa, buscando texto en tus archivos (no los ejecuta): que existen los tres componentes y el enum de
+#   estados; que Inicio.kt los usa; que MainActivity.kt pone TemaTienda; que cada componente tiene su
+#   @Preview con @PreviewParameter; que la raíz de Showkase (@ShowkaseRoot) vive en src/debug y no en
+#   src/main; y que respuestas/02b.md trae pegada una ruta de diferencia (_compare.png) del paso 6.
+#   En los .kt, las líneas de comentario (//) no cuentan.
+# NO revisa: cómo se ve el panel de previews de Android Studio (2B.2) ni el catálogo en el emulador
+#   (2B.3): eso lo ves tú y lo cuentas en respuestas/02b.md. Tampoco califica tus predicciones ni tus
+#   explicaciones, ni si los colores se ven bien a ojo: una captura dice «igual o distinta a la
+#   referencia», no «bonita». Y un cambio de color muy pequeño puede pasar en verde (paso 6).
+# Solo lee tu código: no lo cambia. Gradle escribe sus resultados en build/, que no se sube al repo.
+# Uso:  ./verifica             revisa tu trabajo en inicio/
+#       ./verifica solucion    revisa la solución de referencia
+set -uo pipefail
+# grep -c en vez de grep -q al final de una tubería: con pipefail, grep -q sale al primer hallazgo,
+# el comando de la izquierda recibe SIGPIPE y la tubería da «no está» aunque sí esté.
+cd "$(dirname "$0")"
+PROY="${1:-inicio}"
+ok=0
+si() { echo "✅ $1"; }
+no() { echo "❌ $1"; ok=1; }
+nota() { echo "ℹ️  $1"; }
+
+case "$PROY" in
+  inicio|solucion) ;;
+  *) echo "Uso: ./verifica [inicio|solucion]"; exit 2 ;;
+esac
+PKG="java/mx/habil/ejemplo/tienda"
+MAIN="$PROY/app/src/main"
+DEBUG="$PROY/app/src/debug"
+CAPT="$PROY/app/src/test/capturas"
+ESPERADAS=11   # 4 variantes del botón + 3 de la tarjeta + 4 de la etiqueta
+COLOR_BIEN='val VerdeTienda = Color(0xFF0B6E4F)'
+COLOR_MAL='val VerdeTienda = Color(0xFFC62828)'
+echo "Revisando $PROY/ — nivel simulado (sin emulador)"
+
+# --- Andamiaje · lo que el proyecto ya trae -------------------------------------------------
+grep -q '^org.gradle.jvmargs=.*-Xmx4g' "$PROY/gradle.properties" 2>/dev/null \
+  && si "Andamiaje: gradle.properties le da 4 GB de memoria a Gradle (-Xmx4g)" \
+  || no "gradle.properties ya no trae -Xmx4g: regresa la línea  org.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8"
+if [ "$PROY" = "inicio" ]; then
+  for t in app/src/test/$PKG/RecorridoTest.kt app/src/test/$PKG/ArranqueTest.kt app/src/main/$PKG/Tema.kt; do
+    if cmp -s "inicio/$t" "solucion/$t"; then
+      si "Andamiaje: ${t##*/} es el de la lección, sin cambios"
+    else
+      no "${t##*/} cambió y no se toca. Mira qué cambió con  git diff -- lecciones/02b-catalogo-de-componentes/inicio/$t"
+      nota "Si es el color del paso 6, regrésalo a mano. Restaurar el archivo con git descarta lo que tenga: revisa el diff antes."
+    fi
+  done
+fi
+grep -cF "$COLOR_BIEN" "$MAIN/$PKG/Tema.kt" >/dev/null 2>&1 \
+  || no "Tema.kt no trae la línea  $COLOR_BIEN : sin ella no puedo hacer el sabotaje del color"
+
+# --- 2B.1 a 2B.3 · Las piezas, buscadas como texto (no se ejecutan) ---------------------------
+# hay <texto> <carpeta o archivo>: ¿algún .kt lo contiene en una línea que no sea comentario (//)?
+hay() { grep -rh --include='*.kt' -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -cF -- "$1" >/dev/null; }
+for pieza in 'fun BotonPrincipal(' 'fun TarjetaProducto(' 'enum class EstadoOrden' 'fun EtiquetaEstado('; do
+  hay "$pieza" "$MAIN" \
+    && si "Texto: en src/main hay un «$pieza»" \
+    || no "No encontré «$pieza» en src/main (pasos 1 y 2)"
+done
+INI="$MAIN/$PKG/Inicio.kt"
+usa=""
+for c in 'BotonPrincipal(' 'TarjetaProducto(' 'EtiquetaEstado('; do hay "$c" "$INI" || usa="$usa${c%(} "; done
+[ -z "$usa" ] \
+  && si "Texto: Inicio.kt, la pantalla de inicio de la 02, usa los tres componentes" \
+  || no "Inicio.kt no usa: $usa(paso 2)"
+hay 'TemaTienda(' "$MAIN/$PKG/MainActivity.kt" \
+  && si "Texto: MainActivity.kt envuelve la app con TemaTienda" \
+  || no "MainActivity.kt no menciona «TemaTienda(»: sin él la app no usa la paleta (paso 2)"
+for par in 'BotonPrincipal.kt:VariantesBoton' 'TarjetaProducto.kt:VariantesTarjeta' 'EtiquetaEstado.kt:VariantesEtiqueta'; do
+  f="$MAIN/$PKG/${par%%:*}"; prov="${par##*:}"
+  if hay '@Preview(' "$f" && hay "@PreviewParameter($prov::class)" "$f"; then
+    si "Texto: ${par%%:*} trae su @Preview con @PreviewParameter($prov::class)"
+  else
+    no "${par%%:*} no trae un @Preview con @PreviewParameter($prov::class) (paso 3)"
+  fi
+done
+if hay '@ShowkaseRoot' "$DEBUG"; then
+  hay '@ShowkaseRoot' "$MAIN" \
+    && no "@ShowkaseRoot aparece también en src/main: el catálogo es solo de la app de depuración (paso 4)" \
+    || si "Texto: @ShowkaseRoot vive en src/debug y src/main no lo nombra (el catálogo no viaja en la app publicada)"
+else
+  no "No encontré @ShowkaseRoot en src/debug: es la raíz del catálogo (paso 4)"
+fi
+pngs=$(find "$CAPT" -maxdepth 1 -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+[ "$pngs" -eq "$ESPERADAS" ] \
+  && si "Archivos: app/src/test/capturas/ trae $pngs imágenes de referencia" \
+  || no "app/src/test/capturas/ trae $pngs imágenes de referencia y esperaba $ESPERADAS: grábalas con  ./gradlew recordRoborazziDebug  (paso 5)"
+
+if [ -z "${ANDROID_HOME:-}" ] && [ ! -f "$PROY/local.properties" ]; then
+  no "ANDROID_HOME no está definido: sin él Gradle no encuentra el SDK (lección 00, paso 2)"
+  echo; echo "Resultado: no se corrieron las pruebas."; exit 1
+fi
+
+# --- Corre las pruebas en modo «comparar» ------------------------------------------------------
+# corre <carpeta del proyecto> <archivo de salida>: verifyRoborazziDebug con --rerun, para que el
+# resultado sea de ESTA corrida aunque nada haya cambiado. Deja en $marca un archivo anterior a la corrida.
+corre() {
+  rm -f "${marca:-}"
+  marca=$(mktemp)
+  sleep 1
+  "./$PROY/gradlew" -p "$1" -q verifyRoborazziDebug --rerun >"$2" 2>&1
+}
+# attr <atributo> <informe>: un número del encabezado <testsuite> de un informe XML.
+attr() { sed -n 's/.*<testsuite [^>]*[[:space:]]'"$1"'="\([0-9]*\)".*/\1/p' "$2" 2>/dev/null | head -1; }
+# fresco <informe>: el informe existe y lo escribió la corrida de ahora, no una anterior.
+fresco() { [ -f "$1" ] && [ "$1" -nt "$marca" ]; }
+
+DIRX="$PROY/app/build/test-results/testDebugUnitTest"
+XR="$DIRX/TEST-mx.habil.ejemplo.tienda.RecorridoTest.xml"
+XA="$DIRX/TEST-mx.habil.ejemplo.tienda.ArranqueTest.xml"
+XC="$DIRX/TEST-mx.habil.ejemplo.tienda.CapturasTest.xml"
+salida=$(mktemp)
+echo "Corriendo las pruebas en modo comparar… (la primera vez tarda y necesita red)"
+corre "$PROY" "$salida"
+if ! fresco "$XR" || ! fresco "$XA"; then
+  no "Las pruebas no llegaron a correr: casi siempre es que el código no compila. Esto dijo Gradle:"
+  grep -E '^e: |error:|What went wrong|SDK location|Java heap' "$salida" | sed 's|file://.*/||' | head -8 | sed 's/^/     /'
+  nota "Para ver todo:  ./$PROY/gradlew -p $PROY verifyRoborazziDebug"
+  rm -f "$marca" "$salida"
+  echo; echo "Resultado: 0 pruebas corridas."; exit 1
+fi
+
+# cuenta <informe>: «verdes total rojas errores saltadas» de un informe.
+cuenta() {
+  t=$(attr tests "$1"); f=$(attr failures "$1"); e=$(attr errors "$1"); s=$(attr skipped "$1")
+  t=${t:-0}; f=${f:-0}; e=${e:-0}; s=${s:-0}
+  echo "$((t - f - e - s)) $t $f $e $s"
+}
+read -r vR tR fR eR sR <<<"$(cuenta "$XR")"
+read -r vA tA fA eA sA <<<"$(cuenta "$XA")"
+[ "$tR" -eq 6 ] && [ "$vR" -eq 6 ] \
+  && si "Simulado: las 6 pruebas del recorrido de la 02 siguen en verde (bienvenida → entrada → inicio)" \
+  || no "Las pruebas del recorrido de la 02 dieron $vR de $tR en verde: los componentes rompieron algo de la 02. Mira  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+[ "$tA" -eq 1 ] && [ "$vA" -eq 1 ] \
+  && si "Simulado: la prueba del arranque de la 02 sigue en verde (abriendo MainActivity no se pasa sin proveedor)" \
+  || no "La prueba del arranque de la 02 quedó en rojo: revisa MainActivity.kt, que debe seguir con Tienda(entrada = EntradaSinProveedor()) dentro de TemaTienda"
+
+capturas_ok=1
+if fresco "$XC"; then
+  read -r vC tC fC eC sC <<<"$(cuenta "$XC")"
+  if [ "$tC" -ne "$ESPERADAS" ]; then
+    no "CapturasTest corrió $tC pruebas y esperaba $ESPERADAS, una por variante de cada preview (paso 5)"; capturas_ok=0
+  elif [ "$vC" -eq "$tC" ]; then
+    si "Simulado: las $tC capturas coinciden con sus imágenes de referencia"
+  else
+    no "$((fC + eC)) de $tC capturas no coinciden con su referencia. Las diferencias quedaron en $PROY/app/build/outputs/roborazzi/*_compare.png"
+    nota "Si cambiaste un componente a propósito, vuelve a grabar con  ./gradlew recordRoborazziDebug ; si no, es un cambio que no esperabas."
+    capturas_ok=0
+  fi
+else
+  no "No corrió ninguna prueba de captura: falta CapturasTest.kt en app/src/test (paso 5)"; capturas_ok=0; tC=0; vC=0; fC=0; eC=0; sC=0
+fi
+total=$((tR + tA + tC)); verdes=$((vR + vA + vC))
+rojas=$((fR + fA + fC)); errores=$((eR + eA + eC)); saltadas=$((sR + sA + sC))
+
+# --- 2B.4 · El sabotaje del color, en una copia --------------------------------------------------
+# Solo tiene sentido si las capturas pasan: con capturas rojas o ausentes, un rojo más no demuestra nada.
+if [ "$capturas_ok" -eq 1 ]; then
+  copia=$(mktemp -d)
+  # Se copia el proyecto sin lo que genera Gradle: así la copia compila desde cero.
+  (cd "$PROY" && tar --exclude ./app/build --exclude ./build --exclude ./.gradle --exclude ./.kotlin -cf - .) \
+    | (cd "$copia" && tar -xf -)
+  TEMA="$copia/app/src/main/$PKG/Tema.kt"
+  sed -i.antes "s/$COLOR_BIEN/$COLOR_MAL/" "$TEMA"
+  if grep -cF "$COLOR_MAL" "$TEMA" >/dev/null; then
+    echo "Sabotaje en una copia: VerdeTienda de 0xFF0B6E4F a 0xFFC62828 (rojo)…"
+    salida2=$(mktemp)
+    corre "$copia" "$salida2"
+    XS="$copia/app/build/test-results/testDebugUnitTest/TEST-mx.habil.ejemplo.tienda.CapturasTest.xml"
+    if fresco "$XS"; then
+      read -r vS tS fS eS sS <<<"$(cuenta "$XS")"
+      difs=$(find "$copia/app/build/outputs/roborazzi" -name '*_compare.png' 2>/dev/null | wc -l | tr -d ' ')
+      if [ "$fS" -gt 0 ] && [ "$difs" -gt 0 ]; then
+        si "Simulado: con el color cambiado, $fS de $tS capturas quedan en rojo y dejan $difs imágenes de diferencia (_compare.png)"
+        # Cuáles: el nombre de cada <testcase> que trae un <failure> o un <error> dentro.
+        rojas_s=$(awk '/<testcase /{ n = $0; sub(/.*name="captura\[/, "", n); sub(/\].*/, "", n) }
+                       /<(failure|error)/{ printf "%s ", n }' "$XS")
+        echo "     en rojo: $rojas_s"
+        # Se regresa el color en la misma copia y se vuelve a comparar.
+        mv "$TEMA.antes" "$TEMA"
+        corre "$copia" "$salida2"
+        if fresco "$XS"; then
+          read -r vS2 tS2 fS2 eS2 sS2 <<<"$(cuenta "$XS")"
+          [ "$vS2" -eq "$tS2" ] && [ "$tS2" -eq "$ESPERADAS" ] \
+            && si "Simulado: con el color de regreso, las $tS2 capturas vuelven a verde" \
+            || no "Con el color de regreso, solo $vS2 de $tS2 capturas quedaron en verde: algo más cambió en la copia"
+        else
+          no "Con el color de regreso, las pruebas de la copia no corrieron"
+        fi
+      else
+        no "Con VerdeTienda cambiado a rojo, ninguna captura quedó en rojo ($fS en rojo, $difs diferencias): tus capturas no detectan un color cambiado (paso 5)"
+      fi
+    else
+      no "En la copia con el color cambiado, las pruebas no llegaron a correr:"
+      grep -E '^e: |error:|What went wrong' "$salida2" | head -5 | sed 's/^/     /'
+    fi
+    rm -f "$salida2"
+  else
+    no "No pude cambiar VerdeTienda en la copia: Tema.kt no trae la línea de la lección"
+  fi
+  rm -rf "$copia"
+else
+  no "Sabotaje del color: no lo corrí, porque primero las capturas deben existir y pasar (paso 5)"
+fi
+rm -f "$marca" "$salida"
+
+# --- 2B.4 · Presencia mínima de la evidencia escrita (no califica su contenido) -------------
+if [ "$PROY" = "inicio" ]; then
+  R=../../respuestas/02b.md
+  if [ -f "$R" ] && grep -cF "_compare.png" "$R" >/dev/null; then
+    si "Escrito: respuestas/02b.md trae pegada una ruta de diferencia del paso 6 (no califico tu explicación)"
+  else
+    no "respuestas/02b.md no trae pegada la ruta de una imagen de diferencia (…_compare.png) del paso 6"
+  fi
+else
+  nota "La evidencia escrita de respuestas/02b.md solo se busca sobre inicio/"
+fi
+
+echo
+echo "Resultado: $verdes de $total pruebas en verde ($rojas en rojo, $errores con error, $saltadas saltadas), leído de"
+echo "  $XR"
+echo "  $XA"
+echo "  $XC"
+nota "Nivel simulado: demuestra que la 02 sigue funcionando con los componentes puestos, que cada variante"
+nota "  se ve igual que su imagen de referencia, y que un color cambiado a propósito las pone en rojo."
+nota "No demuestra cómo se ve el panel de previews ni el catálogo en el emulador: eso lo ves tú."
+nota "Las imágenes de referencia de solucion/ se grabaron en una Mac; no se ha medido si coinciden en Linux."
+nota "Las marcas «Texto:» solo buscan palabras en tus archivos: no demuestran que el código haga lo que dicen."
+exit $ok

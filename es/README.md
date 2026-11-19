@@ -42,7 +42,7 @@ listo tu ambiente.
 | 00 | [Ambiente listo](00-ambiente-listo.md) |
 | 01 | [Mi primera pantalla corre](01-mi-primera-pantalla.md) |
 | 02 | [Pantallas que cambian](02-pantallas-que-cambian.md) |
-| 02-B | Catálogo de componentes de la tienda (práctica) |
+| 02-B | [Catálogo de componentes de la tienda](02b-catalogo-de-componentes.md) (práctica) |
 | 03 | [La app conoce a Firebase](03-la-app-conoce-a-firebase.md) |
 | 04 | [Entrar con Google](04-entrar-con-google.md) |
 | 05 | [Entrar con Microsoft](05-entrar-con-microsoft.md) |
