@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "TU_NUMERO_DE_PROYECTO",
+    "project_id": "tu-proyecto",
+    "storage_bucket": "tu-proyecto.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:TU_NUMERO_DE_PROYECTO:android:TU_ID_DE_APP",
+        "android_client_info": {
+          "package_name": "mx.habil.ejemplo.tienda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "TU_ID_DE_CLIENTE_ANDROID.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mx.habil.ejemplo.tienda",
+            "certificate_hash": "TU_HUELLA_SHA1_EN_MINUSCULAS_Y_SIN_DOS_PUNTOS"
+          }
+        },
+        {
+          "client_id": "TU_ID_DE_CLIENTE_WEB.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "TU_CLAVE_DE_API"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "TU_ID_DE_CLIENTE_WEB.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

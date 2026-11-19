@@ -1,0 +1,498 @@
+#!/usr/bin/env bash
+# Revisa la lección 05. Sin más, en el nivel SIMULADO: corre las pruebas en tu computadora
+# (./gradlew testDebugUnitTest), sin emulador, sin navegador, sin cuenta y sin red hacia Microsoft, Google ni
+# Firebase, y lee el conteo de los informes de resultados (XML). Con la palabra «instrumentado» corre ADEMÁS
+# las pruebas instrumentadas dentro de un emulador o teléfono conectado.
+# Nivel simulado. SÍ revisa, corriendo las pruebas de EntradaConMicrosoftTest (le dan a tu EntradaConMicrosoft
+#   una puerta de mentira, la de DoblesDeMicrosoft.kt, y miran qué le pidió y qué contestó): que un toque abra
+#   el navegador una sola vez y con el proveedor microsoft.com; que el nombre sea el que contesta la puerta;
+#   que al tocar el botón se pregunte primero por una entrada a medias y, si la hay, no se abra el navegador;
+#   que retomar() regrese quién entró si quedó algo a medias y null si no, sin abrir nunca el navegador; que
+#   una entrada a medias que terminó en colisión o en falla se retome con ese resultado; y que la cancelación
+#   (FirebaseAuthWebException con ERROR_WEB_CONTEXT_CANCELED), la colisión de cuenta
+#   (FirebaseAuthUserCollisionException) y el error (otra falla web u otra excepción) den tres resultados
+#   distintos.
+# SÍ revisa, corriendo las pruebas de RecorridoConMicrosoftTest (dibujan Tienda en memoria y tocan los
+#   botones): que los dos botones estén y cada uno llame a su entrada; que con tu EntradaConMicrosoft y la
+#   puerta de mentira el botón «Entrar con Microsoft» lleve al inicio con el nombre; que cancelación, error y
+#   colisión dejen en pantalla cada uno su mensaje, sin pasar al inicio; y que, al dibujarse la app con una
+#   entrada a medias, llegue al inicio sin tocar nada, y sin ella se quede en la bienvenida.
+# SÍ revisa, corriendo las pruebas de ArranqueConMicrosoftTest (abren MainActivity, como al tocar el ícono):
+#   que por ese camino la pantalla de entrada muestre los dos botones; y que la entrada que arma
+#   MainActivity.crearEntradaConMicrosoft, con la puerta de mentira que le pasa la prueba, pida microsoft.com.
+# SÍ revisa que las pantallas y el botón de Google sigan como en la lección 04: corre sus 20 pruebas
+#   (EntradaConGoogleTest, RecorridoTest y ArranqueTest) y compara, byte por byte, esos archivos de pruebas,
+#   sus dobles, Puertas.kt, EntradaConGoogle.kt, Bienvenida.kt e Inicio.kt contra los de la solución de la 04.
+#   PantallaEntrada.kt y Tienda.kt SÍ cambiaron respecto a la 04 (traen el segundo botón, que viene dado): esos
+#   dos se comparan contra los de la solución de esta lección.
+# SÍ busca (5.1), en todos los archivos de texto del proyecto y en respuestas/05.md, sin contar build/,
+#   .gradle/ ni .kotlin/: un texto con FORMA de clave de cliente de Entra (3 caracteres, un dígito, «Q~» y de
+#   31 a 34 caracteres más) y un texto que NOMBRE un secreto de cliente (client_secret, clientSecret). Antes
+#   de buscar, siembra una clave inventada en un archivo temporal fuera del proyecto y exige encontrarla: si
+#   la búsqueda no la ve, lo dice en rojo en lugar de dar un «no hay». Nunca imprime lo que encontró: solo el
+#   archivo y el número de línea.
+# PRESENCIA TEXTUAL (busca palabras en tus archivos; no los ejecuta y no valida que el código haga lo que
+#   dicen; en los .kt las líneas de comentario no cuentan): que EntradaConMicrosoft.kt nombre OAuthProvider,
+#   "microsoft.com", select_account y pendiente(); que MainActivity.kt nombre crearEntradaConMicrosoft() y
+#   EntradaConMicrosoft( ; que ningún .kt de la app nombre MicrosoftSinConectar, una pieza de pruebas, el
+#   token de acceso de Microsoft (accessToken, OAuthCredential) ni traiga escrito un ID de cliente de Google;
+#   que ningún archivo de código del proyecto traiga un texto con forma de ID de aplicación de Entra (un
+#   GUID); que el catálogo diga las versiones de la serie; que el .gitignore traiga google-services.json; y
+#   que respuestas/05.md traiga pegado el rojo del «Rompe uno a propósito». Y le pregunta a git si rastrea
+#   algún google-services.json en el repo.
+# Nivel instrumentado (solo si lo pides). SÍ revisa, corriendo MicrosoftEnAndroidTest y BotonEnAndroidTest
+#   dentro de Android (./gradlew connectedDebugAndroidTest): que ahí, con tu EntradaConMicrosoft y la misma
+#   puerta de mentira, el toque en «Entrar con Microsoft» lleve al inicio con el nombre; que cancelación,
+#   error y colisión muestren su mensaje; que una entrada a medias que contesta el doble lleve al inicio sin
+#   tocar nada; y que las 4 pruebas del botón de Google de la 04 sigan en verde. Instala en el dispositivo la
+#   app y su app de pruebas.
+# NO revisa, en ningún nivel: el navegador, a Microsoft ni a Firebase. La clase que sí abre el navegador
+#   (NavegadorConFirebase, en PuertaDelNavegador.kt) solo se ejecuta en una parte: al abrir MainActivity en
+#   las pruebas pregunta por una entrada a medias y Firebase contesta, en tu computadora, que no hay ninguna.
+#   Su otra mitad, abrir el navegador, NO se ejecuta; solo se compara que el archivo siga igual al de la
+#   lección. «Retomar» aquí es el doble diciendo que quedó algo a medias: ninguna prueba cierra la app con el
+#   navegador abierto. Ninguna prueba lee los parámetros de la solicitud: select_account es presencia
+#   textual. Tampoco ve si onCreate le pasa a Tienda la entrada de crearEntradaConMicrosoft(): eso es
+#   presencia textual. La búsqueda de la clave ve archivos, y con una sola forma: no ve tu terminal, tus
+#   capturas, tu portapapeles ni el historial de git, y una clave con otra forma se le pasa. Por eso no
+#   demuestra que tu app esté registrada en Entra, que la dirección de retorno sea la exacta, que la clave en
+#   Firebase sea la vigente ni que tú puedas entrar: eso es el nivel real (paso 9), una vez, a mano. Ni
+#   califica tu tabla del registro (5.1) ni tu tabla de comparación (5.3).
+# Solo lee tu código y tus archivos: no los cambia. Gradle escribe sus resultados en build/, que no se sube.
+# Uso:  ./verifica                          revisa tu trabajo en inicio/, nivel simulado
+#       ./verifica solucion                 revisa la solución de referencia. En un clon limpio sale en ROJO:
+#                                           google-services.json no se sube, y sin él el proyecto no compila.
+#                                           Copia tu archivo a solucion/app/ (sigue ignorado) y retíralo al terminar.
+#       ./verifica inicio instrumentado     además corre el nivel instrumentado (pide un emulador abierto o un
+#       ./verifica solucion instrumentado   teléfono conectado; si no hay, sale en rojo y lo dice)
+set -uo pipefail
+cd "$(dirname "$0")"
+PROY="${1:-inicio}"
+ok=0
+si() { echo "✅ $1"; }
+no() { echo "❌ $1"; ok=1; }
+nota() { echo "ℹ️  $1"; }
+
+NIVEL="${2:-simulado}"
+case "$PROY" in
+  inicio|solucion) ;;
+  *) echo "Uso: ./verifica [inicio|solucion] [instrumentado]"; exit 2 ;;
+esac
+case "$NIVEL" in
+  simulado|instrumentado) ;;
+  *) echo "Uso: ./verifica [inicio|solucion] [instrumentado]"; exit 2 ;;
+esac
+PAQ="mx.habil.ejemplo.tienda"
+DIRM="app/src/main/java/mx/habil/ejemplo/tienda"
+DIRP="app/src/test/java/mx/habil/ejemplo/tienda"
+DIRA="app/src/androidTest/java/mx/habil/ejemplo/tienda"
+MAIN="$PROY/app/src/main"
+JSON="$PROY/app/google-services.json"
+L04="../04-entrar-con-google/solucion"
+RESP=../../respuestas/05.md
+DIRX="$PROY/app/build/test-results/testDebugUnitTest"
+XMLG="$DIRX/TEST-$PAQ.EntradaConGoogleTest.xml"
+XMLR="$DIRX/TEST-$PAQ.RecorridoTest.xml"
+XMLA="$DIRX/TEST-$PAQ.ArranqueTest.xml"
+XMLM="$DIRX/TEST-$PAQ.EntradaConMicrosoftTest.xml"
+XMLRM="$DIRX/TEST-$PAQ.RecorridoConMicrosoftTest.xml"
+XMLAM="$DIRX/TEST-$PAQ.ArranqueConMicrosoftTest.xml"
+MARCA_ROMPE="quedó una entrada a medias y retomar() no la recogió"
+echo "Revisando $PROY/ — nivel simulado (sin emulador, sin navegador, sin cuenta, sin hablar con Microsoft ni con Firebase)"
+
+# --- Andamiaje · lo que el proyecto ya trae -------------------------------------------------
+grep -q '^org.gradle.jvmargs=.*-Xmx4g' "$PROY/gradle.properties" 2>/dev/null \
+  && si "Andamiaje: gradle.properties le da 4 GB de memoria a Gradle (-Xmx4g)" \
+  || no "gradle.properties ya no trae -Xmx4g: regresa la línea  org.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8"
+if [ "$PROY" = "inicio" ]; then
+  cambiados=""
+  for t in "$DIRP/EntradaConMicrosoftTest.kt" "$DIRP/RecorridoConMicrosoftTest.kt" "$DIRP/ArranqueConMicrosoftTest.kt" \
+           "$DIRP/DoblesDeMicrosoft.kt" "$DIRP/AppDePruebas.kt" "app/src/test/resources/robolectric.properties" \
+           "$DIRA/MicrosoftEnAndroidTest.kt" "$DIRA/DoblesDeMicrosoft.kt" \
+           "$DIRM/PuertaDelNavegador.kt" "$DIRM/PantallaEntrada.kt" "$DIRM/Tienda.kt"; do
+    cmp -s "inicio/$t" "solucion/$t" || cambiados="$cambiados inicio/$t"
+  done
+  if [ -z "$cambiados" ]; then
+    si "Andamiaje: las pruebas de esta lección, sus dobles, PuertaDelNavegador.kt, PantallaEntrada.kt y Tienda.kt son los de la lección, sin cambios (11 archivos comparados)"
+  else
+    no "Estos archivos cambiaron y no se tocan:$cambiados"
+    nota "Mira qué cambió con  git diff -- <archivo>  y deshazlo a mano. Restaurar con git descarta lo que tenga: revisa el diff antes."
+  fi
+fi
+
+# Lo de la lección 04, comparado contra SU solución: así «no cambió» no depende de esta lección.
+if [ -f "$L04/$DIRM/Puertas.kt" ]; then
+  cambiados=""
+  for t in "$DIRP/EntradaConGoogleTest.kt" "$DIRP/RecorridoTest.kt" "$DIRP/ArranqueTest.kt" \
+           "$DIRP/EntradaFalsa.kt" "$DIRP/Dobles.kt" "$DIRA/BotonEnAndroidTest.kt" "$DIRA/Dobles.kt" \
+           "$DIRM/Puertas.kt" "$DIRM/EntradaConGoogle.kt" "$DIRM/Bienvenida.kt" "$DIRM/Inicio.kt"; do
+    cmp -s "$PROY/$t" "$L04/$t" || cambiados="$cambiados $PROY/$t"
+  done
+  [ -z "$cambiados" ] \
+    && si "Andamiaje: las pruebas de la lección 04, sus dobles, Puertas.kt, EntradaConGoogle.kt, Bienvenida.kt e Inicio.kt son idénticos a los de la solución de la 04 (11 archivos comparados)" \
+    || no "Estos archivos ya no son los de la lección 04 y no se tocan:$cambiados"
+else
+  no "No encontré la solución de la lección 04 ($L04): sin ella no puedo comparar que lo de la 04 siga igual"
+fi
+
+for d in Dobles.kt DoblesDeMicrosoft.kt; do
+  cmp -s "$PROY/$DIRP/$d" "$PROY/$DIRA/$d" \
+    && si "Andamiaje: $d de src/androidTest es copia idéntica del de src/test" \
+    || no "$d de src/androidTest ya no es igual al de src/test: los dos niveles deben usar los mismos dobles"
+done
+
+# --- 5.1 · La clave de Entra no está en ningún archivo ---------------------------------------
+# FORMA: 3 caracteres, un dígito, «Q~» y de 31 a 34 caracteres más. Es la forma con la que una herramienta
+# pública de búsqueda de secretos (gitleaks, regla azure-ad-client-secret) reconoce estas claves; Microsoft
+# no la publica como formato. NOMBRA: el nombre que OAuth le da a esa clave.
+FORMA='[A-Za-z0-9_~.]{3}[0-9]Q~[A-Za-z0-9_~.-]{31,34}'
+NOMBRA='[Cc][Ll][Ii][Ee][Nn][Tt][_-]?[Ss][Ee][Cc][Rr][Ee][Tt]'
+# donde <patrón> <ruta>… → «archivo:línea» de cada coincidencia. Nunca el texto encontrado.
+donde() {
+  local patron="$1"; shift
+  grep -rInE --exclude-dir=build --exclude-dir=.gradle --exclude-dir=.kotlin -e "$patron" -- "$@" 2>/dev/null | cut -d: -f1,2
+}
+# El «no hay» solo vale si la búsqueda sí ve: se siembra una clave inventada fuera del proyecto y se exige verla.
+sonda=$(mktemp -d)
+relleno=$(printf 'x%.0s' 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34)
+printf 'clave = "%s%s%s"\n' 'Inv8' 'Q~' "$relleno" > "$sonda/sembrada.txt"
+printf 'un texto cualquiera, sin clave\n' > "$sonda/limpia.txt"
+vio=$(donde "$FORMA" "$sonda" | wc -l | tr -d ' ')
+rm -f "$sonda/sembrada.txt" "$sonda/limpia.txt"; rmdir "$sonda" 2>/dev/null
+if [ "$vio" -ne 1 ]; then
+  no "La búsqueda de la clave no funciona en esta máquina (sembré una clave inventada en 1 archivo de 2 y vi $vio): no puedo decir que tus archivos estén limpios"
+else
+  rutas=("$PROY"); [ -f "$RESP" ] && rutas+=("$RESP")
+  con_forma=$(donde "$FORMA" "${rutas[@]}")
+  con_nombre=$(donde "$NOMBRA" "${rutas[@]}")
+  revisados=$(grep -rIlE --exclude-dir=build --exclude-dir=.gradle --exclude-dir=.kotlin -e '' -- "${rutas[@]}" 2>/dev/null | wc -l | tr -d ' ')
+  if [ -z "$con_forma" ]; then
+    si "Clave: ningún archivo de texto de $PROY/ ni respuestas/05.md trae un texto con forma de clave de cliente de Entra ($revisados archivos leídos; la búsqueda vio la clave inventada de control)"
+  else
+    no "Hay un texto con forma de clave de cliente de Entra en: $(echo $con_forma). No la imprimo. Si es tu clave: bórrala del archivo, y en Entra elimina esa clave y crea otra (paso 8): una clave que tocó un archivo ya no es secreta"
+  fi
+  if [ -z "$con_nombre" ]; then
+    si "Clave: ningún archivo de texto de $PROY/ ni respuestas/05.md nombra un secreto de cliente (client_secret, clientSecret)"
+  else
+    no "Algún archivo nombra un secreto de cliente: $(echo $con_nombre). La app no lleva la clave: vive en la consola de Firebase (paso 8)"
+  fi
+fi
+guid='[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}'
+con_guid=$(grep -rInE --exclude-dir=build --exclude-dir=.gradle --exclude-dir=.kotlin --exclude=google-services.json \
+  --include='*.kt' --include='*.kts' --include='*.xml' --include='*.toml' --include='*.properties' -e "$guid" -- "$PROY" 2>/dev/null | cut -d: -f1,2)
+[ -z "$con_guid" ] \
+  && si "Texto: ningún archivo de código de $PROY/ trae un texto con forma de ID de aplicación de Entra (un GUID)" \
+  || no "Hay un texto con forma de ID de aplicación (GUID) en: $(echo $con_guid). El ID de cliente de Entra no va en la app: se captura en la consola de Firebase (paso 8)"
+
+# --- 5.2 · Las piezas, buscadas como texto (no se ejecutan) ----------------------------------
+# hay <texto> <carpeta o archivo>: ¿algún .kt lo contiene en una línea que no sea comentario (//)?
+# Los comentarios no cuentan: una pieza nombrada en un comentario no existe, y tampoco estorba.
+hay() { grep -rh --include='*.kt' -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -qF -- "$1"; }
+ECM="$PROY/$DIRM/EntradaConMicrosoft.kt"
+ACT="$PROY/$DIRM/MainActivity.kt"
+# El «no hay» solo vale si la búsqueda sí lee: se comprueba con una palabra que seguro está.
+if ! hay 'class EntradaConMicrosoft' "$ECM" || ! hay 'class MainActivity' "$ACT"; then
+  no "No pude leer $DIRM/EntradaConMicrosoft.kt o MainActivity.kt (o ya no declaran su clase): sin ellos no reviso el texto"
+else
+  if hay 'OAuthProvider' "$ECM" && hay '"microsoft.com"' "$ECM"; then
+    si "Texto: EntradaConMicrosoft.kt nombra OAuthProvider y \"microsoft.com\""
+  else
+    no "EntradaConMicrosoft.kt no nombra OAuthProvider con \"microsoft.com\": es la solicitud que se le pasa al navegador (paso 4)"
+  fi
+  hay 'select_account' "$ECM" \
+    && si "Texto: EntradaConMicrosoft.kt nombra select_account (presencia textual: ninguna prueba lee los parámetros de la solicitud)" \
+    || no "EntradaConMicrosoft.kt no nombra select_account: la solicitud pide que la persona elija su cuenta (paso 4)"
+  hay 'pendiente()' "$ECM" \
+    && si "Texto: EntradaConMicrosoft.kt llama pendiente() (presencia textual: que lo use bien lo miden las pruebas, abajo)" \
+    || no "EntradaConMicrosoft.kt no llama pendiente(): es la pregunta por una entrada a medias (paso 4)"
+  hay 'crearEntradaConMicrosoft()' "$ACT" \
+    && si "Texto: MainActivity.kt llama crearEntradaConMicrosoft() (presencia textual: no sé si lo que regresa llega a Tienda)" \
+    || no "MainActivity.kt ya no llama crearEntradaConMicrosoft(): onCreate viene dado y arma la segunda entrada con esa función"
+  # Con el paréntesis y sin letra antes: «crearEntradaConMicrosoft(» no cuenta.
+  grep -v '^[[:space:]]*//' "$ACT" 2>/dev/null | grep -qE '(^|[^A-Za-z])EntradaConMicrosoft\(' \
+    && si "Texto: MainActivity.kt nombra EntradaConMicrosoft( (presencia textual)" \
+    || no "MainActivity.kt no nombra EntradaConMicrosoft( : la app instalada todavía no usa tu entrada (paso 4)"
+  sobran=""
+  for p in MicrosoftSinConectar EntradaSinProveedor EntradaFalsa SelectorFalso VerificadorFalso NavegadorFalso AppDePruebas; do
+    hay "$p" "$MAIN" && sobran="$sobran $p"
+  done
+  [ -z "$sobran" ] \
+    && si "Texto: ningún .kt de la app nombra MicrosoftSinConectar ni una pieza de pruebas" \
+    || no "La app todavía nombra:$sobran. MicrosoftSinConectar se borra al conectar Microsoft (paso 4) y las piezas de pruebas viven solo en src/test"
+  fuga=""
+  for p in accessToken AccessToken OAuthCredential; do
+    hay "$p" "$MAIN" && fuga="$fuga $p"
+  done
+  [ -z "$fuga" ] \
+    && si "Texto: ningún .kt de la app nombra el token de acceso de Microsoft (accessToken, OAuthCredential)" \
+    || no "La app nombra:$fuga. Regla de datos: del resultado de Firebase solo sale el nombre; el token de acceso no se lee, no se imprime y no se guarda (paso 2)"
+  if hay '.apps.googleusercontent.com' "$MAIN"; then
+    no "Algún .kt de la app trae escrito un ID de cliente de Google (….apps.googleusercontent.com): se lee del recurso, no se copia al código (lección 04)"
+  else
+    si "Texto: ningún .kt de la app trae escrito un ID de cliente de Google"
+  fi
+fi
+CAT="$PROY/gradle/libs.versions.toml"
+vers=""
+grep -qE '^credentials[[:space:]]*=[[:space:]]*"1\.6\.0"' "$CAT" 2>/dev/null || vers="$vers credentials=1.6.0"
+grep -qE '^googleid[[:space:]]*=[[:space:]]*"1\.1\.1"' "$CAT" 2>/dev/null || vers="$vers googleid=1.1.1"
+grep -qE '^firebaseBom[[:space:]]*=[[:space:]]*"35\.2\.0"' "$CAT" 2>/dev/null || vers="$vers firebaseBom=35.2.0"
+grep -qE '^testRunner[[:space:]]*=[[:space:]]*"1\.7\.0"' "$CAT" 2>/dev/null || vers="$vers testRunner=1.7.0"
+grep -qE '^espresso[[:space:]]*=[[:space:]]*"3\.7\.0"' "$CAT" 2>/dev/null || vers="$vers espresso=3.7.0"
+[ -z "$vers" ] \
+  && si "Texto: el catálogo dice credentials 1.6.0, googleid 1.1.1, firebaseBom 35.2.0, testRunner 1.7.0 y espresso 3.7.0, las versiones de la serie" \
+  || no "gradle/libs.versions.toml ya no dice:$vers. La serie está probada con esas versiones"
+
+# --- Lo que no se sube (lección 03) ----------------------------------------------------------
+if grep -qxE '[[:space:]]*/?(app/)?google-services\.json[[:space:]]*' "$PROY/.gitignore" 2>/dev/null; then
+  si "Texto: $PROY/.gitignore trae la línea google-services.json"
+else
+  no "$PROY/.gitignore no existe o no trae una línea que diga  google-services.json  (lección 03, paso 2)"
+fi
+# El cero de rastreados solo vale si git sí contesta por un archivo que seguro rastrea.
+if git ls-files --error-unmatch "$PROY/gradle.properties" >/dev/null 2>&1; then
+  rastreados=$(git ls-files "$(git rev-parse --show-toplevel)" | grep -E '(^|/)google-services\.json$' || true)
+  [ -z "$rastreados" ] \
+    && si "Git: el repo no rastrea ningún archivo llamado google-services.json (git ls-files)" \
+    || no "Git sí rastrea un google-services.json: $(echo $rastreados). Sácalo con  git rm --cached <archivo>  (no borra tu copia)"
+else
+  nota "No pude preguntarle a git (¿bajaste el repo sin git?): no revisé si algún google-services.json está rastreado"
+fi
+
+# --- Tu archivo de la lección 03 -------------------------------------------------------------
+if [ ! -f "$JSON" ]; then
+  no "No existe $JSON: copia ahí el google-services.json que descargaste en la lección 03 (sigue ignorado por git)"
+  [ "$PROY" = "solucion" ] && nota "Sobre solucion/ este rojo es el esperado en un clon limpio: el archivo no se sube. Copia el tuyo a solucion/app/ y retíralo al terminar."
+fi
+if [ -z "${ANDROID_HOME:-}" ] && [ ! -f "$PROY/local.properties" ]; then
+  no "ANDROID_HOME no está definido: sin él Gradle no encuentra el SDK (lección 00, paso 2)"
+  echo; echo "Resultado: no se corrieron las pruebas."; exit 1
+fi
+
+# --- Las pruebas simuladas -------------------------------------------------------------------
+# --rerun obliga a correr las pruebas aunque nada haya cambiado: así el resultado es de ESTA corrida.
+marca=$(mktemp)
+salida=$(mktemp)
+echo "Corriendo las pruebas… (la primera vez tarda y necesita red para bajar librerías)"
+"./$PROY/gradlew" -p "$PROY" -q testDebugUnitTest --rerun >"$salida" 2>&1
+rc=$?
+
+TODOS=("$XMLG" "$XMLR" "$XMLA" "$XMLM" "$XMLRM" "$XMLAM")
+frescos=1
+for x in "${TODOS[@]}"; do
+  { [ -f "$x" ] && [ "$x" -nt "$marca" ]; } || frescos=0
+done
+if [ "$frescos" -ne 1 ]; then
+  no "Las pruebas no llegaron a correr. Esto dijo Gradle:"
+  grep -E '^e: |error:|What went wrong|SDK location|Java heap|No matching client found|google-services.json is missing|Could not (find|resolve)' "$salida" \
+    | sed -e 's|file://.*/||' -e 's| in /.*google-services.json| en tu app/google-services.json|' | head -8 | sed 's/^/     /'
+  if grep -q 'google-services.json is missing' "$salida"; then
+    nota "Con el plugin aplicado, el proyecto no compila sin app/google-services.json: es el de TU proyecto de Firebase (lección 03)"
+  fi
+  nota "Para ver todo:  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+  rm -f "$marca" "$salida"
+  echo; echo "Resultado: 0 pruebas corridas."; exit 1
+fi
+rm -f "$marca" "$salida"
+
+# El conteo se lee de los informes de resultados (XML), no del código de salida de Gradle.
+# Son seis informes, uno por clase de pruebas, y se suman.
+attr() { sed -n 's/.*<testsuite [^>]*[[:space:]]'"$1"'="\([0-9]*\)".*/\1/p' "$2" | head -1; }
+suma() { a="$1"; shift; t=0; for x in "$@"; do v=$(attr "$a" "$x"); t=$((t + ${v:-0})); done; echo "$t"; }
+total=$(suma tests "${TODOS[@]}"); fallas=$(suma failures "${TODOS[@]}")
+errores=$(suma errors "${TODOS[@]}"); saltadas=$(suma skipped "${TODOS[@]}")
+verdes=$((total - fallas - errores - saltadas))
+
+# estado <nombre de la prueba> <informe> → paso | fallo | falta
+estado() {
+  awk -v n="$1" '
+    /<testcase / { enc = (index($0, "name=\"" n "\"") > 0); if (enc) { visto = 1; if ($0 ~ /\/>[[:space:]]*$/) { print "paso"; fin = 1; exit } } next }
+    enc && /<(failure|error|skipped)/ { print "fallo"; fin = 1; exit }
+    enc && /<\/testcase>/ { print "paso"; fin = 1; exit }
+    END { if (!fin) print (visto ? "fallo" : "falta") }' "$2"
+}
+# todas <informe> <prueba>… → cuántas de esas pruebas pasaron
+todas() { x="$1"; shift; n=0; for p in "$@"; do [ "$(estado "$p" "$x")" = "paso" ] && n=$((n + 1)); done; echo "$n"; }
+revisa() { # informe · nombre · qué demostró · qué falta
+  case "$(estado "$2" "$1")" in
+    paso)  si "$3" ;;
+    fallo) no "$4" ;;
+    *)     no "La prueba $2 no corrió: revisa que el archivo de pruebas esté completo" ;;
+  esac
+}
+
+# --- Lo de la lección 04 sigue en verde -------------------------------------------------------
+t04=$(suma tests "$XMLG" "$XMLR" "$XMLA")
+m04=$(( $(suma failures "$XMLG" "$XMLR" "$XMLA") + $(suma errors "$XMLG" "$XMLR" "$XMLA") + $(suma skipped "$XMLG" "$XMLR" "$XMLA") ))
+if [ "$t04" -eq 20 ] && [ "$m04" -eq 0 ]; then
+  si "Simulado: las 20 pruebas de la lección 04 siguen en verde (10 de EntradaConGoogleTest, 8 de RecorridoTest y 2 de ArranqueTest): las pantallas y el botón de Google no cambiaron para ellas"
+else
+  no "De las 20 pruebas de la lección 04 hay $((t04 - m04)) en verde de $t04 corridas: esta lección no debía cambiar las pantallas ni el botón de Google. Corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+fi
+
+# --- 5.2 · Los dos botones conviven -----------------------------------------------------------
+bot=$(todas "$XMLRM" losDosBotonesEstanYCadaUnoLlamaASuEntrada sinEntradaDeMicrosoftLaPantallaEsLaDeLaLeccion04)
+arr=$(todas "$XMLAM" laAppArrancadaMuestraLosDosBotones)
+if [ "$bot" -eq 2 ] && [ "$arr" -eq 1 ]; then
+  si "Simulado: los dos botones conviven — están los dos, cada uno llama a su entrada, y la app abierta desde MainActivity los muestra (3 de 3)"
+else
+  no "Los dos botones: $((bot + arr)) de 3 pruebas en verde. Una de ellas toca «Entrar con Microsoft» y espera el mensaje de la colisión: sigue roja hasta que tu EntradaConMicrosoft la reconozca (pasos 4 y 5). PantallaEntrada.kt y Tienda.kt vienen dados"
+fi
+
+# --- 5.2 · Qué le pide tu entrada al navegador ------------------------------------------------
+case "$(estado pideElProveedorMicrosoft "$XMLM")" in
+  paso) si "Simulado: un toque abre el navegador una sola vez, con el proveedor microsoft.com" ;;
+  fallo)
+    fue=$(awk '/name="pideElProveedorMicrosoft"/{e=1} e && /y fue /{print; exit}' "$XMLM" | sed -n 's/.*y fue \([A-Za-z0-9.]*\).*/\1/p')
+    if [ -n "$fue" ]; then
+      no "Tu entrada pidió otro proveedor: la solicitud llevó $fue y debe llevar microsoft.com (paso 4)"
+    else
+      no "Tu entrada todavía no abre el navegador con el proveedor microsoft.com, o lo abre más de una vez (paso 4)"
+    fi ;;
+  *) no "La prueba pideElProveedorMicrosoft no corrió: revisa que EntradaConMicrosoftTest.kt esté completo" ;;
+esac
+revisa "$XMLM" elNombreLoPoneElNavegador \
+  "Simulado: el nombre es el que contesta la puerta del navegador" \
+  "El nombre con el que contesta tu entrada no es el que entregó la puerta del navegador (paso 4)"
+revisa "$XMLAM" laAppArmaSuEntradaConMicrosoftPidiendoEseProveedor \
+  "Simulado: la entrada que arma MainActivity.crearEntradaConMicrosoft, con la puerta de mentira, pide microsoft.com" \
+  "La entrada que arma MainActivity.crearEntradaConMicrosoft no abre el navegador con microsoft.com: debe regresar EntradaConMicrosoft(navegador) (paso 4)"
+revisa "$XMLRM" conMicrosoftLlegaAlInicioConElNombre \
+  "Simulado: con la puerta de mentira, tocar «Entrar con Microsoft» lleva al inicio con el nombre («Hola, Ana»)" \
+  "Con la puerta de mentira, tocar «Entrar con Microsoft» no llega al inicio con el nombre (paso 4)"
+
+# --- 5.2 · Retomar lo que quedó a medias ------------------------------------------------------
+case "$(estado retomarConPendienteContestaQuienEntro "$XMLM")" in
+  paso) si "Simulado: con una entrada a medias, retomar() regresa quién entró, sin abrir el navegador" ;;
+  fallo) no "Tu entrada no retoma: $MARCA_ROMPE (paso 4)" ;;
+  *) no "La prueba retomarConPendienteContestaQuienEntro no corrió: revisa que EntradaConMicrosoftTest.kt esté completo" ;;
+esac
+ret=$(todas "$XMLM" retomarSinPendienteContestaNullYNoAbreNada alTocarElBotonPrimeroPreguntaPorLoPendiente \
+  loPendienteQueTerminoEnColisionSeRetomaComoColision loPendienteQueTerminoEnFallaSeRetomaComoFallo)
+[ "$ret" -eq 4 ] \
+  && si "Simulado: sin nada a medias retomar() regresa null; el botón pregunta primero por lo pendiente y no vuelve a abrir el navegador; y lo pendiente que terminó en colisión o en falla se retoma con ese resultado (4 de 4)" \
+  || no "Retomar: $ret de 4 pruebas en verde. Revisa retomar(), que entrar() pregunte primero por lo pendiente, y que las fallas de lo pendiente se traduzcan igual que las del botón (pasos 4 y 5)"
+abr=$(todas "$XMLRM" alAbrirConUnaEntradaAMediasLlegaAlInicioSinTocarNada alAbrirSinNadaAMediasSeQuedaEnLaBienvenida \
+  alAbrirConUnaEntradaAMediasQueTerminoEnColisionMuestraSuMensaje)
+[ "$abr" -eq 3 ] \
+  && si "Simulado: al dibujarse la app, con una entrada a medias llega al inicio sin tocar nada; sin ella se queda en la bienvenida; y si terminó en colisión muestra su mensaje (3 de 3). Lo «a medias» lo dijo el doble: ninguna prueba cerró la app" \
+  || no "Al abrir la app: $abr de 3 pruebas en verde. Tienda.kt viene dado y llama a retomar(): revisa lo que regresa (paso 4)"
+
+# --- 5.2 · Las formas de no entrar: cada una con su resultado y su mensaje --------------------
+caso() { # nombre del caso · pasaron de tu entrada · de cuántas · pasó la de la pantalla (0 o 1) · qué atrapar
+  if [ "$2" -eq "$3" ] && [ "$4" -eq 1 ]; then
+    si "Simulado: $1 — tu entrada contesta su propio resultado y la pantalla muestra su mensaje, sin pasar al inicio ($(($2 + $4)) de $(($3 + 1)))"
+  elif [ "$2" -eq "$3" ]; then
+    no "$1: tu entrada contesta bien su resultado ($2 de $3), pero la pantalla no muestra su mensaje. Tienda.kt viene dado y no se cambia"
+  else
+    no "$1: $(($2 + $4)) de $(($3 + 1)) pruebas en verde. Falta reconocer $5 y contestar su resultado (paso 5)"
+  fi
+}
+caso "cancelación (FirebaseAuthWebException con ERROR_WEB_CONTEXT_CANCELED)" \
+  "$(todas "$XMLM" laCancelacionContestaCancelada)" 1 "$(todas "$XMLRM" laCancelacionMuestraSuMensajeYNoPasa)" \
+  "FirebaseAuthWebException con el código ERROR_WEB_CONTEXT_CANCELED"
+caso "colisión de cuenta (FirebaseAuthUserCollisionException)" \
+  "$(todas "$XMLM" laColisionContestaCuentaConOtroProveedor)" 1 "$(todas "$XMLRM" laColisionMuestraSuMensajeYNoPasa)" \
+  "FirebaseAuthUserCollisionException"
+caso "error (otra falla web que no es cancelación, u otra excepción)" \
+  "$(todas "$XMLM" otraFallaDelNavegadorContestaFalloYNoCancelada cualquierOtraFallaContestaFallo)" 2 \
+  "$(todas "$XMLRM" elErrorMuestraSuMensajeYNoPasa)" "cualquier otra excepción (también una falla web que no sea cancelación)"
+revisa "$XMLRM" elMensajeDeLaColisionEsElDeLaLeccionYDistintoDeLosOtrosTres \
+  "Simulado: el mensaje de la colisión es el de la lección y es distinto de los otros tres" \
+  "El mensaje de la colisión ya no es el de la lección o es igual a otro: Tienda.kt viene dado y no se cambia"
+
+[ "$total" -eq 43 ] || no "Esperaba 43 pruebas (20 de la lección 04; 11 de EntradaConMicrosoftTest, 10 de RecorridoConMicrosoftTest y 2 de ArranqueConMicrosoftTest) y los informes traen $total"
+[ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+
+# --- «Rompe uno a propósito» · presencia mínima de la evidencia escrita ----------------------
+if [ "$PROY" = "inicio" ]; then
+  if [ -f "$RESP" ] && grep -qF "$MARCA_ROMPE" "$RESP"; then
+    si "Escrito: respuestas/05.md trae pegado el rojo del «Rompe uno a propósito» (solo busco esa línea: no sé si lo rompiste ni califico tu explicación)"
+  else
+    no "respuestas/05.md no trae pegado el rojo del «Rompe uno a propósito» (paso 6): la línea que contiene «$MARCA_ROMPE»"
+  fi
+else
+  nota "El rojo pegado en respuestas/05.md solo se busca sobre inicio/"
+fi
+
+# --- Nivel instrumentado (solo si lo pides) ------------------------------------------------
+# Corre dentro de Android. El conteo se lee del informe (XML) que deja Gradle, no de su código de salida.
+linea_inst=""
+if [ "$NIVEL" = "instrumentado" ]; then
+  echo "Nivel instrumentado: pruebas dentro de Android, con las puertas de mentira"
+  ADB="${ANDROID_HOME:+$ANDROID_HOME/platform-tools/adb}"
+  [ -n "$ADB" ] && [ -x "$ADB" ] || ADB="$(command -v adb || true)"
+  listos=0
+  [ -n "$ADB" ] && listos=$("$ADB" devices 2>/dev/null | awk 'NR > 1 && $2 == "device"' | wc -l | tr -d ' ')
+  if [ "$listos" -lt 1 ]; then
+    no "Instrumentado: no hay ningún emulador abierto ni teléfono conectado (adb devices no lista ninguno en estado «device»): no se corrió"
+    linea_inst="Instrumentado: 0 pruebas corridas (sin dispositivo)."
+  else
+    DIRI="$PROY/app/build/outputs/androidTest-results/connected/debug"
+    marca=$(mktemp); salida=$(mktemp)
+    echo "Corriendo las pruebas instrumentadas… (instala la app y su app de pruebas en el dispositivo)"
+    "./$PROY/gradlew" -p "$PROY" -q connectedDebugAndroidTest >"$salida" 2>&1
+    rci=$?
+    # El informe se llama como el dispositivo (trae espacios): se toma el más nuevo que sea de ESTA corrida.
+    xmli=""
+    for x in "$DIRI"/TEST-*.xml; do
+      [ -f "$x" ] && [ "$x" -nt "$marca" ] && xmli="$x"
+    done
+    if [ -z "$xmli" ]; then
+      no "Instrumentado: las pruebas no llegaron a correr. Esto dijo Gradle:"
+      grep -E '^e: |error:|What went wrong|No connected devices|INSTALL_FAILED|Could not (find|resolve)' "$salida" | head -6 | sed 's/^/     /'
+      nota "Para ver todo:  ./$PROY/gradlew -p $PROY connectedDebugAndroidTest"
+      linea_inst="Instrumentado: 0 pruebas corridas."
+    else
+      # Este informe trae un bloque <testsuite> por clase de pruebas (aquí, dos): se suman todos.
+      # Leer solo el primero daría 4 donde corrieron 9 (medido el 18-nov-2026).
+      attr_i() { sed -n 's/.*<testsuite [^>]*[[:space:]]'"$1"'="\([0-9]*\)".*/\1/p' "$2" | awk '{ t += $1 } END { print t + 0 }'; }
+      it=$(attr_i tests "$xmli"); ifa=$(attr_i failures "$xmli"); ie=$(attr_i errors "$xmli"); isk=$(attr_i skipped "$xmli")
+      revisa "$xmli" enAndroidConMicrosoftLlegaAlInicioConElNombre \
+        "Instrumentado: dentro de Android, con la puerta de mentira, tocar «Entrar con Microsoft» lleva al inicio con el nombre, y la solicitud llevó microsoft.com" \
+        "Dentro de Android, con la puerta de mentira, tocar «Entrar con Microsoft» no llega al inicio con el nombre (paso 4)"
+      casos_i=$(todas "$xmli" enAndroidConMicrosoftLaCancelacionMuestraSuMensajeYNoPasa enAndroidConMicrosoftElErrorMuestraSuMensajeYNoPasa enAndroidConMicrosoftLaColisionMuestraSuMensajeYNoPasa)
+      [ "$casos_i" -eq 3 ] \
+        && si "Instrumentado: dentro de Android, cancelación, error y colisión muestran cada uno su mensaje sin pasar al inicio (3 de 3)" \
+        || no "Dentro de Android, de cancelación, error y colisión solo $casos_i muestran su mensaje sin pasar al inicio (paso 5)"
+      revisa "$xmli" enAndroidAlAbrirConUnaEntradaAMediasLlegaAlInicioSinTocarNada \
+        "Instrumentado: dentro de Android, con una entrada a medias que contesta el doble, la app llega al inicio sin tocar nada (Android no cerró ninguna app)" \
+        "Dentro de Android, con una entrada a medias que contesta el doble, la app no llega al inicio (paso 4)"
+      # El botón de Google se cuenta por su clase de pruebas, no por nombre.
+      g_tot=$(grep -c 'classname="'"$PAQ"'.BotonEnAndroidTest"' "$xmli")
+      g_mal=$(awk '/<testcase /{e = (index($0, "BotonEnAndroidTest\"") > 0)} e && /<(failure|error|skipped)/{n++; e = 0} END{print n + 0}' "$xmli")
+      if [ "$g_tot" -eq 4 ] && [ "$g_mal" -eq 0 ]; then
+        si "Instrumentado: dentro de Android, las 4 pruebas del botón de Google de la lección 04 siguen en verde"
+      else
+        no "Dentro de Android, de las 4 pruebas del botón de Google de la lección 04 hay $((g_tot - g_mal)) en verde de $g_tot corridas"
+      fi
+      [ "$it" -eq 9 ] || no "Esperaba 9 pruebas instrumentadas (5 de MicrosoftEnAndroidTest y 4 de BotonEnAndroidTest) y el informe trae $it"
+      [ "$rci" -eq 0 ] || [ $((ifa + ie)) -gt 0 ] || no "Gradle terminó con error sin pruebas instrumentadas en rojo: corre  ./$PROY/gradlew -p $PROY connectedDebugAndroidTest"
+      linea_inst="Instrumentado: $((it - ifa - ie - isk)) de $it pruebas en verde ($ifa en rojo, $ie con error, $isk saltadas), leído de $xmli"
+    fi
+    rm -f "$marca" "$salida"
+  fi
+fi
+
+echo
+echo "Resultado: $verdes de $total pruebas en verde ($fallas en rojo, $errores con error, $saltadas saltadas), leído de"
+for x in "${TODOS[@]}"; do echo "  $x"; done
+if [ -n "$linea_inst" ]; then
+  echo "$linea_inst"
+  nota "Nivel instrumentado: demuestra que las pantallas, el toque y tu EntradaConMicrosoft funcionan dentro de Android."
+  nota "  La puerta también era de mentira ahí: no se abrió el navegador ni se habló con Microsoft o con Firebase."
+else
+  nota "El nivel instrumentado no se corrió. Con un emulador abierto:  ./verifica $PROY instrumentado"
+fi
+nota "Nivel simulado: demuestra qué le pide tu EntradaConMicrosoft a la puerta del navegador (el proveedor), que"
+nota "  pregunta por lo pendiente antes de abrirlo, y qué resultado y qué mensaje da cada caso."
+nota "La puerta era de mentira. No se abrió ningún navegador, no se le pidió nada a Microsoft y Firebase no creó"
+nota "  ningún usuario. De la puerta de verdad solo corrió la pregunta por lo pendiente, que aquí contesta «nada»."
+nota "«Retomar» fue el doble diciendo que quedó algo a medias: ninguna prueba cerró la app con el navegador abierto."
+nota "No demuestra que tu app esté registrada en Entra, que la dirección de retorno sea la exacta, que la clave"
+nota "  que guardaste en Firebase sea la vigente ni que puedas entrar. Eso lo demuestra el nivel real (paso 9)."
+nota "Las marcas «Clave:» leen archivos de $PROY/ y respuestas/05.md con una forma y un nombre: no ven tu terminal,"
+nota "  tus capturas ni el historial de git, y una clave con otra forma se les pasa."
+nota "Las marcas «Texto:» son presencia textual: buscan palabras en tus archivos y no validan que el código haga lo que dicen."
+nota "No califica tu tabla del registro (5.1) ni tu tabla de comparación (5.3): compáralas con «Compara tus respuestas»."
+exit $ok
