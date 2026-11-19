@@ -48,12 +48,10 @@ qui prépare votre environnement.
 | 00 | [Environnement prêt](00-ambiente-listo.md) |
 | 01 | [Mon premier écran tourne](01-mi-primera-pantalla.md) |
 | 02 | [Des écrans qui changent](02-pantallas-que-cambian.md) |
-| 02-B | Catalogue des composants de la boutique (pratique) |
+| 02-B | [Catalogue des composants de la boutique (pratique)](02b-catalogo-de-componentes.md) |
 | 03 | [L'application rencontre Firebase](03-la-app-conoce-a-firebase.md) |
 | 04 | [Se connecter avec Google](04-entrar-con-google.md) |
 | 05 | [Se connecter avec Microsoft](05-entrar-con-microsoft.md) |
 | 06 | [Deux boutons, un seul compte](06-dos-botones-una-cuenta.md) |
-| 07 | La session reste ouverte |
-| 08 | La première fois |
-
-Les leçons sans lien sont en préparation et sont publiées dans l'ordre.
+| 07 | [La session reste ouverte](07-la-sesion-se-queda.md) |
+| 08 | [La première fois](08-la-primera-vez.md) |

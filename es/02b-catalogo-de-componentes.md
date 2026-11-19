@@ -529,7 +529,7 @@ variante y vive en el teléfono.
 **Paso 6.** Se ponen en rojo las que pintan `VerdeTienda`. En la paleta clara, `VerdeTienda` es el color primario: lo
 usan el botón habilitado, el de texto largo y el precio de las dos tarjetas claras. La etiqueta «Entregada» lo usa
 directo con `colorDe`, sin pasar por el tema: por eso también cambia en oscuro. No cambian el botón deshabilitado, que
-usa un gris del tema; el botón y la tarjeta en oscuro, cuyo primario es `VerdeClaro`; ni «Recibida» y «Enviada», que
+usa un gris del tema; el botón y la tarjeta en oscuro, cuyo primario es `VerdeClaro`; y «Recibida» y «Enviada», que
 tienen su propio color.
 
 **Para cerrar:**

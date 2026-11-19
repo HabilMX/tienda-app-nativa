@@ -339,6 +339,7 @@ l'ajusterons avec le temps que prendra la première cohorte.
 | ❌ « Retomar el enlace » (reprendre la liaison) | `retomar()` n'utilise pas ce que renvoie `enlazador.pendiente()`, ou répond toujours la même chose | Étape 3 |
 | Vous êtes entré avec Microsoft avec une adresse e-mail déjà entrée avec Google, et le message de la collision n'est pas sorti | Votre projet permet plusieurs comptes par adresse e-mail : Firebase a créé un autre utilisateur | Étape 1. Ne liez pas deux utilisateurs créés séparément comme si c'était le cas de la leçon |
 | « Primero entra con el botón que ya usabas… » (D'abord, connectez-vous avec le bouton que vous utilisiez déjà…) | On a demandé de lier sans que personne soit entré | Connectez-vous d'abord ; la liaison se fait sur un utilisateur qui est déjà entré |
+| ❌ « EnlaceConMicrosoft.kt nombra una puerta concreta » (`EnlaceConMicrosoft.kt` nomme une porte concrète) | Votre code nomme la vraie porte (`EnlazadorConFirebase`) ou une doublure des tests. Les tests ne lui passent que des doublures : si votre code demande laquelle lui est échue, le vert ne dit pas ce qu'il fait avec la vraie | Que votre code ne parle qu'à `EnlazadorDeProveedor`. La vraie porte, c'est `MainActivity.kt` qui la choisit, et il est fourni (étape 3) |
 
 Sur Linux Mint 22.3 (x86_64), le `verifica` de cette leçon a donné le même résultat que sur le Mac (18 nov. 2026), au
 niveau simulé et avec un fichier de test qui contenait l'empreinte de cet ordinateur : sur `inicio/`, 46 sur 66 au vert ;

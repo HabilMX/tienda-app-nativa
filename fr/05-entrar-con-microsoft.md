@@ -679,6 +679,7 @@ l'abonnement d'essai a mis environ 15 minutes à apparaître comme actif.
 | « Nuevo registro » (Nouvel enregistrement) ouvre un panneau sans formulaire | Votre compte n'a pas de répertoire (mesuré le 13 nov. 2026 avec un compte tout juste créé) | « Avant de commencer » : il vous faut d'abord un répertoire |
 | « Ese correo ya entró a la tienda con otro botón… » (cette adresse e-mail est déjà entrée dans la boutique avec un autre bouton…) | Cette adresse e-mail a déjà un utilisateur dans votre projet, créé avec un autre fournisseur ; dans cette série, Google | Connectez-vous avec Google. Que les deux boutons mènent au même utilisateur, c'est la leçon 06 |
 | L'écran de la clé d'accès reste sur « Verifying… » | Mesuré le 13 nov. 2026 dans l'émulateur | *Cancel* et connectez-vous avec le mot de passe |
+| ❌ « EntradaConMicrosoft.kt nombra una puerta concreta » (`EntradaConMicrosoft.kt` nomme une porte concrète) | Votre code nomme la vraie porte (`NavegadorConFirebase`) ou une doublure des tests. Les tests ne lui passent que des doublures : si votre code demande laquelle lui est échue, le vert ne dit pas ce qu'il fait avec la vraie | Que votre code ne parle qu'à `NavegadorDeProveedor`. La vraie porte, c'est `MainActivity.kt` qui la choisit, et il est fourni (étape 4) |
 
 Sur Linux Mint 22.3 (x86_64), le `verifica` de cette leçon a donné le même résultat que sur le Mac (18 nov. 2026), au
 niveau simulé et avec un fichier de test qui contenait l'empreinte de cet ordinateur : sur `inicio/`, 23 sur 44 au vert ;
