@@ -62,8 +62,10 @@ else
   nota "No hay dispositivo tienda37: está bien si usas tu teléfono"
 fi
 if [ -n "$dev" ]; then
-  # Solo se cuenta cuántas cuentas de Google hay; el correo nunca se imprime
-  n=$(adb shell dumpsys account 2>/dev/null | grep -c 'type=com.google}' || true)
+  # Solo se cuenta cuántas cuentas de Google hay; el correo nunca se imprime.
+  # Cuenta solo las líneas «Account {name=…, type=com.google}»: el autenticador registrado
+  # («AuthenticatorDescription {type=com.google}») aparece aunque no haya ninguna cuenta.
+  n=$(adb shell dumpsys account 2>/dev/null | grep -cE 'Account \{name=[^}]*, type=com\.google\}' || true)
   [ "${n:-0}" -ge 1 ] && si "Hay una cuenta de Google en el dispositivo" || no "No hay cuenta de Google: Ajustes › Google (paso 4)"
 fi
 

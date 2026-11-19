@@ -9,7 +9,7 @@ de escritorio. No hace falta saber Kotlin, Android ni OAuth: se aprenden aquí.
 entras con tu cuenta de Google o de Microsoft; la app te da la bienvenida la primera vez y te recuerda al volver. Y
 explicar qué hizo Firebase por ti y qué hiciste tú.
 
-**Lo que necesitas antes de empezar:** Ubuntu 26.04 en un procesador x86_64, o una Mac, con 16 GB de RAM para el
+**Lo que necesitas antes de empezar:** Linux en un procesador x86_64 (probado en Linux Mint 22.3), o una Mac, con 16 GB de RAM para el
 emulador (con menos, usas tu teléfono Android). Windows no está cubierto. La parte de iOS es solo en Mac.
 
 ## El proyecto

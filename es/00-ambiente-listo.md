@@ -44,9 +44,9 @@ de que te pasen, junto con los comandos que te dicen, en cada paso, si vas bien.
 
 | | Sirve | No sirve |
 |---|---|---|
-| Sistema | Ubuntu 26.04 en un procesador **x86_64**, o una Mac | Windows (la serie no lo cubre) · Linux en procesador ARM: Android Studio no tiene soporte oficial ahí |
+| Sistema | Linux en un procesador **x86_64** (la serie se probó en Linux Mint 22.3), o una Mac | Windows (la serie no lo cubre) · Linux en procesador ARM: Android Studio no tiene soporte oficial ahí |
 | Memoria | 16 GB de RAM para Android Studio con el emulador | Con 8 GB, usa tu teléfono en lugar del emulador (paso 3) |
-| Disco | 20 GB libres. En Mac ocupó unos 12 GB: Android Studio 3.3, SDK 4.5, dispositivo virtual 3.1 y Gradle 1.1 (medido el 13-nov-2026). Ubuntu [pendiente: medir en Ubuntu] | Menos: el dispositivo virtual crece al usarlo |
+| Disco | 20 GB libres. En Mac ocupó unos 12 GB: Android Studio 3.3, SDK 4.5, dispositivo virtual 3.1 y Gradle 1.1 (medido el 13-nov-2026). En Linux Mint 22.3 ocupó unos 10 GB: Android Studio 1.6, SDK 3.9 (con la imagen del emulador adentro), dispositivo virtual 1.9 y Gradle 2.4 (medido el 18-nov-2026) | Menos: el dispositivo virtual crece al usarlo |
 | Red | Para las descargas de esta lección y de la primera compilación | |
 | Saber | Abrir una terminal y usar git | No se supone Kotlin ni Android |
 
@@ -79,7 +79,7 @@ romper la conexión con Firebase. Lo vas a buscar en el paso 5.
 **Predice primero.** Antes de correr lo de abajo, escribe en una línea: ¿crees que tu procesador tiene la
 virtualización encendida? ¿Cómo lo sabrías?
 
-**En Ubuntu** [pendiente: medir en Ubuntu]:
+**En Linux** (así salió en Linux Mint 22.3 el 18-nov: `x86_64`, `VT-x`, `/dev/kvm` del grupo `kvm` y tu usuario en `kvm`):
 
 ```bash
 uname -m                                  # debe decir x86_64
@@ -125,16 +125,18 @@ normal. Vuelve a correrlo al final de la lección.
 
 - **Mac:** abre el `.dmg` y arrastra Android Studio a Aplicaciones. Si usas Homebrew, `brew install --cask
   android-studio` hace lo mismo (así se instaló en la prueba del 13-nov).
-- **Ubuntu** [pendiente: medir en Ubuntu]: descomprime el `.tar.gz` y corre `bin/studio.sh`.
+- **Linux:** descomprime el `.tar.gz` y corre `bin/studio.sh` desde tu sesión gráfica. En la prueba (Linux Mint 22.3)
+  el archivo descargado coincidió con el sha256 publicado en developer.android.com/studio.
 
-Al abrirlo la primera vez, el asistente ofrece descargar el SDK. Acepta las licencias y deja la carpeta que propone:
+Al abrirlo la primera vez, el asistente ofrece descargar el SDK. Acepta las licencias, deja la carpeta que propone y
+**anótala**: la vas a usar en la terminal. Estas son las que usamos en la prueba:
 
 | Sistema | Carpeta del SDK |
 |---|---|
 | Mac | `~/Library/Android/sdk` |
-| Ubuntu | `~/Android/Sdk` [pendiente: medir en Ubuntu] |
+| Linux | `~/Android/Sdk` (en Linux Mint 22.3 el SDK se instaló por terminal en esa carpeta; si el asistente te propone otra, usa la tuya) |
 
-**Ahora la terminal.** Agrega estas líneas al final de tu `~/.zshrc` (Mac) o `~/.bashrc` (Ubuntu), cambiando la
+**Ahora la terminal.** Agrega estas líneas al final de tu `~/.zshrc` (Mac) o `~/.bashrc` (Linux), cambiando la
 carpeta por la tuya, y abre una terminal nueva:
 
 ```bash
@@ -178,11 +180,11 @@ Google Play services. La serie fija `google_apis_playstore`, que además trae Pl
 ```bash
 # Mac con Apple silicon:
 sdkmanager "system-images;android-37.0;google_apis_playstore;arm64-v8a"
-# Ubuntu x86_64 [pendiente: medir en Ubuntu]:
+# Linux x86_64 (medido en Linux Mint 22.3):
 sdkmanager "system-images;android-37.0;google_apis_playstore;x86_64"
 ```
 
-**Crea el dispositivo** (cambia `arm64-v8a` por `x86_64` en Ubuntu):
+**Crea el dispositivo** (cambia `arm64-v8a` por `x86_64` en Linux):
 
 ```bash
 echo no | avdmanager create avd -n tienda37 \
@@ -196,7 +198,10 @@ emulator -accel-check
 ```
 
 En la Mac de la prueba respondió `0`, `Hypervisor.Framework OS X Version 27.0` y `accel`. El `0` del principio es
-«todo bien». En Ubuntu debe hablar de KVM [pendiente: medir en Ubuntu].
+«todo bien». En Linux Mint 22.3 respondió `KVM (version 12) is installed and usable.`, con código de salida `0`.
+
+En Linux, `avdmanager` puede imprimir `Error: Could not load devices from …/devices.xml` y aun así crear el
+dispositivo: en la prueba quedó con `hw.device.name=pixel_9`. Compruébalo con `avdmanager list avd`.
 
 **Arráncalo:**
 
@@ -243,7 +248,7 @@ su archivo `config.ini`. Se arregla con el emulador **cerrado**:
 grep '^hw.keyboard=' RUTA/config.ini      # debe decir hw.keyboard=yes; si no aparece, no arranques todavía
 ```
 
-Atajo para la ruta de siempre (Mac y Ubuntu):
+Atajo para la ruta de siempre (Mac y Linux):
 
 ```bash
 sed -i.bak 's/^hw.keyboard=no$/hw.keyboard=yes/' ~/.android/avd/tienda37.avd/config.ini
@@ -323,7 +328,8 @@ Los ejercicios 0.3 y 0.4 se hacen **sin IA**: son comandos y pantallas que tiene
 | 0.4 | Enciendes el teclado y agregas tu cuenta | Escribes con tu teclado en el emulador y tu cuenta aparece en Ajustes › Google |
 | 0.5 | Corres el proyecto y compruebas una afirmación de Claude Code | Abriste la app y ves «La tienda corre en tu ambiente», y tienes: la afirmación, el archivo y la línea donde la comprobaste, y si era cierta |
 
-**Tiempo:** la primera vez, contando descargas, calcula una tarde. [pendiente: medir el tiempo total en Ubuntu]
+**Tiempo:** la primera vez, contando descargas, calcula una tarde. En Linux Mint 22.3, las descargas del SDK, el emulador (arrancó en 109 segundos) y la primera
+compilación (3 min 51 s) tomaron 10 minutos de reloj con buena red; súmale el asistente de Android Studio y tus pausas.
 
 ---
 
@@ -333,14 +339,14 @@ Los ejercicios 0.3 y 0.4 se hacen **sin IA**: son comandos y pantallas que tiene
 |---|---|---|
 | `sdkmanager: command not found` | Faltan las Command-line Tools o el `PATH` | Instálalas (paso 2) y abre una terminal nueva |
 | `sdkmanager` no encuentra `platforms;android-37` | El nombre está incompleto | Es `platforms;android-37.0` |
-| `-accel-check` no dice «accel» (Ubuntu) | Virtualización apagada, estás dentro de otra máquina virtual, KVM sin instalar o tu usuario fuera de `kvm` | Paso 1: BIOS/UEFI, fuera de la VM, o el grupo `kvm` (con permiso), y vuelve a entrar a la sesión |
+| `-accel-check` no dice «accel» (Linux) | Virtualización apagada, estás dentro de otra máquina virtual, KVM sin instalar o tu usuario fuera de `kvm` | Paso 1: BIOS/UEFI, fuera de la VM, o el grupo `kvm` (con permiso), y vuelve a entrar a la sesión |
 | El emulador tarda minutos y se arrastra | Sin aceleración | Igual que la fila anterior, o usa tu teléfono |
 | Tu teclado no escribe en el emulador | `hw.keyboard=no` | Paso 4, con el emulador cerrado |
 | El QR de la llave de acceso no termina | El emulador no tiene Bluetooth hacia tu teléfono | «Try another way» |
 | `avdmanager` no reconoce `pixel_9` | Ese perfil no está en tu versión | Corre `avdmanager list device -c` y usa un nombre de la lista |
 | `adb devices` no muestra tu teléfono | Depuración USB apagada o aviso sin aceptar | Revisa el aviso en la pantalla del teléfono |
 | `adb devices` dice `unauthorized` | No aceptaste la llave de la computadora | Desbloquea el teléfono, acepta el aviso y repite |
-| Ubuntu no detecta el teléfono por USB [pendiente: medir en Ubuntu] | Permisos del sistema (`plugdev`, reglas udev) | En Android Studio, Tools › Troubleshoot Device Connections; si pide permisos, hazlo con quien administra el equipo |
+| Linux no detecta el teléfono por USB | Permisos del sistema (`plugdev`, reglas udev) | En Android Studio, Tools › Troubleshoot Device Connections; si pide permisos, hazlo con quien administra el equipo |
 | `installDebug` terminó bien pero no ves la app | `installDebug` instala, no abre | Ábrela desde el cajón de apps (paso 5) |
 | «Java heap space» al compilar | Memoria de Gradle | Revisa que `gradle.properties` traiga `-Xmx4g` |
 
@@ -388,4 +394,5 @@ Abiertas el 13-nov-2026.
 - Android Developers. *Build your app from the command line* (`installDebug` compila e instala). https://developer.android.com/build/building-cmdline
 - Android Developers. *Android Gradle plugin release notes* (AGP 9.4 pide Gradle 9.6.0) y *Java versions in Android builds* (toolchain). https://developer.android.com/build/releases/about-agp · https://developer.android.com/build/jdks
 - Android Developers. *Authenticate across form factors* (el emulador no sirve para el flujo de llave de acceso entre dispositivos). https://developer.android.com/identity/form-factors
-- Medición propia: ensayo en Mac con Apple silicon y en Linux Mint x86_64, 13-nov-2026.
+- Medición propia: ensayo en Mac con Apple silicon y en Linux Mint x86_64, 13-nov-2026; ambiente completo en Linux
+  Mint 22.3 x86_64 (KVM, SDK, emulador, primera compilación e instalación), 18-nov-2026.
