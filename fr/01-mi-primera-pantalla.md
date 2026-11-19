@@ -2,54 +2,54 @@
 
 **Avant de lire, sept mots.** Une ligne chacun ; les autres mots de la série arrivent dans la leçon où ils servent.
 
-- **Kotlin :** le langage dans lequel vous écrivez l'application. Ses fichiers se terminent par `.kt`.
+- **Kotlin :** le langage dans lequel tu écris l'application. Ses fichiers se terminent par `.kt`.
 - **Compose** (Jetpack Compose) : la bibliothèque d'Android pour construire des écrans en écrivant des fonctions Kotlin.
 - **Fonction composable :** une fonction marquée `@Composable` qui décrit une partie de l'écran.
-- **Maquette :** le dessin de ce à quoi l'écran doit ressembler. C'est avec elle que vous comparez.
+- **Maquette :** le dessin de ce à quoi l'écran doit ressembler. C'est avec elle que tu compares.
 - **Modificateur :** ce qui dit à un élément combien de place il occupe et quelle marge il laisse.
 - **État :** une donnée que l'écran retient et qui peut changer, comme « le bouton a déjà été touché ».
-- **Test simulé :** un test qui dessine votre écran dans la mémoire de votre ordinateur, sans émulateur, et y cherche ce
+- **Test simulé :** un test qui dessine ton écran dans la mémoire de ton ordinateur, sans émulateur, et y cherche ce
   qui devrait s'y trouver.
 
-**Ce que vous en retirez :** l'écran d'accueil de la boutique —nom, slogan et bouton— écrit par vous, et savoir lire un
+**Ce que tu en retires :** l'écran d'accueil de la boutique —nom, slogan et bouton— écrit par toi, et savoir lire un
 écran Compose ligne par ligne et dire ce que chacune change à l'écran.
 
 **Idée nouvelle de cette leçon (la seule qui est évaluée) :** en Compose, un écran est une fonction qui décrit ce qui
-s'affiche. Il n'y a pas de fichier de mise en page à part : vous lisez la fonction et vous savez ce qui va apparaître.
+s'affiche. Il n'y a pas de fichier de mise en page à part : tu lis la fonction et tu sais ce qui va apparaître.
 
 **Une note sur les textes de l'application.** Le projet du cours livre ses textes d'écran en espagnol, et les fichiers
 de `lecciones/` ne sont pas traduits : les vérifications automatiques du cours (les `verifica`) cherchent ces textes
 exacts. Donc, dans les blocs de code, les sorties de terminal et les maquettes d'écran, les textes restent tels que le
 projet les contient, et dans la prose la leçon les cite en français avec l'original entre parenthèses la première
-fois : le nom « La boutique » (dans le projet, « La tienda »), le slogan « Vos commandes, dans votre poche » (« Tus
+fois : le nom « La boutique » (dans le projet, « La tienda »), le slogan « Tes commandes, dans ta poche » (« Tus
 órdenes, en tu bolsillo »), le bouton « Entrer » (« Entrar ») et le salut « Bonjour ! » (« ¡Hola! »).
 
 ---
 
 ## La scène
 
-Vous demandez à Claude Code l'écran d'accueil. En peu de temps, vous avez un court fichier Kotlin. Il compile. Les tests
-passent au vert. Vous l'installez, vous touchez « Entrer » et le salut apparaît. Vous fermez l'ordinateur.
+Tu demandes à Claude Code l'écran d'accueil. En peu de temps, tu as un court fichier Kotlin. Il compile. Les tests
+passent au vert. Tu l'installes, tu touches « Entrer » et le salut apparaît. Tu fermes l'ordinateur.
 
-Le lendemain, quelqu'un ouvre l'application à côté de la maquette et vous demande : « pourquoi le salut s'affiche
-au-dessus du bouton, alors qu'ici il va en dessous ? » Vous ouvrez le fichier. Vous voyez `remember`, `mutableStateOf`,
-`Modifier`, un `if` au milieu de l'écran. Vous ne savez pas laquelle de ces lignes déplace le salut.
+Le lendemain, quelqu'un ouvre l'application à côté de la maquette et te demande : « pourquoi le salut s'affiche
+au-dessus du bouton, alors qu'ici il va en dessous ? » Tu ouvres le fichier. Tu vois `remember`, `mutableStateOf`,
+`Modifier`, un `if` au milieu de l'écran. Tu ne sais pas laquelle de ces lignes déplace le salut.
 
 Ce code existe : c'est le listing de l'exercice 1.3, et ses tests passent 4 sur 4 au vert avec le salut au mauvais
 endroit (mesuré le 18 novembre 2026). Le vert dit que le salut apparaît. Il ne dit pas où.
 
-C'est pourquoi la leçon suit cet ordre : vous lisez un écran, vous en écrivez un à la main, vous demandez un changement
-à Claude Code et, à la fin, vous expliquez —sans aide— ce que fait chaque bloc de ce qu'il a généré.
+C'est pourquoi la leçon suit cet ordre : tu lis un écran, tu en écris un à la main, tu demandes un changement
+à Claude Code et, à la fin, tu expliques —sans aide— ce que fait chaque bloc de ce qu'il a généré.
 
 ---
 
 ## Avant de commencer
 
-**Ce dont vous avez besoin :**
+**Ce dont tu as besoin :**
 
 | | Convient | Ne convient pas |
 |---|---|---|
-| Leçon précédente | La [00](00-ambiente-listo.md) terminée : `ANDROID_HOME` défini et un émulateur ou votre téléphone | La sauter : sans le SDK, le projet ne compile pas |
+| Leçon précédente | La [00](00-ambiente-listo.md) terminée : `ANDROID_HOME` défini et un émulateur ou ton téléphone | La sauter : sans le SDK, le projet ne compile pas |
 | Savoir | Programmer dans un langage et avoir réalisé une interface | Kotlin et Compose ne sont pas supposés connus |
 
 **Le projet de départ.** Depuis la racine du dépôt de la série :
@@ -59,16 +59,16 @@ git pull
 cd lecciones/01-mi-primera-pantalla/inicio
 ```
 
-C'est là que vous travaillez. À côté se trouve `solucion/`, avec l'écran résolu : il sert à comparer à la fin, pas à
+C'est là que tu travailles. À côté se trouve `solucion/`, avec l'écran résolu : il sert à comparer à la fin, pas à
 copier.
 
-**Ce que le projet apporte déjà (échafaudage).** Vous ne l'écrivez pas et il n'est pas évalué ici, mais il est utile de
+**Ce que le projet apporte déjà (échafaudage).** Tu ne l'écris pas et il n'est pas évalué ici, mais il est utile de
 savoir pourquoi il est là :
 
 | Ce qu'il apporte | Où | Pourquoi |
 |---|---|---|
 | `org.gradle.jvmargs=-Xmx4g` | `gradle.properties` | Donne 4 Go de mémoire à Gradle, l'outil qui compile. Sans elle, compiler avec Firebase (leçon 03) échouait avec « Java heap space » (mesuré le 13 nov. 2026) |
-| `gradlew` déjà généré | racine du projet | Le script qui télécharge et lance la version exacte de Gradle. Le générer avec `gradle wrapper` **à l'intérieur** d'un projet avec AGP 9.4 a échoué (mesuré le 13 nov.). Ne le régénérez pas |
+| `gradlew` déjà généré | racine du projet | Le script qui télécharge et lance la version exacte de Gradle. Le générer avec `gradle wrapper` **à l'intérieur** d'un projet avec AGP 9.4 a échoué (mesuré le 13 nov.). Ne le régénère pas |
 | `sdk=36` | `app/src/test/resources/robolectric.properties` | Les tests simulés utilisent une copie d'Android 36. Sans ce réglage, ils prenaient Android 37 et aucun ne tournait (mesuré le 13 nov.) |
 | `jvmToolchain(25)` | `app/build.gradle.kts` | Lors de l'essai du 13 nov., Robolectric, en chargeant son Android 36, n'a pas démarré avec Java 17 et a demandé Java 21 ou plus. C'est pourquoi le projet fixe 25 |
 
@@ -91,9 +91,9 @@ paraître de la même taille sur les écrans plus denses.
 
 ---
 
-## Étape 1 · Lisez un écran avant de le lancer
+## Étape 1 · Lis un écran avant de le lancer
 
-Ouvrez `app/src/main/java/mx/habil/ejemplo/tienda/Bienvenida.kt`. Voici comment il se présente :
+Ouvre `app/src/main/java/mx/habil/ejemplo/tienda/Bienvenida.kt`. Voici comment il se présente :
 
 ```kotlin
 @Composable
@@ -108,12 +108,12 @@ fun Bienvenida() {
 }
 ```
 
-**Prédisez d'abord.** À la racine du dépôt, créez le dossier des réponses s'il n'existe pas encore (`mkdir -p
-respuestas`) et, dedans, le fichier `respuestas/01.md`. C'est là que vont vos prédictions et vos explications.
-Écrivez, avant de lancer quoi que ce soit, trois lignes : combien de textes vont s'afficher ? l'un à côté de l'autre ou
+**Prédis d'abord.** À la racine du dépôt, crée le dossier des réponses s'il n'existe pas encore (`mkdir -p
+respuestas`) et, dedans, le fichier `respuestas/01.md`. C'est là que vont tes prédictions et tes explications.
+Écris, avant de lancer quoi que ce soit, trois lignes : combien de textes vont s'afficher ? l'un à côté de l'autre ou
 l'un sous l'autre ? collés à gauche ou centrés ?
 
-Pour prédire, lisez la fonction de l'extérieur vers l'intérieur :
+Pour prédire, lis la fonction de l'extérieur vers l'intérieur :
 
 - **`@Composable`** marque la fonction comme une fonction qui décrit un écran.
 - **`fun Bienvenida()`** est une fonction Kotlin. Elle ne renvoie rien : elle décrit ce qui doit s'afficher.
@@ -124,64 +124,64 @@ Pour prédire, lisez la fonction de l'extérieur vers l'intérieur :
 - **`verticalArrangement = Arrangement.Center`** place le contenu à mi-hauteur. Pour l'horizontal, personne n'a rien
   dit, et dans une `Column` cela commence, par défaut, à `Alignment.Start` : le côté où commence le texte.
 
-**Maintenant, lancez-la.** Avec l'émulateur ouvert ou votre téléphone branché :
+**Maintenant, lance-la.** Avec l'émulateur ouvert ou ton téléphone branché :
 
 ```bash
 ./gradlew installDebug      # compile et installe ; n'ouvre pas l'application
 ```
 
-Ouvrez-la depuis le tiroir d'applications et comparez avec vos trois lignes. Si une prédiction s'est révélée fausse, ne
-l'effacez pas : écrivez en dessous quelle ligne du code vous aurait donné la réponse. Sur l'émulateur du test (Pixel 9,
-Android 37, 18 nov. 2026), deux textes se sont affichés, « Aquí va tu pantalla » (Votre écran va ici) et en dessous « Lección 01 »
+Ouvre-la depuis le tiroir d'applications et compare avec tes trois lignes. Si une prédiction s'est révélée fausse, ne
+l'efface pas : écris en dessous quelle ligne du code t'aurait donné la réponse. Sur l'émulateur du test (Pixel 9,
+Android 37, 18 nov. 2026), deux textes se sont affichés, « Aquí va tu pantalla » (Ton écran va ici) et en dessous « Lección 01 »
 (Leçon 01), à mi-hauteur et collés à gauche.
 
-**Seconde prédiction.** Et si vous retirez la `Column` et laissez les deux `Text` seuls ? Selon la documentation
-d'Android, Compose superpose un texte sur l'autre. Essayez, notez ce que vous voyez et remettez la `Column`.
+**Seconde prédiction.** Et si tu retires la `Column` et laisses les deux `Text` seuls ? Selon la documentation
+d'Android, Compose superpose un texte sur l'autre. Essaie, note ce que tu vois et remets la `Column`.
 
 **Qui appelle `Bienvenida()` ?** `MainActivity.kt`, dans le même dossier : sa ligne `setContent { Bienvenida() }` dit
-quelle fonction dessine l'écran. Vous ne la changez pas.
+quelle fonction dessine l'écran. Tu ne la changes pas.
 
-**Ce qui le prouve :** votre prédiction écrite, comparée à l'exécution (objectif 1.1).
+**Ce qui le prouve :** ta prédiction écrite, comparée à l'exécution (objectif 1.1).
 
 ---
 
-## Étape 2 · Kotlin : ce que vous connaissez déjà sous un autre nom
+## Étape 2 · Kotlin : ce que tu connais déjà sous un autre nom
 
-Il suffit de reconnaître trois choses que vous utilisez déjà dans un autre langage.
+Il suffit de reconnaître trois choses que tu utilises déjà dans un autre langage.
 
-| En Kotlin | Ce que c'est | Où vous le voyez |
+| En Kotlin | Ce que c'est | Où tu le vois |
 |---|---|---|
 | `val nombre = "La tienda"` | Une variable affectée une seule fois et qui ne change plus | `val pantalla = …` dans `BienvenidaTest.kt` |
-| `var saludando = false` | Une variable qui, elle, peut changer | Vous l'écrivez à l'étape 4 |
+| `var saludando = false` | Une variable qui, elle, peut changer | Tu l'écris à l'étape 4 |
 | `fun doble(n: Int): Int { return n * 2 }` | Une fonction : nom, paramètres avec leur type et type de retour | `fun Bienvenida()` |
 | `fun doble(n: Int) = n * 2` | La même, en court : le corps est une expression et le type de retour est déduit | |
 | `Bundle?` | Un type qui **peut** être nul. Sans le `?`, il ne peut pas | `savedInstanceState: Bundle?` dans `MainActivity.kt` |
 
 Trois détails qui, eux, changent par rapport à d'autres langages :
 
-- **Le type va après le nom :** `n: Int`. Pour une variable, vous ne l'écrivez presque jamais : dans `val x = 5`,
+- **Le type va après le nom :** `n: Int`. Pour une variable, tu ne l'écris presque jamais : dans `val x = 5`,
   Kotlin déduit que c'est un `Int`.
 - **Les nuls se déclarent.** Une variable `String` ne peut pas contenir `null`. Si elle peut manquer, le type est
   `String?`, et alors `lema.length` provoque une erreur à la compilation ; `lema?.length` renvoie `null` si `lema` est
   nul ; et `lema?.length ?: 0` renvoie `0` dans ce cas.
-- **Les accolades finales sont une fonction que vous passez à une autre.** Dans `Column( … ) { … }`, ce qui se trouve
+- **Les accolades finales sont une fonction que tu passes à une autre.** Dans `Column( … ) { … }`, ce qui se trouve
   entre accolades est une fonction sans nom (une *lambda*). Si le dernier paramètre d'une fonction est une autre
   fonction, Kotlin permet de l'écrire en dehors des parenthèses. C'est pourquoi Compose ressemble à des blocs imbriqués.
 
-**Ce qui le prouve :** la révision 1.4, dans « Vos exercices ».
+**Ce qui le prouve :** la révision 1.4, dans « Tes exercices ».
 
 ---
 
-## Étape 3 · Écrivez l'accueil, à la main
+## Étape 3 · Écris l'accueil, à la main
 
-Cette étape est la vôtre, sans Claude Code : ce sont une dizaine de lignes.
+Cette étape est la tienne, sans Claude Code : ce sont une dizaine de lignes.
 
-**Prédisez d'abord.** De combien d'appels à des fonctions composables aurez-vous besoin dans la `Column`, et
+**Prédis d'abord.** De combien d'appels à des fonctions composables auras-tu besoin dans la `Column`, et
 lequel d'entre eux va en contenir un autre ?
 
 Dans `Bienvenida.kt` :
 
-1. **Ajoutez trois lignes au bloc d'`import`.** Un `import` dit à Kotlin de quelle bibliothèque vient chaque nom :
+1. **Ajoute trois lignes au bloc d'`import`.** Un `import` dit à Kotlin de quelle bibliothèque vient chaque nom :
 
 ```kotlin
 import androidx.compose.material3.Button
@@ -189,14 +189,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 ```
 
-2. **Centrez l'horizontal.** Mettez une virgule après `Arrangement.Center` et, en dessous, le paramètre qui manquait :
+2. **Centre l'horizontal.** Mets une virgule après `Arrangement.Center` et, en dessous, le paramètre qui manquait :
 
 ```kotlin
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
 ```
 
-3. **Remplacez les deux textes par les trois éléments de la maquette :**
+3. **Remplace les deux textes par les trois éléments de la maquette :**
 
 ```kotlin
         Text("La tienda", style = MaterialTheme.typography.headlineLarge)
@@ -210,18 +210,18 @@ import androidx.compose.ui.Alignment
 composants visuels d'Android. `Button` prend deux choses : `onClick`, la fonction appelée quand quelqu'un le touche
 —pour l'instant vide—, et, entre accolades, ce qui s'affiche à l'intérieur du bouton, qui est un autre `Text`.
 
-**Lancez le `verifica`.** Depuis la racine du dépôt :
+**Lance le `verifica`.** Depuis la racine du dépôt :
 
 ```bash
 ./lecciones/01-mi-primera-pantalla/verifica
 ```
 
-Il ne modifie pas votre code : il lance les tests simulés (`./gradlew testDebugUnitTest`) et vous traduit le résultat.
+Il ne modifie pas ton code : il lance les tests simulés (`./gradlew testDebugUnitTest`) et te traduit le résultat.
 La première fois, il a besoin du réseau et prend du temps, car il télécharge la bibliothèque de tests (Robolectric) et
 une copie d'Android : lors de l'essai du 13 nov., cela a pris 1 minute 21 secondes sur un Mac ; les suivantes, quelques
 secondes.
 
-**Vous êtes sur la bonne voie** si vous voyez trois coches vertes et une rouge :
+**Tu es sur la bonne voie** si tu vois trois coches vertes et une rouge :
 
 ```text
 ✅ Simulado: la pantalla muestra el nombre «La tienda»
@@ -234,32 +234,32 @@ Resultado: 3 de 4 pruebas en verde (1 en rojo, 0 con error, 0 saltadas), leído 
 *(C'est la sortie du `verifica`, exactement comme le script l'affiche, en espagnol. En français, elle dit : l'écran
 affiche le nom ; l'écran affiche le slogan ; il y a un élément « Entrer » avec une action de toucher et un rôle de
 bouton ; et, en rouge, « en touchant le bouton « Entrer », « Bonjour ! » n'apparaît pas (ou y était déjà avant) : ce
-changement, vous le demandez à l'étape 4 » ; et le résultat, 3 tests sur 4 au vert.)*
+changement, tu le demandes à l'étape 4 » ; et le résultat, 3 tests sur 4 au vert.)*
 
-Ce rouge est le rouge attendu : le bouton ne fait encore rien. La coche pour `respuestas/01.md`, que vous n'avez pas
+Ce rouge est le rouge attendu : le bouton ne fait encore rien. La coche pour `respuestas/01.md`, que tu n'as pas
 encore remplie, sort elle aussi en rouge.
 
-**Ce que chaque coche prouve, et ce qu'elle ne prouve pas.** « Simulado » (simulé) signifie que le test a dessiné votre
+**Ce que chaque coche prouve, et ce qu'elle ne prouve pas.** « Simulado » (simulé) signifie que le test a dessiné ta
 fonction en mémoire et y a trouvé ce texte, et que « Entrer » peut être touché et se déclare comme un bouton (un
-`Text` auquel vous ajoutez seulement un toucher ne passe pas). Cela ne prouve ni la taille des caractères, ni la marge,
-ni le centrage, ni l'ordre : cela, vous le voyez vous-même, avec `./gradlew installDebug` et la maquette à côté.
+`Text` auquel tu ajoutes seulement un toucher ne passe pas). Cela ne prouve ni la taille des caractères, ni la marge,
+ni le centrage, ni l'ordre : cela, tu le vois toi-même, avec `./gradlew installDebug` et la maquette à côté.
 
-**Ce qui le prouve :** le `verifica` simulé trouve les trois éléments **et** vous avez comparé l'application installée
+**Ce qui le prouve :** le `verifica` simulé trouve les trois éléments **et** tu as comparé l'application installée
 avec la maquette (objectif 1.2).
 
 ---
 
 ## Étape 4 · Avec Claude Code : que le bouton salue
 
-C'est ici qu'entre l'outil, et il entre toujours de la même manière : **vous prédisez → vous demandez → vous lisez ce
-qu'il a généré → vous lancez le `verifica` → vous l'expliquez avec vos propres mots.**
+C'est ici qu'entre l'outil, et il entre toujours de la même manière : **tu prédis → tu demandes → tu lis ce
+qu'il a généré → tu lances le `verifica` → tu l'expliques avec tes propres mots.**
 
-1. **Prédisez.** Écrivez dans `respuestas/01.md` : pour que « Bonjour ! » n'apparaisse qu'après avoir touché le bouton,
-   que doit retenir l'écran ? Laquelle des lignes que vous avez déjà écrites va changer ?
-2. **Demandez** à Claude Code, depuis `inicio/` : « Dans `Bienvenida.kt`, fais en sorte qu'en touchant "Entrar" le texte
+1. **Prédis.** Écris dans `respuestas/01.md` : pour que « Bonjour ! » n'apparaisse qu'après avoir touché le bouton,
+   que doit retenir l'écran ? Laquelle des lignes que tu as déjà écrites va changer ?
+2. **Demande** à Claude Code, depuis `inicio/` : « Dans `Bienvenida.kt`, fais en sorte qu'en touchant "Entrar" le texte
    "¡Hola!" apparaisse sous le bouton. Avant de toucher, il ne doit pas être visible. Ne change rien d'autre et ne
    touche pas aux tests. »
-3. **Lisez** le changement complet avant de l'accepter. Il n'a pas à être identique à ceci, mais il doit contenir ces
+3. **Lis** le changement complet avant de l'accepter. Il n'a pas à être identique à ceci, mais il doit contenir ces
    trois éléments :
 
 ```kotlin
@@ -273,12 +273,12 @@ qu'il a généré → vous lancez le `verifica` → vous l'expliquez avec vos pr
         }
 ```
 
-4. **Lancez le `verifica`.** Maintenant, les quatre tests doivent passer au vert.
-5. **Expliquez**, en deux lignes de `respuestas/01.md`, ce qui se passe entre le moment où vous touchez le bouton et
+4. **Lance le `verifica`.** Maintenant, les quatre tests doivent passer au vert.
+5. **Explique**, en deux lignes de `respuestas/01.md`, ce qui se passe entre le moment où tu touches le bouton et
    celui où le salut apparaît.
 
-Aujourd'hui, vous ne concevez pas l'état de zéro : vous suivez seulement le changement que propose Claude Code. Quel
-état il convient de conserver et comment le conserver est l'idée centrale de la L02. Pour le suivre, vous devez savoir
+Aujourd'hui, tu ne conçois pas l'état de zéro : tu suis seulement le changement que propose Claude Code. Quel
+état il convient de conserver et comment le conserver est l'idée centrale de la L02. Pour le suivre, tu dois savoir
 ce que fait chaque élément :
 
 - **`mutableStateOf(false)`** crée une valeur que Compose surveille. Quand elle change, Compose programme la mise à jour
@@ -291,19 +291,19 @@ ce que fait chaque élément :
 - **`if (saludando) { Text("¡Hola!") }`** est du Kotlin normal à l'intérieur de l'écran : si l'état est `true`, ce texte
   existe ; sinon, non.
 
-L'idée de la leçon, complète : vous touchez → l'état change → Compose met à jour ce qui a lu cet état, ici le `if` →
+L'idée de la leçon, complète : tu touches → l'état change → Compose met à jour ce qui a lu cet état, ici le `if` →
 la description de l'écran inclut maintenant le salut. Personne n'« ajoute » le texte. Et Compose peut ne ré-exécuter
-que le nécessaire : n'écrivez pas de code en supposant que toute la fonction sera exécutée.
+que le nécessaire : n'écris pas de code en supposant que toute la fonction sera exécutée.
 
-**Si une ligne n'est toujours pas claire,** faites une pause ici : demandez à Claude Code de l'expliquer, vérifiez-la
-avec un petit changement et le `verifica`, et continuez quand vous pourrez la dire avec vos propres mots.
+**Si une ligne n'est toujours pas claire,** fais une pause ici : demande à Claude Code de l'expliquer, vérifie-la
+avec un petit changement et le `verifica`, et continue quand tu pourras la dire avec tes propres mots.
 
 ---
 
-## Étape 5 · Sans IA : expliquez cinq blocs et corrigez-en un
+## Étape 5 · Sans IA : explique cinq blocs et corriges-en un
 
-C'est l'exercice 1.3 et il se fait **sans Claude Code**, sur votre propre `Bienvenida.kt`. Si le vôtre respecte déjà la
-maquette, utilisez pour la correction ce listing, qui est une réponse possible à la même demande :
+C'est l'exercice 1.3 et il se fait **sans Claude Code**, sur ton propre `Bienvenida.kt`. Si le tien respecte déjà la
+maquette, utilise pour la correction ce listing, qui est une réponse possible à la même demande :
 
 ```kotlin
 19  @Composable
@@ -329,50 +329,50 @@ maquette, utilisez pour la correction ce listing, qui est une réponse possible 
 
 Avec ce listing, le `verifica` donne 4 sur 4 au vert (mesuré le 18 nov. 2026). Et pourtant il ne respecte pas la maquette.
 
-**Vous faites deux choses, par écrit, dans `respuestas/01.md` :**
+**Tu fais deux choses, par écrit, dans `respuestas/01.md` :**
 
-1. **Expliquez cinq blocs,** un de chaque type : **état**, **texte**, **modificateur**, **événement** et **fonction**.
-   Pour chacun, écrivez sa ligne au format `Bienvenida.kt:21` et ce qui change **à l'écran** si vous le retirez ou le
-   modifiez. « Conserve un booléen » n'est pas un effet visible ; « sans cette ligne, le salut n'apparaît jamais » en est
+1. **Explique cinq blocs,** un de chaque type : **état**, **texte**, **modificateur**, **événement** et **fonction**.
+   Pour chacun, écris sa ligne au format `Bienvenida.kt:21` et ce qui change **à l'écran** si tu le retires ou le
+   modifies. « Conserve un booléen » n'est pas un effet visible ; « sans cette ligne, le salut n'apparaît jamais » en est
    un.
-2. **Corrigez le bloc qui ne respecte pas la maquette.** Dites lequel c'est et pourquoi les tests ne le détectent pas,
-   corrigez-le, lancez le `verifica` et réinstallez l'application.
+2. **Corrige le bloc qui ne respecte pas la maquette.** Dis lequel c'est et pourquoi les tests ne le détectent pas,
+   corrige-le, lance le `verifica` et réinstalle l'application.
 
-Le `verifica` vérifie seulement que vous avez noté au moins cinq références au format `Bienvenida.kt:N` ; il n'évalue ni
-vos explications ni la correction. Et un 4 sur 4 confirme un comportement, pas l'apparence. Le 1.3 est terminé quand
-vous pouvez cocher les quatre cases :
+Le `verifica` vérifie seulement que tu as noté au moins cinq références au format `Bienvenida.kt:N` ; il n'évalue ni
+tes explications ni la correction. Et un 4 sur 4 confirme un comportement, pas l'apparence. Le 1.3 est terminé quand
+tu peux cocher les quatre cases :
 
 - [ ] Les cinq types sont là : état, texte, modificateur, événement et fonction.
 - [ ] Chacun donne un effet visible à l'écran.
-- [ ] Vous avez expliqué pourquoi le salut s'affichait au-dessus et pourquoi les tests ne l'ont pas détecté.
-- [ ] Après l'avoir déplacé, le 4 sur 4 reste au vert **et** dans l'application installée, vous avez vu « ¡Hola! »
-      sous « Entrar ». Notez cette observation à côté de la correction.
+- [ ] Tu as expliqué pourquoi le salut s'affichait au-dessus et pourquoi les tests ne l'ont pas détecté.
+- [ ] Après l'avoir déplacé, le 4 sur 4 reste au vert **et** dans l'application installée, tu as vu « ¡Hola! »
+      sous « Entrar ». Note cette observation à côté de la correction.
 
 **Ce qui le prouve :** exercice 1.3 (objectif 1.3).
 
 ---
 
-## Vos exercices
+## Tes exercices
 
 Le 1.2 et le 1.3 se font **sans IA**.
 
-| # | Vous faites | C'est fait quand |
+| # | Tu fais | C'est fait quand |
 |---|---|---|
-| 1.1 | Vous prédisez ce que dessine la fonction de l'étape 1 et vous la lancez | Vous avez vos trois lignes et ce que vous avez vu |
-| 1.2 | Vous écrivez nom, slogan et bouton à partir de la maquette | Le `verifica` marque en vert les trois éléments **et** vous avez comparé l'application installée avec la maquette : groupe centré et nom en grandes lettres |
-| 1.3 | Vous expliquez cinq blocs et corrigez celui qui ne respecte pas la maquette | Vous avez coché les quatre cases de l'étape 5 : le 4 sur 4 reste au vert **et** vous avez vu le salut sous le bouton dans l'application installée |
-| 1.4 | Vous répondez à la révision de Kotlin | Quatre réponses sur cinq correctes, **chacune avec son pourquoi** |
+| 1.1 | Tu prédis ce que dessine la fonction de l'étape 1 et tu la lances | Tu as tes trois lignes et ce que tu as vu |
+| 1.2 | Tu écris nom, slogan et bouton à partir de la maquette | Le `verifica` marque en vert les trois éléments **et** tu as comparé l'application installée avec la maquette : groupe centré et nom en grandes lettres |
+| 1.3 | Tu expliques cinq blocs et corriges celui qui ne respecte pas la maquette | Tu as coché les quatre cases de l'étape 5 : le 4 sur 4 reste au vert **et** tu as vu le salut sous le bouton dans l'application installée |
+| 1.4 | Tu réponds à la révision de Kotlin | Quatre réponses sur cinq correctes, **chacune avec son pourquoi** |
 
-**Révision 1.4.** Répondez sans lancer le code. Le `verifica` ne note ni vos prédictions ni cette révision : comparez-les
-vous-même avec « Comparez vos réponses » et conservez ce que vous avez écrit.
+**Révision 1.4.** Réponds sans lancer le code. Le `verifica` ne note ni tes prédictions ni cette révision : compare-les
+toi-même avec « Compare tes réponses » et conserve ce que tu as écrit.
 
 1. `val nombre = "La tienda"` puis, à la ligne suivante, `nombre = "Otra"`. Est-ce que cela compile ?
 2. `var saludando = false`. Personne n'a écrit le type. Quel est-il et qui l'a décidé ?
 3. `fun doble(n: Int) = n * 2`. Que renvoie `doble(4)` et de quel type est-ce ?
-4. Dans `MainActivity.kt`, il est écrit `savedInstanceState: Bundle?`. Que vous signale ce `?` ?
+4. Dans `MainActivity.kt`, il est écrit `savedInstanceState: Bundle?`. Que te signale ce `?` ?
 5. `val lema: String? = null`. Que se passe-t-il avec `lema.length`, avec `lema?.length` et avec `lema?.length ?: 0` ?
 
-**Durée :** comptez environ deux heures, avec la compilation et vos prédictions. C'est une estimation : nous
+**Durée :** compte environ deux heures, avec la compilation et tes prédictions. C'est une estimation : nous
 l'ajusterons avec le temps que prendra la première cohorte.
 
 ---
@@ -381,35 +381,35 @@ l'ajusterons avec le temps que prendra la première cohorte.
 
 Les messages en anglais sont ceux que le compilateur de la série (Kotlin 2.4.21) a donnés le 18 nov. 2026.
 
-| Vous voyez | Cause probable | Ce que vous faites |
+| Tu vois | Cause probable | Ce que tu fais |
 |---|---|---|
-| `Unresolved reference 'Button'` | L'`import` de ce nom manque, ou il est mal écrit | Ajoutez l'`import` de l'étape 3 et vérifiez les majuscules |
-| `'val' cannot be reassigned` | Vous avez déclaré l'état avec `val` puis vous le modifiez | C'est `var saludando by remember { … }` |
-| `Property delegate must have a 'getValue(…)' method` | Vous avez utilisé `by` sans ses deux `import` | Ajoutez `getValue` et `setValue` (étape 4) |
-| « Las pruebas no llegaron a correr » (les tests n'ont pas pu s'exécuter) | Le code ne compile pas | Lisez la ligne qui commence par `e:` : elle contient fichier, ligne et colonne |
+| `Unresolved reference 'Button'` | L'`import` de ce nom manque, ou il est mal écrit | Ajoute l'`import` de l'étape 3 et vérifie les majuscules |
+| `'val' cannot be reassigned` | Tu as déclaré l'état avec `val` puis tu le modifies | C'est `var saludando by remember { … }` |
+| `Property delegate must have a 'getValue(…)' method` | Tu as utilisé `by` sans ses deux `import` | Ajoute `getValue` et `setValue` (étape 4) |
+| « Las pruebas no llegaron a correr » (les tests n'ont pas pu s'exécuter) | Le code ne compile pas | Lis la ligne qui commence par `e:` : elle contient fichier, ligne et colonne |
 | ❌ sur le bouton, avec « Entrer » visible | C'est un `Text`, seul ou avec `clickable` : il ne se déclare pas comme un bouton | Cela doit être un `Button` avec le `Text` à l'intérieur |
 | ❌ sur le salut, alors que « ¡Hola! » s'affiche | Le salut est toujours là, pas seulement après avoir touché | Il va à l'intérieur du `if (saludando)` |
-| `BienvenidaTest.kt` a changé | Quelqu'un (vous ou Claude Code) a touché aux tests | Récupérez-le avec la commande que donne le message et répétez la demande en précisant de ne pas y toucher |
+| `BienvenidaTest.kt` a changé | Quelqu'un (toi ou Claude Code) a touché aux tests | Récupère-le avec la commande que donne le message et répète la demande en précisant de ne pas y toucher |
 
 Sur Linux Mint 22.3 (x86_64), le `verifica` de cette leçon est sorti au vert sur la solution : 4 sur 4, en 64 secondes en
-comptant la première compilation (18 nov. 2026). Si votre SDK n'apporte pas `build-tools`, Gradle le télécharge tout
+comptant la première compilation (18 nov. 2026). Si ton SDK n'apporte pas `build-tools`, Gradle le télécharge tout
 seul la première fois.
 
 ---
 
 ## Pour conclure
 
-**Répondez sans relire :**
+**Réponds sans relire :**
 
 1. Qu'est-ce qu'un écran en Compose, en une phrase ?
-2. Vous touchez « Entrer » et « Bonjour ! » apparaît. Que s'est-il passé entre les deux, dans l'ordre ?
-3. Vos quatre tests simulés sont au vert. Dites une chose que cela prouve et une qu'il ne prouve pas.
+2. Tu touches « Entrer » et « Bonjour ! » apparaît. Que s'est-il passé entre les deux, dans l'ordre ?
+3. Tes quatre tests simulés sont au vert. Dis une chose que cela prouve et une qu'il ne prouve pas.
 
 **La suite :** dans la L02, l'application compte plus d'un écran et passe de l'un à l'autre.
 
 ---
 
-## Comparez vos réponses
+## Compare tes réponses
 
 **Étape 1.** Deux textes, l'un sous l'autre (`Column`), à mi-hauteur (`Arrangement.Center`) et du côté gauche (personne
 n'a indiqué l'alignement horizontal).
@@ -436,7 +436,7 @@ position il se trouve.
 1. Non. Un `val` ne peut pas être réaffecté ; le compilateur dit `'val' cannot be reassigned`.
 2. `Boolean`. Kotlin l'a déduit à partir de la valeur `false`.
 3. Elle renvoie `8`, de type `Int` : le corps est une expression et le type de retour est déduit.
-4. Que ce paramètre peut valoir `null`, et Kotlin ne vous laisse pas l'utiliser sans tenir compte de ce cas.
+4. Que ce paramètre peut valoir `null`, et Kotlin ne te laisse pas l'utiliser sans tenir compte de ce cas.
 5. `lema.length` ne compile pas ; `lema?.length` donne `null` ; `lema?.length ?: 0` donne `0`.
 
 **Pour conclure :**

@@ -1,24 +1,24 @@
-# Votre boutique dans la poche
+# Ta boutique dans la poche
 
 **Par Dorian Chávez, fondateur de Hábil et architecte d'intégration.**
 
 **Page du cours :** [habil.mx/fr/cours/tienda-app-nativa/](https://www.habil.mx/fr/cours/tienda-app-nativa/), avec le programme et les leçons en cinq langues.
 
 **À qui il s'adresse :** à toute personne qui programme déjà dans un langage, utilise le terminal et git, et a réalisé
-au moins une interface, web ou de bureau. Kotlin, Android et OAuth ne sont pas supposés connus : vous les apprenez ici.
+au moins une interface, web ou de bureau. Kotlin, Android et OAuth ne sont pas supposés connus : tu les apprends ici.
 
-**Ce que vous saurez faire à la fin :** construire de vos propres mains une application Android native, en Kotlin et
-Jetpack Compose, où vous vous connectez avec votre compte Google ou Microsoft ; l'application vous accueille la première
-fois et vous reconnaît quand vous revenez. Et expliquer ce que Firebase a fait pour vous et ce que vous avez fait vous-même.
+**Ce que tu sauras faire à la fin :** construire de tes propres mains une application Android native, en Kotlin et
+Jetpack Compose, où tu te connectes avec ton compte Google ou Microsoft ; l'application t'accueille la première
+fois et te reconnaît quand tu reviens. Et expliquer ce que Firebase a fait pour toi et ce que tu as fait toi-même.
 
-**Ce dont vous avez besoin avant de commencer :** Linux sur un processeur x86_64 (testé sur Linux Mint 22.3), ou un Mac,
-avec 16 Go de RAM pour l'émulateur (avec moins, vous utilisez votre téléphone Android). Windows n'est pas couvert. La
+**Ce dont tu as besoin avant de commencer :** Linux sur un processeur x86_64 (testé sur Linux Mint 22.3), ou un Mac,
+avec 16 Go de RAM pour l'émulateur (avec moins, tu utilises ton téléphone Android). Windows n'est pas couvert. La
 partie iOS se fait uniquement sur Mac.
 
 ## Le projet
 
 La même boutique inventée de [« Ni una orden perdida »](https://www.habil.mx/fr/cours/ni-una-orden-perdida/) a maintenant
-une application. Dans ce premier tronçon, vous arrivez jusqu'à la connexion : le client se connecte avec Google ou avec
+une application. Dans ce premier tronçon, tu arrives jusqu'à la connexion : le client se connecte avec Google ou avec
 Microsoft et l'application le reconnaît. Dans les suivants, l'application consomme l'API de la boutique et passe à iOS.
 
 *Une note sur les langues :* le projet du cours livre ses textes d'écran en espagnol, et les fichiers de `lecciones/` ne
@@ -27,19 +27,19 @@ le projet les contient ; dans la prose de chaque leçon, ils sont donnés en fra
 
 ## Comment nous travaillons avec l'IA
 
-Dans toutes les leçons, de la même manière : vous **prédisez** ce qui va se passer → vous demandez le changement à
-Claude Code → vous **lisez** ce qu'il a généré → vous lancez le `verifica` → vous **expliquez** avec vos propres mots ce
-qu'il fait. Si vous ne savez pas l'expliquer, vous n'avancez pas. Et chaque leçon contient au moins un exercice qui se
+Dans toutes les leçons, de la même manière : tu **prédis** ce qui va se passer → tu demandes le changement à
+Claude Code → tu **lis** ce qu'il a généré → tu lances le `verifica` → tu **expliques** avec tes propres mots ce
+qu'il fait. Si tu ne sais pas l'expliquer, tu n'avances pas. Et chaque leçon contient au moins un exercice qui se
 fait sans IA.
 
-Chaque leçon apporte un projet `inicio/` et un `verifica` qui vous dit, en rouge ou en vert, si vous avez réussi. Vos
+Chaque leçon apporte un projet `inicio/` et un `verifica` qui te dit, en rouge ou en vert, si tu as réussi. Tes
 réponses écrites vont dans `respuestas/`. Chacun utilise son propre projet Firebase : `google-services.json` n'est
 jamais versé dans le dépôt.
 
 ## Les leçons
 
-Elles se font dans l'ordre : chacune part de ce que la précédente a laissé. Commencez par la [00](00-ambiente-listo.md),
-qui prépare votre environnement.
+Elles se font dans l'ordre : chacune part de ce que la précédente a laissé. Commence par la [00](00-ambiente-listo.md),
+qui prépare ton environnement.
 
 ### Tronçon 1 — Arriver à la connexion (Android)
 

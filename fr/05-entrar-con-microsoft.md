@@ -10,12 +10,12 @@
   connecter. La documentation l'appelle *redirect URI*.
 - **Clé client :** un mot de passe de l'application, pas d'une personne. Avec elle, celui qui la détient s'identifie
   auprès de Microsoft comme étant cette application. La documentation l'appelle *client secret*.
-- **Résultat en attente :** la réponse d'une connexion qui s'est terminée alors que votre application n'était plus là
+- **Résultat en attente :** la réponse d'une connexion qui s'est terminée alors que ton application n'était plus là
   pour la recevoir.
 
-**Ce que vous en retirez :** le bouton « Se connecter avec Microsoft » (« Entrar con Microsoft ») à côté de celui de
-Google, écrit par vous, qui récupère la connexion même si Android a fermé votre application en cours de route ; votre
-application enregistrée dans Entra sans que sa clé touche un seul fichier ; et un tableau à vous qui dit ce qui est
+**Ce que tu en retires :** le bouton « Se connecter avec Microsoft » (« Entrar con Microsoft ») à côté de celui de
+Google, écrit par toi, qui récupère la connexion même si Android a fermé ton application en cours de route ; ton
+application enregistrée dans Entra sans que sa clé touche un seul fichier ; et un tableau à toi qui dit ce qui est
 pareil et ce qui change entre les deux fournisseurs.
 
 **Idée nouvelle de cette leçon :** un second fournisseur qui s'enregistre en dehors de Firebase, avec une adresse de
@@ -33,7 +33,7 @@ l'écran « La boutique » (« La tienda ») et son bouton « Entrer » (« Entr
 ## La scène
 
 La page de Microsoft est ouverte sur le téléphone. La personne n'a pas encore choisi son compte. Derrière cette page,
-votre application n'existe plus : Android l'a fermée.
+ton application n'existe plus : Android l'a fermée.
 
 La page est toujours là, en attente.
 
@@ -47,18 +47,18 @@ se connecter une seconde fois.
 
 Lors de l'essai, elle s'en est rendu compte, parce qu'au démarrage elle posait une question avant toute autre : y
 a-t-il une connexion restée à moitié faite ? Cette question tient en une ligne, et cette leçon l'écrit. Elle écrit aussi
-ce qui vient avant : enregistrer votre application auprès de Microsoft, ce qui ne se fait pas dans Firebase, et prendre
+ce qui vient avant : enregistrer ton application auprès de Microsoft, ce qui ne se fait pas dans Firebase, et prendre
 soin d'une clé qui ne s'affiche qu'une seule fois.
 
 ---
 
 ## Avant de commencer
 
-**Ce dont vous avez besoin :** la [04](04-entrar-con-google.md) terminée (son `verifica` à 20 sur 20) et l'environnement
-de la [00](00-ambiente-listo.md). Pour l'étape 7, un émulateur ouvert ou votre téléphone connecté suffit. Appliquez ce
+**Ce dont tu as besoin :** la [04](04-entrar-con-google.md) terminée (son `verifica` à 20 sur 20) et l'environnement
+de la [00](00-ambiente-listo.md). Pour l'étape 7, un émulateur ouvert ou ton téléphone connecté suffit. Applique ce
 qui est dit dans « Compte et machine de confiance » de la 00.
 
-**Pour les étapes 8 et 9, en plus :** un compte Microsoft pour se connecter et un répertoire Entra où vous pouvez
+**Pour les étapes 8 et 9, en plus :** un compte Microsoft pour se connecter et un répertoire Entra où tu peux
 enregistrer une application. Ce sont deux choses différentes, et la seconde est celle qui coûte :
 
 - Le guide de Microsoft demande un compte Azure avec un abonnement actif et le rôle *Application Developer*.
@@ -67,12 +67,12 @@ enregistrer une application. Ce sont deux choses différentes, et la seconde est
 - Ce jour-là, un compte **tout juste créé** n'a pas pu : « Nuevo registro » (Nouvel enregistrement) a ouvert un panneau
   sans formulaire. Il s'est ouvert après l'activation de l'essai gratuit d'Azure, qui a demandé un téléphone vérifié,
   une adresse de facturation et une carte.
-- Si vous êtes étudiant, regardez si vous remplissez les conditions d'Azure for Students. Sa page dit qu'elle ne demande
-  pas de carte, qu'elle vérifie avec l'adresse e-mail de votre école et qu'elle ne s'applique pas aux cours en ligne
-  ouverts à tous ni aux formations d'organisations à but lucratif. Cette leçon n'affirme pas que vous y avez droit.
+- Si tu es étudiant, regarde si tu remplis les conditions d'Azure for Students. Sa page dit qu'elle ne demande
+  pas de carte, qu'elle vérifie avec l'adresse e-mail de ton école et qu'elle ne s'applique pas aux cours en ligne
+  ouverts à tous ni aux formations d'organisations à but lucratif. Cette leçon n'affirme pas que tu y as droit.
 
-**Si vous n'avez pas de répertoire,** vous faites en entier les étapes 1 à 7, qui ne demandent aucun compte. Les étapes
-8 et 9 attendent que vous en ayez un.
+**Si tu n'as pas de répertoire,** tu fais en entier les étapes 1 à 7, qui ne demandent aucun compte. Les étapes
+8 et 9 attendent que tu en aies un.
 
 **Le projet de départ.** Depuis la racine du dépôt de la série :
 
@@ -82,9 +82,9 @@ cp lecciones/03-la-app-conoce-a-firebase/inicio/app/google-services.json leccion
 cd lecciones/05-entrar-con-microsoft/inicio
 ```
 
-La deuxième commande amène votre fichier de la 03 dans le projet de cette leçon. Il y est aussi ignoré par git. À côté
-se trouve `solucion/` : vous pouvez la lire sans rien configurer, et **`./verifica solucion` sort au rouge dans un clone
-propre**, parce que sans votre fichier le projet ne compile pas (mesuré le 18 nov. 2026 : 0 test exécuté). Vos réponses
+La deuxième commande amène ton fichier de la 03 dans le projet de cette leçon. Il y est aussi ignoré par git. À côté
+se trouve `solucion/` : tu peux la lire sans rien configurer, et **`./verifica solucion` sort au rouge dans un clone
+propre**, parce que sans ton fichier le projet ne compile pas (mesuré le 18 nov. 2026 : 0 test exécuté). Tes réponses
 vont dans `respuestas/05.md`, à la racine du dépôt.
 
 **Ce que le projet apporte déjà (échafaudage).** Il n'est pas évalué ici ; l'étape 3 le parcourt :
@@ -93,12 +93,12 @@ vont dans `respuestas/05.md`, à la racine du dépôt.
 |---|---|---|
 | Tout ce que la 04 a laissé : `EntradaConGoogle`, ses deux portes, ses tests et ses doublures | Les mêmes fichiers, sans un seul changement | Le `verifica` les compare, octet par octet, avec la solution de la 04 |
 | Un cinquième résultat, `CuentaConOtroProveedor`, et l'interface `EntradaQueSeRetoma` | `Entrada.kt` | Avec Microsoft, il y a une nouvelle manière de ne pas entrer, et une connexion qui peut rester à moitié faite |
-| La troisième porte, avec son implémentation réelle | `PuertaDelNavegador.kt` | C'est par là que votre code sort vers le navigateur et vers Firebase |
-| Le second bouton et le message de la collision | `PantallaEntrada.kt`, `Tienda.kt` | Ces deux-là **ont** changé par rapport à la 04. Ils sont fournis : vous ne touchez aucun écran |
+| La troisième porte, avec son implémentation réelle | `PuertaDelNavegador.kt` | C'est par là que ton code sort vers le navigateur et vers Firebase |
+| Le second bouton et le message de la collision | `PantallaEntrada.kt`, `Tienda.kt` | Ces deux-là **ont** changé par rapport à la 04. Ils sont fournis : tu ne touches aucun écran |
 | `MainActivity`, qui assemble les pièces et les passe à `Tienda` | `MainActivity.kt` | Fourni et non modifiable : le `verifica` le compare avec celui de la leçon |
-| L'endroit où se décide quelle pièce est assemblée ; pour l'instant, une qui ne fait rien | `Armado.kt` | C'est le fichier où vous branchez ce que vous écrivez |
-| Les tests de cette leçon, leurs doublures et une « application de tests » | `app/src/test`, `app/src/androidTest` | Ce sont ceux que lance le `verifica`. Ne les modifiez pas |
-| Un squelette de `EntradaConMicrosoft` | `EntradaConMicrosoft.kt` | C'est le fichier que vous écrivez |
+| L'endroit où se décide quelle pièce est assemblée ; pour l'instant, une qui ne fait rien | `Armado.kt` | C'est le fichier où tu branches ce que tu écris |
+| Les tests de cette leçon, leurs doublures et une « application de tests » | `app/src/test`, `app/src/androidTest` | Ce sont ceux que lance le `verifica`. Ne les modifie pas |
+| Un squelette de `EntradaConMicrosoft` | `EntradaConMicrosoft.kt` | C'est le fichier que tu écris |
 
 Le catalogue de versions est celui de la 04, sans nouvelle bibliothèque : Microsoft est inclus dans Firebase
 Authentication.
@@ -111,19 +111,19 @@ conserve ni ne ferme la session (leçon 07), et ne distingue pas la première fo
 
 ## Étape 1 · Sans IA : le même voyage, par un autre chemin
 
-Cette étape est la vôtre, sans Claude Code. C'est l'exercice 5.3.
+Cette étape est la tienne, sans Claude Code. C'est l'exercice 5.3.
 
-Dans la 04, votre application a demandé un jeton au téléphone et l'a porté à Firebase. Avec Microsoft, votre
+Dans la 04, ton application a demandé un jeton au téléphone et l'a porté à Firebase. Avec Microsoft, ton
 application ne porte rien : elle ouvre le navigateur et attend.
 
 | # | De qui à qui | Ce qui voyage |
 |---|---|---|
-| 1 | Votre application → Firebase (sa bibliothèque) | Une demande : « je veux me connecter avec le fournisseur `microsoft.com` » |
-| 2 | Firebase → le navigateur | Ouvre la page de Microsoft, avec l'ID client de votre enregistrement et votre adresse de redirection |
-| 3 | La personne → Microsoft | Son compte et ce que Microsoft lui demande. Cela se passe dans le navigateur, en dehors de votre application |
-| 4 | Microsoft → Firebase (ses serveurs) | Un code à usage unique, envoyé à votre adresse de redirection |
-| 5 | Firebase → Microsoft | Ce code, avec l'ID client **et la clé** que vous avez gardés dans la console de Firebase |
-| 6 | Firebase → votre application | Un utilisateur, avec son identifiant dans votre projet et, si le fournisseur l'a remis, son nom |
+| 1 | Ton application → Firebase (sa bibliothèque) | Une demande : « je veux me connecter avec le fournisseur `microsoft.com` » |
+| 2 | Firebase → le navigateur | Ouvre la page de Microsoft, avec l'ID client de ton enregistrement et ton adresse de redirection |
+| 3 | La personne → Microsoft | Son compte et ce que Microsoft lui demande. Cela se passe dans le navigateur, en dehors de ton application |
+| 4 | Microsoft → Firebase (ses serveurs) | Un code à usage unique, envoyé à ton adresse de redirection |
+| 5 | Firebase → Microsoft | Ce code, avec l'ID client **et la clé** que tu as gardés dans la console de Firebase |
+| 6 | Firebase → ton application | Un utilisateur, avec son identifiant dans ton projet et, si le fournisseur l'a remis, son nom |
 
 La ligne 5 est celle qui n'existait pas avec Google. Le guide de Firebase le dit ainsi : Firebase gère tout le flux et
 l'échange du code en utilisant l'ID client et la clé configurés dans sa console. Et la documentation de Microsoft
@@ -134,19 +134,19 @@ C'est pourquoi la ligne 2 exige de l'exactitude. La documentation de Microsoft d
 qu'à une adresse ajoutée à l'enregistrement de l'application, et que l'adresse de la demande doit coïncider exactement
 avec l'une de celles enregistrées. Si elle ne coïncide pas, il répond par une erreur.
 
-**Prédisez** avant de continuer, dans `respuestas/05.md` : sur les six lignes, dans lesquelles le code que vous allez
+**Prédis** avant de continuer, dans `respuestas/05.md` : sur les six lignes, dans lesquelles le code que tu vas
 écrire intervient-il ?
 
-**Faites votre tableau.** Dans `respuestas/05.md`, comparez les deux fournisseurs avec ces cinq questions. Remplissez-le
-sans regarder « Comparez vos réponses », puis comparez :
+**Fais ton tableau.** Dans `respuestas/05.md`, compare les deux fournisseurs avec ces cinq questions. Remplis-le
+sans regarder « Compare tes réponses », puis compare :
 
 1. Qui enregistre l'application auprès du fournisseur, et dans quelle console ?
 2. Quelle pièce montre à la personne où se connecter ?
-3. Que reçoit votre application du fournisseur ?
+3. Que reçoit ton application du fournisseur ?
 4. Y a-t-il une clé ? Où vit-elle ?
 5. Qu'est-ce qui doit coïncider exactement pour que cela fonctionne ?
 
-**Ce qui le prouve :** votre tableau, comparé à celui de la leçon (objectif 5.3). Aucun test ne le lit.
+**Ce qui le prouve :** ton tableau, comparé à celui de la leçon (objectif 5.3). Aucun test ne le lit.
 
 ---
 
@@ -161,17 +161,17 @@ plus.
 - **Le jeton d'accès de Microsoft ne se lit pas.** Le résultat de Firebase en contient un, avec lequel on pourrait
   appeler des services de Microsoft au nom de la personne. De ce résultat, seul le nom sort.
 - **L'ID client d'Entra ne va pas dans le code.** Ce n'est pas un secret, mais l'application n'en a pas besoin : c'est
-  Firebase qui l'utilise. Dans votre tableau de l'étape 8, vous le notez bel et bien.
+  Firebase qui l'utilise. Dans ton tableau de l'étape 8, tu le notes bel et bien.
 
 Si la clé vient à toucher un fichier, le terminal ou une capture, elle n'est plus secrète : on la supprime dans Entra et
-l'on en crée une autre. Effacer le fichier ne suffit pas. Ajoutez-la, avec les jetons d'accès, à la liste de ce qui
+l'on en crée une autre. Effacer le fichier ne suffit pas. Ajoute-la, avec les jetons d'accès, à la liste de ce qui
 n'est jamais versé dans le dépôt.
 
 ---
 
 ## Étape 3 · Ce que le projet apporte déjà
 
-Ouvrez ces fichiers ; ne les modifiez pas encore. Vous allez voir trois nouvelles pièces de Kotlin :
+Ouvre ces fichiers ; ne les modifie pas encore. Tu vas voir trois nouvelles pièces de Kotlin :
 
 - **`String?` :** un type qui se termine par `?` accepte `null`. `String?` signifie « un texte, ou rien ».
 - **`a ?: b` :** si `a` n'est pas `null`, renvoie `a` ; s'il l'est, renvoie `b`.
@@ -223,14 +223,14 @@ l'application.
 
 **`MainActivity.kt` et `Armado.kt`.** `onCreate` assemble les pièces et les passe à `Tienda`. Quelle pièce est
 assemblée pour Microsoft, c'est une fonction d'`Armado.kt` qui le décide, et elle renvoie pour l'instant
-`MicrosoftSinConectar()` : elle ne laisse passer personne. Vous changez `Armado.kt` ; on ne touche pas à
+`MicrosoftSinConectar()` : elle ne laisse passer personne. Tu changes `Armado.kt` ; on ne touche pas à
 `MainActivity.kt`.
 
-**Les tests.** Sur votre ordinateur, Firebase ne se prépare pas tout seul comme sur un téléphone : sans aide, les tests
+**Les tests.** Sur ton ordinateur, Firebase ne se prépare pas tout seul comme sur un téléphone : sans aide, les tests
 ont donné « Default FirebaseApp is not initialized » (mesuré le 18 nov. 2026). C'est pourquoi `src/test` apporte
 `AppDePruebas`, qui le prépare à la main. Préparer n'est pas se connecter.
 
-**Mesurez le point de départ.** Depuis la racine du dépôt :
+**Mesure le point de départ.** Depuis la racine du dépôt :
 
 ```bash
 ./lecciones/05-entrar-con-microsoft/verifica
@@ -239,7 +239,7 @@ ont donné « Default FirebaseApp is not initialized » (mesuré le 18 nov. 2026
 Le 18 nov. 2026, avec un fichier inventé complet, la dernière ligne a été
 `Resultado: 23 de 44 pruebas en verde (21 en rojo, 0 con error, 0 saltadas)`. Il y en a 44 parce qu'on y retrouve les 20
 de la leçon 04 et 24 nouveaux. Les 20 de la 04 sont déjà au vert, et trois des nouveaux aussi : ils sont de
-l'échafaudage. Les 21 autres attendent votre code.
+l'échafaudage. Les 21 autres attendent ton code.
 
 *(Résultat : 23 tests sur 44 au vert, 21 au rouge, 0 avec erreur, 0 sauté.)*
 
@@ -247,23 +247,23 @@ l'échafaudage. Les 21 autres attendent votre code.
 
 ## Étape 4 · Avec Claude Code : se connecter et reprendre
 
-C'est ici qu'entre l'outil, et il entre toujours de la même manière : **vous prédisez → vous demandez → vous lisez ce
-qu'il a généré → vous lancez le `verifica` → vous l'expliquez avec vos propres mots.**
+C'est ici qu'entre l'outil, et il entre toujours de la même manière : **tu prédis → tu demandes → tu lis ce
+qu'il a généré → tu lances le `verifica` → tu l'expliques avec tes propres mots.**
 
-1. **Prédisez.** Écrivez dans `respuestas/05.md` : si, à l'ouverture de l'application, aucune connexion n'est restée à
+1. **Prédis.** Écris dans `respuestas/05.md` : si, à l'ouverture de l'application, aucune connexion n'est restée à
    moitié faite, que doit renvoyer `retomar()`, et que doit-il se passer sur l'écran ?
-2. **Demandez** à Claude Code, depuis `inicio/`, la seconde connexion en prenant la première comme référence. C'est
+2. **Demande** à Claude Code, depuis `inicio/`, la seconde connexion en prenant la première comme référence. C'est
    l'exercice 5.4, et la demande est courte exprès : « Prends `EntradaConGoogle.kt` comme référence et écris
    `EntradaConMicrosoft.kt` seulement pour le cas où tout se passe bien, avec `retomar()` et `entrar()`, en utilisant la
    porte `navegador`. N'attrape pas encore les exceptions. Dans `Armado.kt`, change seulement le corps de
    `armarEntradaConMicrosoft` pour qu'il renvoie `EntradaConMicrosoft` avec la porte qu'il reçoit, et supprime-y
    `MicrosoftSinConectar`. Ne modifie aucun autre fichier. »
-3. **Lisez** le changement complet avant de l'accepter et **listez ce qu'il n'a pas bien copié.** La première connexion
+3. **Lis** le changement complet avant de l'accepter et **liste ce qu'il n'a pas bien copié.** La première connexion
    est une bonne référence pour le style et une mauvaise pour le fond : Google remet un jeton et Microsoft non.
-   Répondez par oui ou non aux huit questions de « Comparez vos réponses », exercice 5.4, et notez dans
-   `respuestas/05.md` chaque « non » avec le fichier et la ligne. Puis demandez la correction de chacun, en disant
-   pourquoi. Si les huit donnent « oui », écrivez « No encontré desvíos en las ocho revisiones » (Je n'ai trouvé aucun
-   écart dans les huit vérifications) et conservez le tableau : n'inventez pas une erreur. Le cœur doit ressembler à
+   Réponds par oui ou non aux huit questions de « Compare tes réponses », exercice 5.4, et note dans
+   `respuestas/05.md` chaque « non » avec le fichier et la ligne. Puis demande la correction de chacun, en disant
+   pourquoi. Si les huit donnent « oui », écris « No encontré desvíos en las ocho revisiones » (Je n'ai trouvé aucun
+   écart dans les huit vérifications) et conserve le tableau : n'invente pas une erreur. Le cœur doit ressembler à
    ceci :
 
 ```kotlin
@@ -283,9 +283,9 @@ override suspend fun entrar(): Resultado {
 }
 ```
 
-4. **Lancez le `verifica`.** Avec ce code, il a donné `Resultado: 32 de 44 pruebas en verde` le 18 nov. 2026. Les rouges
+4. **Lance le `verifica`.** Avec ce code, il a donné `Resultado: 32 de 44 pruebas en verde` le 18 nov. 2026. Les rouges
    sont les manières de ne pas entrer : l'étape 5.
-5. **Expliquez**, en trois lignes de `respuestas/05.md` : pourquoi `entrar()` demande ce qui est en attente alors que
+5. **Explique**, en trois lignes de `respuestas/05.md` : pourquoi `entrar()` demande ce qui est en attente alors que
    `retomar()` l'a déjà fait à l'ouverture de l'application.
 
 **Que fait `select_account` ?** Selon la documentation de Microsoft, il interrompt la connexion automatique et affiche
@@ -301,25 +301,25 @@ renvoie qui s'est connecté ou `null`. Un autre test ouvre `MainActivity`, lui p
 La porte était factice : aucun navigateur ne s'est ouvert. « Quelque chose est resté à moitié fait », c'est la doublure
 qui l'a dit ; aucun test n'a fermé l'application.
 
-**Et l'application installée utilise-t-elle votre pièce ?** Aucun test ne le voit de bout en bout. Il y a deux appuis :
+**Et l'application installée utilise-t-elle ta pièce ?** Aucun test ne le voit de bout en bout. Il y a deux appuis :
 
-- `MainActivity.kt` doit être identique à celui de la leçon. Si vous le changez, le `verifica` le marque au rouge même
+- `MainActivity.kt` doit être identique à celui de la leçon. Si tu le changes, le `verifica` le marque au rouge même
   si les 44 tests sont au vert (mesuré le 18 nov. 2026).
 - Si `Armado.kt` assemble autre chose, un test passe au rouge (43 sur 44).
 
-Les coches « Texto: » ne font que chercher des mots dans vos fichiers. La preuve complète est le niveau réel, à
+Les coches « Texto: » ne font que chercher des mots dans tes fichiers. La preuve complète est le niveau réel, à
 l'étape 9.
 
 ---
 
 ## Étape 5 · Sans IA : les trois manières de ne pas entrer
 
-Cette étape se fait **sans Claude Code**. C'est une fonction à trois branches, et c'est vous qui l'écrivez.
+Cette étape se fait **sans Claude Code**. C'est une fonction à trois branches, et c'est toi qui l'écris.
 
 Quand la porte du navigateur ne peut pas remettre un nom, elle lance une exception de Firebase. La référence de
 Firebase liste celles de cet appel. Trois groupes comptent ici :
 
-| Exception | Quand, selon la référence | Votre connexion répond |
+| Exception | Quand, selon la référence | Ta connexion répond |
 |---|---|---|
 | `FirebaseAuthUserCollisionException` avec le code `ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL` | Cette adresse e-mail a déjà un utilisateur avec une autre manière de se connecter. N'arrive qu'avec l'option « un compte par adresse e-mail » activée (leçon 06) | `Resultado.CuentaConOtroProveedor` |
 | `FirebaseAuthWebException` avec le code `ERROR_WEB_CONTEXT_CANCELED` | La personne a annulé l'opération en attente | `Resultado.Cancelada` |
@@ -330,14 +330,14 @@ Google, et Firebase a répondu avec cette exception et ce texte : « An account 
 but different sign-in credentials ».
 
 La classe ne suffit pas. La même exception contient deux autres codes, et la référence demande de vérifier le code pour
-connaître la cause : seul celui-ci veut dire « connectez-vous avec l'autre bouton ». Une autre collision s'affiche comme
+connaître la cause : seul celui-ci veut dire « connecte-toi avec l'autre bouton ». Une autre collision s'affiche comme
 une panne, sans lui inventer une cause.
 
-**1. Prédisez.** Les deux premières lignes nomment des classes différentes. Si, dans la seconde, vous retirez la
-condition du code et ne laissez que « c'est une `FirebaseAuthWebException` », quel message verra une personne dont la
+**1. Prédis.** Les deux premières lignes nomment des classes différentes. Si, dans la seconde, tu retires la
+condition du code et ne laisse que « c'est une `FirebaseAuthWebException` », quel message verra une personne dont la
 page a échoué, sans qu'elle ait rien annulé ?
 
-**2. Écrivez-le.** Ajoutez cette fonction dans votre classe :
+**2. Écris-le.** Ajoute cette fonction dans ta classe :
 
 ```kotlin
 private fun resultadoDe(falla: Exception): Resultado = when {
@@ -350,7 +350,7 @@ private fun resultadoDe(falla: Exception): Resultado = when {
 }
 ```
 
-Et enveloppez le corps de `retomar()` et celui d'`entrar()` avec `try { … }` et ces deux `catch`, dans cet ordre :
+Et enveloppe le corps de `retomar()` et celui d'`entrar()` avec `try { … }` et ces deux `catch`, dans cet ordre :
 
 ```kotlin
 } catch (e: CancellationException) {
@@ -364,42 +364,42 @@ Le premier est celui de la 04 : `CancellationException` n'est pas une panne de l
 la tâche a été annulée, et on la laisse passer. `retomar()` porte les mêmes `catch` parce que, selon la référence, le
 résultat en attente contient aussi les exceptions avec lesquelles la connexion aurait fini.
 
-**3. Lancez le `verifica`.** Maintenant la ligne est `Resultado: 44 de 44 pruebas en verde` (résultat : 44 tests sur 44
+**3. Lance le `verifica`.** Maintenant la ligne est `Resultado: 44 de 44 pruebas en verde` (résultat : 44 tests sur 44
 au vert). Il reste une coche au rouge, celle de `respuestas/05.md` : elle se remplit à l'étape 6.
 
-**4. Vérifiez votre prédiction.** Retirez `&& falla.errorCode == "ERROR_WEB_CONTEXT_CANCELED"` et lancez le `verifica` :
+**4. Vérifie ta prédiction.** Retire `&& falla.errorCode == "ERROR_WEB_CONTEXT_CANCELED"` et lance le `verifica` :
 deux tests de plus passent au rouge, les deux du cas « error » (mesuré le 18 nov. 2026 sur la solution : 42 sur 44).
-Remettez-le. Si ce que vous retirez est la condition du code de la collision, un seul passe au rouge (43 sur 44).
+Remets-le. Si ce que tu retires est la condition du code de la collision, un seul passe au rouge (43 sur 44).
 
 Les textes que voit la personne sont déjà dans `mensajeDe` :
 
 | Résultat | Message |
 |---|---|
-| `Cancelada` | « Cerraste la ventana sin elegir cuenta. Toca el botón cuando quieras intentar otra vez. » (Vous avez fermé la fenêtre sans choisir de compte. Touchez le bouton quand vous voudrez réessayer.) |
-| `Fallo` | « No se pudo entrar. Revisa tu conexión y vuelve a intentar. » (Impossible d'entrer. Vérifiez votre connexion et réessayez.) |
-| `CuentaConOtroProveedor` | « Ese correo ya entró a la tienda con otro botón. Entra con el que usaste la primera vez. » (Cette adresse e-mail est déjà entrée dans la boutique avec un autre bouton. Connectez-vous avec celui que vous avez utilisé la première fois.) |
+| `Cancelada` | « Cerraste la ventana sin elegir cuenta. Toca el botón cuando quieras intentar otra vez. » (Tu as fermé la fenêtre sans choisir de compte. Touche le bouton quand tu voudras réessayer.) |
+| `Fallo` | « No se pudo entrar. Revisa tu conexión y vuelve a intentar. » (Impossible d'entrer. Vérifie ta connexion et réessaye.) |
+| `CuentaConOtroProveedor` | « Ese correo ya entró a la tienda con otro botón. Entra con el que usaste la primera vez. » (Cette adresse e-mail est déjà entrée dans la boutique avec un autre bouton. Connecte-toi avec celui que tu as utilisé la première fois.) |
 
 Les deux premiers sont ceux de la 04. Le troisième ne dit pas « Google » exprès : l'exception ne dit pas avec quel
 fournisseur l'utilisateur a été créé.
 
 **Ce qui le prouve :** le `verifica` simulé, les trois cas. Chaque cas comporte des tests de deux types : les uns lancent
-l'exception à votre classe et lisent ce qu'elle a répondu ; un autre dessine l'écran avec votre classe et cherche son
+l'exception à ta classe et lisent ce qu'elle a répondu ; un autre dessine l'écran avec ta classe et cherche son
 message. Les exceptions ont été montées par une doublure, avec des codes écrits à la main : aucune ne venait de
 Firebase. Quelle exception donne, sur un téléphone réel, la fermeture de l'onglet du navigateur, nous ne l'avons pas
 encore mesuré avec un compte.
 
 ---
 
-## Étape 6 · Sans IA : cassez-en un exprès
+## Étape 6 · Sans IA : casses-en un exprès
 
-Aussi **sans Claude Code**. Vous allez provoquer la mauvaise fin de la scène.
+Aussi **sans Claude Code**. Tu vas provoquer la mauvaise fin de la scène.
 
-**1. Prédisez.** Vous allez faire en sorte que `retomar()` réponde toujours `null`, comme s'il ne restait jamais rien à
+**1. Prédis.** Tu vas faire en sorte que `retomar()` réponde toujours `null`, comme s'il ne restait jamais rien à
 moitié fait. Est-ce que ça compile ? Le bouton de Microsoft continue-t-il de fonctionner ? Combien de tests passent au
 rouge ?
 
-**2. Cassez-le et mesurez.** Dans `EntradaConMicrosoft.kt`, remplacez les deux lignes du corps de `retomar()` par un
-simple `null`, à l'intérieur du `try`. Lancez le `verifica`. Voici ce que cela a donné le 18 nov. 2026 (abrégé) :
+**2. Casse-le et mesure.** Dans `EntradaConMicrosoft.kt`, remplace les deux lignes du corps de `retomar()` par un
+simple `null`, à l'intérieur du `try`. Lance le `verifica`. Voici ce que cela a donné le 18 nov. 2026 (abrégé) :
 
 ```text
 ❌ Tu entrada no retoma: quedó una entrada a medias y retomar() no la recogió (paso 4)
@@ -408,14 +408,14 @@ simple `null`, à l'intérieur du `try`. Lancez le `verifica`. Voici ce que cela
 Resultado: 37 de 44 pruebas en verde (7 en rojo, 0 con error, 0 saltadas), leído de …
 ```
 
-*(En français, les coches disent : votre connexion ne reprend pas : une connexion est restée à moitié faite et
-`retomar()` ne l'a pas récupérée (étape 4) ; Reprendre : 1 test sur 4 au vert, vérifiez `retomar()` et que `entrar()`
+*(En français, les coches disent : ta connexion ne reprend pas : une connexion est restée à moitié faite et
+`retomar()` ne l'a pas récupérée (étape 4) ; Reprendre : 1 test sur 4 au vert, vérifie `retomar()` et que `entrar()`
 demande d'abord ce qui est en attente, et … ; À l'ouverture de l'application : 0 test sur 3 au vert, `Tienda.kt` est
-fourni et appelle `retomar()`, vérifiez ce que … Résultat : 37 tests sur 44 au vert, 7 au rouge.)*
+fourni et appelle `retomar()`, vérifie ce que … Résultat : 37 tests sur 44 au vert, 7 au rouge.)*
 
-Copiez dans `respuestas/05.md` la ligne qui dit « Tu entrada no retoma » (Votre connexion ne reprend pas).
+Copie dans `respuestas/05.md` la ligne qui dit « Tu entrada no retoma » (Ta connexion ne reprend pas).
 
-**3. Ce que ces tests ne vous disent pas.** Ça compile, et les tests du bouton restent au vert : toucher « Entrar con
+**3. Ce que ces tests ne te disent pas.** Ça compile, et les tests du bouton restent au vert : toucher « Entrar con
 Microsoft » mène à l'accueil quand même. Le défaut n'existe que si Android ferme l'application au milieu d'une
 connexion, et cela n'arrive pas dans un test qui dure une seconde. Sur un téléphone, cela a été mesuré à part, le 13 nov.
 2026, avec un code d'essai :
@@ -426,17 +426,17 @@ connexion, et cela n'arrive pas dans un test qui dure une seconde. Sur un télé
   elle détruit l'écran, mais le processus reste vivant et termine la connexion tout seul. Pour voir le cas, il faut
   fermer le processus, pas l'écran.
 
-**4. Réparez-le.** Remettez les deux lignes de `retomar()`. Lancez le `verifica` : 44 sur 44, et maintenant aussi la
+**4. Répare-le.** Remets les deux lignes de `retomar()`. Lance le `verifica` : 44 sur 44, et maintenant aussi la
 coche de `respuestas/05.md`.
 
-L'exercice est terminé quand vous pouvez cocher les trois cases :
+L'exercice est terminé quand tu peux cocher les trois cases :
 
-- [ ] Votre prédiction du point 1 est écrite, avec ce que vous avez vu en dessous.
-- [ ] Vous avez collé la ligne du rouge.
-- [ ] Vous avez dit pourquoi les tests du bouton sont restés au vert avec un code qui, sur un téléphone à court de
+- [ ] Ta prédiction du point 1 est écrite, avec ce que tu as vu en dessous.
+- [ ] Tu as collé la ligne du rouge.
+- [ ] Tu as dit pourquoi les tests du bouton sont restés au vert avec un code qui, sur un téléphone à court de
       mémoire, ferait entrer la personne deux fois.
 
-**Ce qui le prouve :** « Cassez-en un exprès ». C'est une base de l'objectif 5.2 : savoir ce que récupère `retomar()`.
+**Ce qui le prouve :** « Casses-en un exprès ». C'est une base de l'objectif 5.2 : savoir ce que récupère `retomar()`.
 
 ---
 
@@ -449,7 +449,7 @@ Avec l'émulateur ouvert, depuis la racine du dépôt :
 ```
 
 Il répète le niveau simulé, puis installe l'application et son application de tests sur l'appareil. Là, il dessine
-`Tienda` avec votre `EntradaConMicrosoft` et la même porte factice, touche les boutons et cherche les textes. Avec la
+`Tienda` avec ta `EntradaConMicrosoft` et la même porte factice, touche les boutons et cherche les textes. Avec la
 solution, dans un émulateur neuf et sans compte (Pixel 9, image `google_apis_playstore` d'Android 37), cela a donné le
 18 nov. 2026 (abrégé) :
 
@@ -471,24 +471,24 @@ vert. Instrumenté : 9 sur 9 au vert.)*
 Il y en a neuf : cinq de cette leçon et les quatre de la 04. Sur le projet de départ non modifié, il a donné 4 sur 9, les
 quatre de la 04. Sans aucun appareil connecté, le `verifica` sort au rouge et dit qu'il ne s'est pas exécuté.
 
-**Ce qui le prouve, et jusqu'où.** Il prouve que les écrans, le toucher et votre classe fonctionnent à l'intérieur
+**Ce qui le prouve, et jusqu'où.** Il prouve que les écrans, le toucher et ta classe fonctionnent à l'intérieur
 d'Android, avec la bibliothèque de Firebase Authentication de l'appareil qui monte le fournisseur. Il ne prouve **rien**
-de votre enregistrement dans Entra ni de votre projet : la porte reste factice, le navigateur ne s'ouvre pas et il ne
+de ton enregistrement dans Entra ni de ton projet : la porte reste factice, le navigateur ne s'ouvre pas et il ne
 faut ni compte ni réseau vers Microsoft. Et le test de « retomar » est la doublure qui répond que quelque chose est resté
 à moitié fait : Android n'a fermé aucune application.
 
-**Regardez le vrai bouton, sans enregistrement.** Dans ce même émulateur, avec un fichier inventé, on a installé
+**Regarde le vrai bouton, sans enregistrement.** Dans ce même émulateur, avec un fichier inventé, on a installé
 l'application et touché « Entrar con Microsoft » (18 nov. 2026). Aucune page ne s'est ouverte. L'application a affiché
-« No se pudo entrar. Revisa tu conexión y vuelve a intentar. » (Impossible d'entrer. Vérifiez votre connexion et
-réessayez.), et le journal du système a dit `[GetAuthDomainTask] Error getting project config. Failed with API key not
-valid`. C'est ce qui est attendu : le fichier était inventé. Avec votre vrai fichier et Microsoft pas encore activé dans
-Firebase, nous n'avons pas encore mesuré le résultat ; si vous le voyez, dites-nous quel message vous avez obtenu.
+« No se pudo entrar. Revisa tu conexión y vuelve a intentar. » (Impossible d'entrer. Vérifie ta connexion et
+réessaye.), et le journal du système a dit `[GetAuthDomainTask] Error getting project config. Failed with API key not
+valid`. C'est ce qui est attendu : le fichier était inventé. Avec ton vrai fichier et Microsoft pas encore activé dans
+Firebase, nous n'avons pas encore mesuré le résultat ; si tu le vois, dis-nous quel message tu as obtenu.
 
 ---
 
 ## Étape 8 · Dans les consoles : enregistrer l'application sans que la clé touche un fichier
 
-Cette étape et la suivante demandent le répertoire de « Avant de commencer ». Ici, on n'écrit pas de code. Ouvrez les
+Cette étape et la suivante demandent le répertoire de « Avant de commencer ». Ici, on n'écrit pas de code. Ouvre les
 deux consoles dans deux onglets, parce que trois données vont passer de l'une à l'autre :
 
 | Donnée | Naît dans | Se colle dans |
@@ -499,11 +499,11 @@ deux consoles dans deux onglets, parce que trois données vont passer de l'une �
 
 Les menus et les boutons sont en anglais, comme dans la documentation. En espagnol, l'essai du 13 nov. 2026 a vu
 « Registros de aplicaciones », « Nuevo registro » et « Registrar una aplicación » (dans la console en espagnol). Les
-autres libellés en espagnol, nous ne les avons pas parcourus de bout en bout : si votre console dit autre chose, guidez-vous sur la version anglaise de chacun et dites-nous comment il apparaît.
+autres libellés en espagnol, nous ne les avons pas parcourus de bout en bout : si ta console dit autre chose, guide-toi sur la version anglaise de chacun et dis-nous comment il apparaît.
 
-**1. Dans Firebase, copiez votre adresse de redirection.** Dans Authentication, onglet *Sign-in method*, choisissez
-Microsoft et activez-le. N'enregistrez pas encore : le panneau demande l'ID et la clé, que vous n'avez pas encore.
-Laissez cet onglet ouvert ainsi, à moitié rempli ; vous y reviendrez au point 5. Lors de l'essai, l'adresse a été copiée
+**1. Dans Firebase, copie ton adresse de redirection.** Dans Authentication, onglet *Sign-in method*, choisis
+Microsoft et active-le. N'enregistre pas encore : le panneau demande l'ID et la clé, que tu n'as pas encore.
+Laisse cet onglet ouvert ainsi, à moitié rempli ; tu y reviendras au point 5. Lors de l'essai, l'adresse a été copiée
 depuis ce même panneau. Elle a cette forme :
 
 ```text
@@ -512,46 +512,46 @@ https://<tu-proyecto>.firebaseapp.com/__/auth/handler
 
 Le guide de Firebase sur les redirections dit que la fin `/__/auth/handler` compte.
 
-**2. Dans Entra, entrez par `entra.microsoft.com`.** Pas par `portal.azure.com` : lors de l'essai, le compte sans
+**2. Dans Entra, entre par `entra.microsoft.com`.** Pas par `portal.azure.com` : lors de l'essai, le compte sans
 abonnement y a donné l'erreur `AADSTS16000`, et par Entra il a ouvert son propre répertoire.
 
-**3. Enregistrez l'application.** Selon le guide de Microsoft : *Entra ID* › *App registrations* › *New registration*.
+**3. Enregistre l'application.** Selon le guide de Microsoft : *Entra ID* › *App registrations* › *New registration*.
 
-- **Name :** un nom que vous reconnaissez. Le guide prévient que les personnes qui se connectent peuvent le voir.
+- **Name :** un nom que tu reconnais. Le guide prévient que les personnes qui se connectent peuvent le voir.
 - **Supported account types :** *Any Entra ID Tenant + Personal Microsoft accounts*, pour les comptes d'organisations et
   les comptes personnels. C'est celui qu'a utilisé l'essai.
 - *Register*.
 
-La page *Overview* montre l'**Application (client) ID**. Celui-là, on le note, et vous pouvez déjà le coller dans
+La page *Overview* montre l'**Application (client) ID**. Celui-là, on le note, et tu peux déjà le coller dans
 l'onglet de Firebase. Ce n'est pas la clé : la clé n'existe pas encore.
 
-**4. Ajoutez l'adresse de redirection.** Selon le guide : *Manage* › *Authentication* › *Add Redirect URI* › plateforme
-**Web** › collez l'adresse du point 1 › *Configure*. Collez-la ; ne la tapez pas à la main. Microsoft demande qu'elle
+**4. Ajoute l'adresse de redirection.** Selon le guide : *Manage* › *Authentication* › *Add Redirect URI* › plateforme
+**Web** › colle l'adresse du point 1 › *Configure*. Colle-la ; ne la tape pas à la main. Microsoft demande qu'elle
 commence par `https` et distingue majuscules et minuscules.
 
-**5. Créez la clé.** Selon le guide : *Certificates & secrets* › *Client secrets* › *New client secret*. Donnez-lui une
-description et choisissez une expiration. Le guide dit qu'elle ne peut pas dépasser 24 mois et recommande moins de 12.
+**5. Crée la clé.** Selon le guide : *Certificates & secrets* › *Client secrets* › *New client secret*. Donne-lui une
+description et choisis une expiration. Le guide dit qu'elle ne peut pas dépasser 24 mois et recommande moins de 12.
 *Add*.
 
-La clé apparaît dans la colonne **Value**, et le guide prévient qu'elle ne s'affiche plus une fois que vous avez quitté
+La clé apparaît dans la colonne **Value**, et le guide prévient qu'elle ne s'affiche plus une fois que tu as quitté
 la page. Avec cette page ouverte :
 
-- Copiez-la avec le bouton de copie et collez-la **directement** dans le champ de la clé du panneau de Microsoft, dans
-  l'onglet de Firebase. Vérifiez que l'*Application (client) ID* du point 3 est déjà dans son champ. *Save*.
-- Ne la collez nulle part ailleurs. Ensuite, copiez n'importe quel autre texte, pour la faire sortir du presse-papiers
+- Copie-la avec le bouton de copie et colle-la **directement** dans le champ de la clé du panneau de Microsoft, dans
+  l'onglet de Firebase. Vérifie que l'*Application (client) ID* du point 3 est déjà dans son champ. *Save*.
+- Ne la colle nulle part ailleurs. Ensuite, copie n'importe quel autre texte, pour la faire sortir du presse-papiers
   (recommandation de cette série).
-- Notez la **date d'expiration**. Quand elle arrivera, la connexion avec Microsoft cessera de fonctionner jusqu'à ce que
-  vous créiez une autre clé et l'apportiez à Firebase.
-- Ne faites aucune capture tant que la colonne *Value* montre la clé.
+- Note la **date d'expiration**. Quand elle arrivera, la connexion avec Microsoft cessera de fonctionner jusqu'à ce que
+  tu créais une autre clé et l'apportais à Firebase.
+- Ne fais aucune capture tant que la colonne *Value* montre la clé.
 
 Une frontière, pour ne pas en tirer une architecture : Firebase demande cet ID et cette clé pour ce fournisseur, et ce
 même guide de Microsoft recommande des certificats plutôt que des clés avant de mettre une application en production.
 Pour un produit réel, cela se revoit avec la personne qui s'occupe de la sécurité : la politique d'Entra, la rotation de
 la clé et le type d'identifiant.
 
-**6. Laissez la preuve.** Dans `respuestas/05.md` :
+**6. Laisse la preuve.** Dans `respuestas/05.md` :
 
-| Donnée | Ce que vous notez |
+| Donnée | Ce que tu notes |
 |---|---|
 | *Application (client) ID* | Oui, en entier |
 | Type de comptes | Oui, le nom de l'option |
@@ -560,18 +560,18 @@ la clé et le type d'identifiant.
 | Valeur de la clé | **Jamais** |
 
 Et une capture de *Certificates & secrets* prise **après** avoir quitté cette page et y être revenu. Si une partie de la
-valeur reste visible sur la capture, masquez-la avant de l'enregistrer.
+valeur reste visible sur la capture, masque-la avant de l'enregistrer.
 
-**7. Demandez au `verifica` de chercher.** Lancez-le : les deux coches « Clave: » doivent être au vert. Pour savoir que
-cette recherche voit bien, semez une clé **inventée**. Cette commande la monte par morceaux, pour qu'elle ne soit écrite
+**7. Demande au `verifica` de chercher.** Lance-le : les deux coches « Clave: » doivent être au vert. Pour savoir que
+cette recherche voit bien, sème une clé **inventée**. Cette commande la monte par morceaux, pour qu'elle ne soit écrite
 nulle part, et l'ajoute comme commentaire à la fin d'un fichier :
 
 ```bash
 printf '// %s%s%s\n' 'Inv8' 'Q~' "$(printf 'x%.0s' $(seq 34))" >> lecciones/05-entrar-con-microsoft/inicio/app/src/main/java/mx/habil/ejemplo/tienda/Armado.kt
 ```
 
-Lancez le `verifica`. Le 18 nov. 2026, sur le projet de départ non modifié, il a répondu avec le fichier et le numéro de
-ligne, sans afficher le texte (votre numéro de ligne peut être différent) :
+Lance le `verifica`. Le 18 nov. 2026, sur le projet de départ non modifié, il a répondu avec le fichier et le numéro de
+ligne, sans afficher le texte (ton numéro de ligne peut être différent) :
 
 ```text
 ❌ Hay un texto con forma de clave de cliente de Entra en: inicio/app/src/main/java/…/Armado.kt:19. No la imprimo. …
@@ -579,21 +579,21 @@ ligne, sans afficher le texte (votre numéro de ligne peut être différent) :
 
 *(En français : il y a un texte qui a la forme d'une clé client d'Entra dans : … Je ne l'affiche pas. …)*
 
-Supprimez cette dernière ligne dans votre éditeur et relancez le `verifica` : vert.
+Supprime cette dernière ligne dans ton éditeur et relance le `verifica` : vert.
 
 **Ce qui le prouve, et jusqu'où.** Les coches « Clave: » prouvent qu'aucun fichier texte de `inicio/` ni
 `respuestas/05.md` ne contient un texte ayant la forme de ces clés ni ne nomme un secret client. La forme est inspirée
 d'une règle publique de gitleaks, mais le `verifica` n'exécute pas gitleaks et ne remplace pas une analyse de secrets :
 il est plus simple, il peut marquer du texte innocent, et d'autres formes lui échappent, ainsi que les binaires, les
-variables d'environnement et l'historique de git. Il ne voit pas non plus votre terminal, vos captures ni votre
-presse-papiers. Cette partie, c'est vous qui y veillez, et votre tableau et votre capture, c'est vous qui les comparez.
+variables d'environnement et l'historique de git. Il ne voit pas non plus ton terminal, tes captures ni ton
+presse-papiers. Cette partie, c'est toi qui y veilles, et ton tableau et ta capture, c'est toi qui les compares.
 
 ---
 
 ## Étape 9 · Sur le téléphone : le niveau réel
 
 Cette étape parle bel et bien à Microsoft, une fois, à la main. C'est la seule qui vérifie l'étape 8 : que l'adresse de
-redirection est la bonne, que l'ID est celui de votre enregistrement et que la clé que vous avez conservée est la clé
+redirection est la bonne, que l'ID est celui de ton enregistrement et que la clé que tu as conservée est la clé
 en vigueur.
 
 Avec l'émulateur ouvert, depuis `inicio/` :
@@ -602,7 +602,7 @@ Avec l'émulateur ouvert, depuis `inicio/` :
 ./gradlew installDebug
 ```
 
-Ouvrez « La tienda » (La boutique), touchez « Entrar » (Entrer) puis « Entrar con Microsoft ».
+Ouvre « La tienda » (La boutique), touche « Entrar » (Entrer) puis « Entrar con Microsoft ».
 
 **Ce qui a été vu lors de l'essai du 13 nov. 2026** (Mac, émulateur, comptes personnels). Cet essai a utilisé un code de
 test avec les mêmes appels, pas celui de `solucion/` :
@@ -616,15 +616,15 @@ test avec les mêmes appels, pas celui de `solucion/` :
 | L'application fermée au milieu d'une connexion | Ce qu'on voit à l'étape 6 : le résultat en attente a remis la connexion |
 
 La classe `NavegadorConFirebase` de cette leçon, nous ne l'avons exécutée que jusqu'à l'erreur du fichier inventé de
-l'étape 7 ; la connexion complète avec un compte réel, pas encore. Si, en l'essayant, vous voyez quelque chose de
-différent, dites-nous ce qui est apparu.
+l'étape 7 ; la connexion complète avec un compte réel, pas encore. Si, en l'essayant, tu vois quelque chose de
+différent, dis-nous ce qui est apparu.
 
-**Si votre compte utilise une clé d'accès (passkey).** Lors de l'essai, l'écran « Sign in with your passkey » est resté
+**Si ton compte utilise une clé d'accès (passkey).** Lors de l'essai, l'écran « Sign in with your passkey » est resté
 sur « Verifying… » dans l'émulateur. On a touché *Cancel* et l'on est entré avec le mot de passe.
 
-**Si le navigateur propose d'enregistrer le mot de passe :** sur une machine qui n'est pas la vôtre, « No ».
+**Si le navigateur propose d'enregistrer le mot de passe :** sur une machine qui n'est pas la tienne, « No ».
 
-**Essayez la fin de la scène.** Avec la page de Microsoft au premier plan et avant de choisir un compte, dans un autre
+**Essaie la fin de la scène.** Avec la page de Microsoft au premier plan et avant de choisir un compte, dans un autre
 terminal :
 
 ```bash
@@ -633,29 +633,29 @@ adb shell pidof mx.habil.ejemplo.tienda
 ```
 
 La première ferme les processus de l'application qu'il est sûr de fermer, selon la documentation d'`adb`. La seconde ne
-doit rien afficher : le processus n'existe plus. Maintenant, choisissez votre compte. L'application doit démarrer et vous
-saluer sans que vous touchiez le bouton une seconde fois.
+doit rien afficher : le processus n'existe plus. Maintenant, choisis ton compte. L'application doit démarrer et te
+saluer sans que tu touches le bouton une seconde fois.
 
-**Pour terminer, sur une machine qui n'est pas la vôtre :** fermez la session Microsoft dans le navigateur de l'émulateur
-et effacez ses données (leçon 00).
+**Pour terminer, sur une machine qui n'est pas la tienne :** ferme la session Microsoft dans le navigateur de l'émulateur
+et efface ses données (leçon 00).
 
 **Ce qui le prouve :** la connexion réelle prouve que l'enregistrement, l'adresse de redirection, l'ID et la clé sont
 corrects. Elle ne prouve pas les cas où l'on n'entre pas : ceux-là, le niveau simulé les couvre.
 
 ---
 
-## Vos exercices
+## Tes exercices
 
 Les étapes 1, 5 et 6 se font **sans IA**.
 
-| # | Vous faites | C'est fait quand |
+| # | Tu fais | C'est fait quand |
 |---|---|---|
-| 5.1 | Vous enregistrez l'application dans Entra avec l'adresse de redirection exacte et vous apportez son ID et sa clé à Firebase | Trois preuves. Votre tableau de l'étape 8 et votre capture sans clé visible : vous les comparez vous-même. Les deux coches « Clave: » du `verifica` au vert, qui disent seulement qu'aucun **fichier** de `inicio/` ni `respuestas/05.md` ne contient cette forme ou ce nom. Et la connexion réelle de l'étape 9, qui est la seule chose qui valide l'enregistrement |
-| 5.2 | Vous implémentez `EntradaConMicrosoft` sans changer les écrans, et vous reprenez le résultat en attente | Trois preuves. Simulé : ses coches du `verifica` au vert ; cela valide ce que demande votre classe et ce qu'elle répond, avec une porte factice, et que les 20 tests de la 04 restent au vert avec leurs fichiers identiques. Cela **n'atteste pas** à lui seul que l'application installée utilise votre connexion : cela, `MainActivity.kt` identique à celui de la leçon et le test de ce qu'assemble `Armado.kt` l'appuient. Instrumenté : 9 sur 9, la même chose à l'intérieur d'Android. Réel : vous entrez à l'étape 9 et vous fermez le processus au milieu d'une connexion ; c'est la seule chose qui valide qu'Android vous ramène vraiment dans l'application |
-| 5.3 | Vous comparez Google et Microsoft avec les cinq questions de l'étape 1 | Votre tableau coïncide avec celui de « Comparez vos réponses ». Vous le comparez vous-même |
-| 5.4 | Vous demandez à Claude Code la seconde connexion en prenant la première comme référence, et vous listez ce qu'il n'a pas bien copié | Votre liste de oui et de non de l'étape 4, avec fichier et ligne pour chaque « non », contre les huit questions de « Comparez vos réponses ». Si les huit donnent « oui », votre rendu est ce tableau et la phrase « No encontré desvíos en las ocho revisiones ». C'est vous qui la notez ; le `verifica` ne la lit pas |
+| 5.1 | Tu enregistres l'application dans Entra avec l'adresse de redirection exacte et tu apportes son ID et sa clé à Firebase | Trois preuves. Ton tableau de l'étape 8 et ta capture sans clé visible : tu les compares toi-même. Les deux coches « Clave: » du `verifica` au vert, qui disent seulement qu'aucun **fichier** de `inicio/` ni `respuestas/05.md` ne contient cette forme ou ce nom. Et la connexion réelle de l'étape 9, qui est la seule chose qui valide l'enregistrement |
+| 5.2 | Tu implémentes `EntradaConMicrosoft` sans changer les écrans, et tu reprends le résultat en attente | Trois preuves. Simulé : ses coches du `verifica` au vert ; cela valide ce que demande ta classe et ce qu'elle répond, avec une porte factice, et que les 20 tests de la 04 restent au vert avec leurs fichiers identiques. Cela **n'atteste pas** à lui seul que l'application installée utilise ta connexion : cela, `MainActivity.kt` identique à celui de la leçon et le test de ce qu'assemble `Armado.kt` l'appuient. Instrumenté : 9 sur 9, la même chose à l'intérieur d'Android. Réel : tu entres à l'étape 9 et tu fermes le processus au milieu d'une connexion ; c'est la seule chose qui valide qu'Android te ramène vraiment dans l'application |
+| 5.3 | Tu compares Google et Microsoft avec les cinq questions de l'étape 1 | Ton tableau coïncide avec celui de « Compare tes réponses ». Tu le compares toi-même |
+| 5.4 | Tu demandes à Claude Code la seconde connexion en prenant la première comme référence, et tu listes ce qu'il n'a pas bien copié | Ta liste de oui et de non de l'étape 4, avec fichier et ligne pour chaque « non », contre les huit questions de « Compare tes réponses ». Si les huit donnent « oui », ton rendu est ce tableau et la phrase « No encontré desvíos en las ocho revisiones ». C'est toi qui la notes ; le `verifica` ne la lit pas |
 
-**Durée :** comptez environ quatre heures, avec l'enregistrement dans Entra, le « Cassez-en un exprès », le niveau
+**Durée :** compte environ quatre heures, avec l'enregistrement dans Entra, le « Casses-en un exprès », le niveau
 instrumenté et la connexion réelle ; sans les étapes 8 et 9, environ deux heures et demie. C'est une estimation : nous
 l'ajusterons avec le temps que prendra la première cohorte. Obtenir le répertoire n'est pas compté : lors de l'essai,
 l'abonnement d'essai a mis environ 15 minutes à apparaître comme actif.
@@ -664,22 +664,22 @@ l'abonnement d'essai a mis environ 15 minutes à apparaître comme actif.
 
 ## Ça ne tourne pas ?
 
-| Vous voyez | Cause probable | Ce que vous faites |
+| Tu vois | Cause probable | Ce que tu fais |
 |---|---|---|
-| `File google-services.json is missing.` | Vous n'avez pas copié votre fichier dans `inicio/app/` | Le `cp` de « Avant de commencer ». Sur `solucion/`, c'est ce qui est attendu dans un clone propre |
-| ❌ « Estos archivos ya no son los de la lección 04 » (ces fichiers ne sont plus ceux de la leçon 04) | Quelqu'un, vous ou Claude Code, a changé un test, une porte ou un écran de la 04 | `git diff -- <fichier>` et défaites-le à la main |
-| ❌ « Tu entrada no retoma » (votre connexion ne reprend pas) | `retomar()` n'utilise pas ce que renvoie `pendiente()` | Étape 4. Si vous venez du « Cassez-en un », étape 6, point 4 |
+| `File google-services.json is missing.` | Tu n'as pas copié ton fichier dans `inicio/app/` | Le `cp` de « Avant de commencer ». Sur `solucion/`, c'est ce qui est attendu dans un clone propre |
+| ❌ « Estos archivos ya no son los de la lección 04 » (ces fichiers ne sont plus ceux de la leçon 04) | Quelqu'un, toi ou Claude Code, a changé un test, une porte ou un écran de la 04 | `git diff -- <fichier>` et défaites-le à la main |
+| ❌ « Tu entrada no retoma » (ta connexion ne reprend pas) | `retomar()` n'utilise pas ce que renvoie `pendiente()` | Étape 4. Si tu viens du « Casses-en un », étape 6, point 4 |
 | ❌ Le cas « error » au rouge, avec `resultadoDe` écrite | Toute `FirebaseAuthWebException` est comptée comme une annulation | Étape 5 : il manque la condition du code |
-| ❌ « Hay un texto con forma de clave de cliente de Entra » (il y a un texte qui a la forme d'une clé client d'Entra) | Une clé, ou quelque chose qui en a la forme, est dans un fichier | Si c'est votre clé : effacez-la du fichier, supprimez-la dans Entra et créez-en une autre (étape 8). Si c'est celle, inventée, du contrôle : effacez cette ligne |
-| Dans les tests, `Default FirebaseApp is not initialized` | `robolectric.properties` ou `AppDePruebas.kt` ont été changés (mesuré le 18 nov. 2026 sans eux) | Remettez-les : c'est de l'échafaudage |
-| Dans les tests instrumentés, `NoSuchMethodException: android.hardware.input.InputManager.getInstance` | La ligne d'Espresso 3.7.0 a été retirée et c'est celui que Compose apporte par défaut qui est resté. Mesuré le 18 nov. 2026 sur Android 37 : 0 sur 9 | Remettez `androidTestImplementation(libs.espresso.core)` |
-| Sur le téléphone, « No se pudo entrar… » (Impossible d'entrer…) sans qu'aucune page s'ouvre | Avec un fichier inventé, le journal a dit `API key not valid` (mesuré le 18 nov. 2026). Avec votre fichier, ce que cela donne avec Microsoft non activé ou avec la clé expirée, nous ne l'avons pas encore mesuré | Vérifiez que vous avez copié votre `google-services.json` et l'étape 8 |
-| Dans le navigateur, une erreur `AADSTS50011` | Selon Microsoft : l'adresse de redirection de la demande ne coïncide avec aucune de celles enregistrées. Non mesuré ici | Étape 8, point 4 : collez-la à nouveau, en entier |
-| Sur `portal.azure.com`, `AADSTS16000` | Mesuré le 13 nov. 2026 avec un compte sans abonnement | Entrez par `entra.microsoft.com` |
-| « Nuevo registro » (Nouvel enregistrement) ouvre un panneau sans formulaire | Votre compte n'a pas de répertoire (mesuré le 13 nov. 2026 avec un compte tout juste créé) | « Avant de commencer » : il vous faut d'abord un répertoire |
-| « Ese correo ya entró a la tienda con otro botón… » (cette adresse e-mail est déjà entrée dans la boutique avec un autre bouton…) | Cette adresse e-mail a déjà un utilisateur dans votre projet, créé avec un autre fournisseur ; dans cette série, Google | Connectez-vous avec Google. Que les deux boutons mènent au même utilisateur, c'est la leçon 06 |
-| L'écran de la clé d'accès reste sur « Verifying… » | Mesuré le 13 nov. 2026 dans l'émulateur | *Cancel* et connectez-vous avec le mot de passe |
-| ❌ « EntradaConMicrosoft.kt nombra una puerta concreta » (`EntradaConMicrosoft.kt` nomme une porte concrète) | Votre code nomme la vraie porte (`NavegadorConFirebase`) ou une doublure des tests. Les tests ne lui passent que des doublures : si votre code demande laquelle lui est échue, le vert ne dit pas ce qu'il fait avec la vraie | Que votre code ne parle qu'à `NavegadorDeProveedor`. La vraie porte, c'est `MainActivity.kt` qui la choisit, et il est fourni (étape 4) |
+| ❌ « Hay un texto con forma de clave de cliente de Entra » (il y a un texte qui a la forme d'une clé client d'Entra) | Une clé, ou quelque chose qui en a la forme, est dans un fichier | Si c'est ta clé : efface-la du fichier, supprime-la dans Entra et crées-en une autre (étape 8). Si c'est celle, inventée, du contrôle : efface cette ligne |
+| Dans les tests, `Default FirebaseApp is not initialized` | `robolectric.properties` ou `AppDePruebas.kt` ont été changés (mesuré le 18 nov. 2026 sans eux) | Remets-les : c'est de l'échafaudage |
+| Dans les tests instrumentés, `NoSuchMethodException: android.hardware.input.InputManager.getInstance` | La ligne d'Espresso 3.7.0 a été retirée et c'est celui que Compose apporte par défaut qui est resté. Mesuré le 18 nov. 2026 sur Android 37 : 0 sur 9 | Remets `androidTestImplementation(libs.espresso.core)` |
+| Sur le téléphone, « No se pudo entrar… » (Impossible d'entrer…) sans qu'aucune page s'ouvre | Avec un fichier inventé, le journal a dit `API key not valid` (mesuré le 18 nov. 2026). Avec ton fichier, ce que cela donne avec Microsoft non activé ou avec la clé expirée, nous ne l'avons pas encore mesuré | Vérifie que tu as copié ton `google-services.json` et l'étape 8 |
+| Dans le navigateur, une erreur `AADSTS50011` | Selon Microsoft : l'adresse de redirection de la demande ne coïncide avec aucune de celles enregistrées. Non mesuré ici | Étape 8, point 4 : colle-la à nouveau, en entier |
+| Sur `portal.azure.com`, `AADSTS16000` | Mesuré le 13 nov. 2026 avec un compte sans abonnement | Entre par `entra.microsoft.com` |
+| « Nuevo registro » (Nouvel enregistrement) ouvre un panneau sans formulaire | Ton compte n'a pas de répertoire (mesuré le 13 nov. 2026 avec un compte tout juste créé) | « Avant de commencer » : il te faut d'abord un répertoire |
+| « Ese correo ya entró a la tienda con otro botón… » (cette adresse e-mail est déjà entrée dans la boutique avec un autre bouton…) | Cette adresse e-mail a déjà un utilisateur dans ton projet, créé avec un autre fournisseur ; dans cette série, Google | Connecte-toi avec Google. Que les deux boutons mènent au même utilisateur, c'est la leçon 06 |
+| L'écran de la clé d'accès reste sur « Verifying… » | Mesuré le 13 nov. 2026 dans l'émulateur | *Cancel* et connecte-toi avec le mot de passe |
+| ❌ « EntradaConMicrosoft.kt nombra una puerta concreta » (`EntradaConMicrosoft.kt` nomme une porte concrète) | Ton code nomme la vraie porte (`NavegadorConFirebase`) ou une doublure des tests. Les tests ne lui passent que des doublures : si ton code demande laquelle lui est échue, le vert ne dit pas ce qu'il fait avec la vraie | Que ton code ne parle qu'à `NavegadorDeProveedor`. La vraie porte, c'est `MainActivity.kt` qui la choisit, et il est fourni (étape 4) |
 
 Sur Linux Mint 22.3 (x86_64), le `verifica` de cette leçon a donné le même résultat que sur le Mac (18 nov. 2026), au
 niveau simulé et avec un fichier de test qui contenait l'empreinte de cet ordinateur : sur `inicio/`, 23 sur 44 au vert ;
@@ -689,11 +689,11 @@ sur `solucion/`, 44 sur 44. Le niveau instrumenté n'a pas été mesuré sous Li
 
 ## Pour conclure
 
-**Répondez sans relire :**
+**Réponds sans relire :**
 
 1. Où vit la clé client, qui l'utilise et pourquoi ne va-t-elle pas dans l'application ?
 2. Qu'est-ce qui doit coïncider exactement entre Firebase et Entra ?
-3. Votre `verifica` donne 44 sur 44 et les coches « Clave: » sont au vert. Dites une chose que cela prouve et deux qu'il
+3. Ton `verifica` donne 44 sur 44 et les coches « Clave: » sont au vert. Dis une chose que cela prouve et deux qu'il
    ne prouve pas.
 4. Pourquoi « No conservar actividades » ne sert-il pas à tester `retomar()` ?
 
@@ -702,17 +702,17 @@ fournisseurs se retrouve avec un seul utilisateur, et seulement si elle le confi
 
 ---
 
-## Comparez vos réponses
+## Compare tes réponses
 
-**Étape 1.** Votre code intervient à la ligne 1, quand il monte la demande, et reçoit la ligne 6. Les lignes 2 à 5 se
-passent entre Firebase, le navigateur et Microsoft. Votre tableau :
+**Étape 1.** Ton code intervient à la ligne 1, quand il monte la demande, et reçoit la ligne 6. Les lignes 2 à 5 se
+passent entre Firebase, le navigateur et Microsoft. Ton tableau :
 
 | Question | Google (leçon 04) | Microsoft (cette leçon) |
 |---|---|---|
-| Qui enregistre l'application, et où ? | Vous enregistrez l'application dans Firebase et vous ajoutez l'empreinte ; les clients Google, vous ne les créez pas à la main : ils arrivent dans votre `google-services.json` après l'activation de Google (leçon 03) | Vous, à la main, dans la console d'Entra, qui est en dehors de Firebase |
+| Qui enregistre l'application, et où ? | Tu enregistres l'application dans Firebase et tu ajoutes l'empreinte ; les clients Google, tu ne les crées pas à la main : ils arrivent dans ton `google-services.json` après l'activation de Google (leçon 03) | Toi, à la main, dans la console d'Entra, qui est en dehors de Firebase |
 | Que montre-t-il à la personne pour se connecter ? | Credential Manager, avec la fenêtre des comptes d'Android | Le navigateur, avec la page de Microsoft |
-| Que reçoit votre application du fournisseur ? | Un jeton d'identité, qu'elle porte elle-même à Firebase | Rien : le code voyage de Microsoft à Firebase. Votre application reçoit l'utilisateur de Firebase |
-| Y a-t-il une clé ? Où vit-elle ? | Vous n'en gérez aucune : dans l'application ne va que l'ID client web, qui n'est pas secret | Oui, la clé client. Vous la créez dans Entra et elle vit dans la console de Firebase |
+| Que reçoit ton application du fournisseur ? | Un jeton d'identité, qu'elle porte elle-même à Firebase | Rien : le code voyage de Microsoft à Firebase. Ton application reçoit l'utilisateur de Firebase |
+| Y a-t-il une clé ? Où vit-elle ? | Tu n'en gères aucune : dans l'application ne va que l'ID client web, qui n'est pas secret | Oui, la clé client. Tu la crées dans Entra et elle vit dans la console de Firebase |
 | Qu'est-ce qui doit coïncider ? | Le nom de paquet et l'empreinte | L'adresse de redirection, caractère par caractère |
 
 **Ce qui est pareil, c'est le schéma :** une `Entrada` avec sa porte, un `Resultado` pour chaque manière de finir, les
@@ -724,7 +724,7 @@ nouveau parce que c'est ce que demande le guide de Firebase avant d'ouvrir un au
 doit pas entrer deux fois s'il y a déjà une réponse qui attend.
 
 **Exercice 5.4.** Huit questions oui ou non sur ce que Claude Code a généré. Ce qui est attendu, ce sont huit « oui » ;
-chaque « non » est quelque chose qu'il n'a pas bien copié et va dans votre liste avec fichier et ligne. La liste dit quoi
+chaque « non » est quelque chose qu'il n'a pas bien copié et va dans ta liste avec fichier et ligne. La liste dit quoi
 vérifier, pas ce qui va échouer : on n'a pas mesuré ce que génère l'outil.
 
 | # | Question | Pourquoi |
@@ -734,11 +734,11 @@ vérifier, pas ce qui va échouer : on n'a pas mesuré ce que génère l'outil.
 | 3 | La classe reçoit-elle seulement la porte `navegador`, sans `idDeClienteWeb` ni autre identifiant ? | L'ID et la clé vivent dans les consoles |
 | 4 | `entrar()` demande-t-il `pendiente()` avant `abrir` ? | C'est ce que demande le guide, pour ne pas faire entrer deux fois |
 | 5 | `retomar()` n'appelle-t-il jamais `abrir` ? | Il est appelé à l'ouverture de l'application, sans que personne touche un bouton |
-| 6 | N'y a-t-il d'écrit aucun ID client, aucune clé ni l'identifiant d'un répertoire ? | Règle sur les données de l'étape 2. Le paramètre `tenant` avec la valeur `common` n'est pas une donnée à vous : c'est la valeur par défaut |
+| 6 | N'y a-t-il d'écrit aucun ID client, aucune clé ni l'identifiant d'un répertoire ? | Règle sur les données de l'étape 2. Le paramètre `tenant` avec la valeur `common` n'est pas une donnée à toi : c'est la valeur par défaut |
 | 7 | Personne ne nomme-t-il `accessToken`, `idToken` ni `OAuthCredential` ? | Règle sur les données : de Firebase, seul le nom sort |
-| 8 | Les tests, les portes, les écrans et votre `google-services.json` sont-ils restés intacts ? | Le `verifica` compare ces fichiers |
+| 8 | Les tests, les portes, les écrans et ton `google-services.json` sont-ils restés intacts ? | Le `verifica` compare ces fichiers |
 
-**Étape 5.** Elle verrait celui de l'annulation, « Cerraste la ventana… » (Vous avez fermé la fenêtre…), alors qu'elle
+**Étape 5.** Elle verrait celui de l'annulation, « Cerraste la ventana… » (Tu as fermé la fenêtre…), alors qu'elle
 n'a rien fermé. Sans la condition, toute panne du navigateur est comptée comme une annulation.
 
 **Étape 6.** Ça compile, et le bouton continue de fonctionner. Sept tests passent au rouge : ceux de `retomar()` et les
@@ -751,10 +751,10 @@ l'application : dans ceux-là, le navigateur factice répond instantanément.
    échanger le code de Microsoft contre les données de la personne. Elle ne va pas dans l'application parce que quiconque
    a l'application installée pourrait l'en extraire : Microsoft demande de ne pas l'utiliser dans les applications
    natives.
-2. L'adresse de redirection : celle qu'utilise Firebase et celle que vous avez enregistrée dans Entra.
-3. Il prouve ce que demande votre classe et ce qu'elle répond dans chaque cas, avec une porte factice, et qu'aucun
-   fichier vérifié ne contient un texte ayant la forme d'une clé. Il ne prouve pas que votre enregistrement dans Entra
-   fonctionne, ni que la clé ne se trouve pas dans votre terminal, dans une capture ou dans l'historique de git.
+2. L'adresse de redirection : celle qu'utilise Firebase et celle que tu as enregistrée dans Entra.
+3. Il prouve ce que demande ta classe et ce qu'elle répond dans chaque cas, avec une porte factice, et qu'aucun
+   fichier vérifié ne contient un texte ayant la forme d'une clé. Il ne prouve pas que ton enregistrement dans Entra
+   fonctionne, ni que la clé ne se trouve pas dans ton terminal, dans une capture ou dans l'historique de git.
 4. Parce qu'elle détruit l'écran mais laisse vivant le processus, qui termine la connexion tout seul. `retomar()` existe
    pour le moment où le processus n'est plus là.
 
