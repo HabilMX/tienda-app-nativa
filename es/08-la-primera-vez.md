@@ -97,8 +97,8 @@ El 19-nov-2026, con un archivo inventado, la última línea del conteo fue
 07, ya en verde, y 15 de la primera vez. De esas, dos ya pasan con el andamiaje (las de «el usuario que vuelve»:
 hoy tu app nunca dice que es la primera vez, y en ese caso acierta) y trece esperan tu código.
 
-**Lo demuestra:** tu predicción, contra lo que veas en el paso 3 (las pruebas) y en el paso 4 (tu teléfono). El
-`verifica` solo busca la línea: no sabe si acertaste.
+**Lo demuestra:** tu predicción, contra lo que veas en el paso 3 (las pruebas) y en el paso 4 (tu teléfono). Qué
+revisa el `verifica` de tus respuestas está en «Tus ejercicios».
 
 ---
 
@@ -280,8 +280,8 @@ cuenta honesta. Escribe en `respuestas/08.md` tres líneas que empiecen así:
 3. **Todavía no hay:** algo que una tienda de verdad necesita saber de ti y que tu app, hoy, no tiene dónde
    guardar.
 
-**Lo demuestra:** tus tres líneas, contra «Compara tus respuestas». El `verifica` solo busca las tres: no las
-califica.
+**Lo demuestra:** tus tres líneas, contra «Compara tus respuestas» (lo que revisa el `verifica`, en «Tus
+ejercicios»).
 
 ---
 
@@ -319,20 +319,22 @@ En `8.3 comprobé` di dos cosas: qué de la respuesta comprobó la propia respue
 página?) y qué comprobaste tú, y cómo. En `fuente 8.3`, la dirección de una página oficial que usaste para
 comprobar algo.
 
-**Lo demuestra:** tus tres juicios contra «Compara tus respuestas», y tu comprobación. El `verifica` solo busca las
-líneas y la fuente, o sea, el formato: no las califica. Eso lo haces tú al cotejar.
+**Lo demuestra:** tus tres juicios contra «Compara tus respuestas», y tu comprobación (lo que revisa el
+`verifica`, en «Tus ejercicios»).
 
 ---
 
 ## Tus ejercicios
 
-El paso 5 se hace **sin IA**.
+El paso 5 se hace **sin IA**. De tus respuestas en `respuestas/08.md`, el `verifica` solo revisa el formato:
+que estén las líneas, los juicios y la fuente. No sabe si acertaste ni si escribiste sin IA; eso lo cierras tú al
+cotejar con «Compara tus respuestas».
 
 | # | Haces | Está hecho cuando |
 |---|---|---|
 | 8.1 | Decides con `isNewUser` si se muestra la bienvenida y demuestras que aparece solo la primera vez | El `verifica` dice «Nivel simulado: completo», con las 97 pruebas en verde, y tu `predicción 8.1` está comparada con lo que viste. Es el nivel simulado; el paso 4 es tu prueba en el teléfono |
-| 8.2 | Explicas qué hizo Firebase por ti, qué construirías sin él y qué todavía no hay | El `verifica` confirma el formato. Tú lo terminas al cotejar tus tres líneas `8.2` con «Compara tus respuestas»: ¿nombraste la verificación del token, la creación del usuario, la sesión que se queda y lo que todavía no hay (el perfil)? Escritas sin IA: eso no lo puede comprobar ningún script, es tu compromiso |
-| 8.3 | Juzgas una respuesta de Claude Code sobre la seguridad del inicio de sesión | El `verifica` confirma el formato. Tú lo terminas cuando tus tres juicios coinciden con «Compara tus respuestas», cada uno con su porqué, y junto a cada uno anotaste qué lo respalda: la página oficial o el archivo y la línea |
+| 8.2 | Explicas qué hizo Firebase por ti, qué construirías sin él y qué todavía no hay | Tus tres líneas `8.2`, escritas sin IA, nombran la verificación del token, la creación del usuario, la sesión que se queda y lo que todavía no hay (el perfil) |
+| 8.3 | Juzgas una respuesta de Claude Code sobre la seguridad del inicio de sesión | Tus tres juicios coinciden con «Compara tus respuestas», cada uno con su porqué y con lo que lo respalda: la página oficial, o el archivo y la línea |
 
 **Tiempo:** calcula una hora y media sin el paso 4, y veinte minutos más con él. Es un estimado: lo ajustamos con
 lo que tarde la primera cohorte.
