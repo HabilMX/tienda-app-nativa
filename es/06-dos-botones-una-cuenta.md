@@ -51,6 +51,11 @@ cd lecciones/06-dos-botones-una-cuenta/inicio
 Parte de la solución de la 05, con el andamiaje de esta lección encima. `./verifica solucion` sale en rojo en un
 clon limpio, porque sin tu archivo el proyecto no compila. Tus respuestas van en `respuestas/06.md`.
 
+**Regla que sigue vigente de la 05.** Nunca pegues ni subas el valor de la clave de Entra, un token de acceso o
+de identidad, ni capturas o registros que los traigan. El resultado de un enlace también trae un token de
+acceso: esta app no lo lee. `google-services.json` sigue ignorado porque es de tu proyecto: no lo uses como
+evidencia. Si una clave o un token tocó un archivo, la terminal o una captura, se revoca y se crea otro.
+
 **Lo que no hace esta lección.** No deshace un enlace, no guarda la sesión ni la cierra (lección 07) y no
 distingue la primera vez (lección 08).
 
@@ -58,10 +63,12 @@ distingue la primera vez (lección 08).
 
 ## Paso 1 · En la consola: la regla que hace existir la colisión
 
-La colisión solo existe con una opción de tu proyecto de Firebase: «una cuenta por correo» (*One account per
+El choque de esta lección —`ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL` al entrar con el segundo
+proveedor— solo aparece con una opción de tu proyecto de Firebase: «una cuenta por correo» (*One account per
 email address*). La referencia de Firebase dice que ese error solo se lanza con ella activada, y la recomienda.
 Con varias cuentas por correo, Firebase puede crear un segundo usuario: el primer final malo de la escena, y
-nada que resolver.
+nada que resolver. La misma excepción tiene otros códigos, por ejemplo al enlazar una cuenta que ya es de otro
+usuario: no son el caso de esta lección, y la app los muestra como falla.
 
 Búscala en la configuración de Authentication de tu consola y comprueba que está activa. Anota en
 `respuestas/06.md` esta línea, sin correos ni claves:
@@ -95,14 +102,17 @@ Tres archivos son nuevos y cuatro cambiaron respecto a la solución de la 05. Á
 | `PuertaDelNavegador.kt` | Una línea: no toma lo pendiente si lo que quedó a medias fue un enlace |
 | `MainActivity.kt`, `Armado.kt` | Arman también el enlace. Por ahora `Armado.kt` regresa `EnlaceSinConectar()` |
 
-Lo demás es idéntico a la solución de la 05, y el `verifica` lo compara archivo por archivo.
+Lo demás es idéntico a la solución de la 05, y el `verifica` lo compara archivo por archivo. Es una restricción
+de esta actividad, no del objetivo: un cambio en un archivo dado puede ser código válido y aun así sale en
+rojo, porque la lección los fija para poder decir qué mide.
 
-**Un enlace a medias no es una entrada a medias.** Firebase entrega lo que quedó pendiente por el mismo lugar,
-`pendingAuthResult`, sea una entrada o un enlace: su referencia lo dice para las dos llamadas. Y no dice cuál
-fue. Si la app lo leyera siempre como entrada, un enlace cancelado se vería como «no pudiste entrar». Por eso
-la puerta deja una nota en el teléfono antes de abrir el navegador para enlazar: «hay un enlace en curso». Es
-un sí o un no; no guarda cuentas, tokens ni claves. Al abrirse la app, la puerta de entrar no toma lo pendiente
-si esa nota está puesta, y `Tienda` le pregunta primero a tu enlace.
+**Un enlace a medias no es una entrada a medias.** La referencia de Firebase dice que, si la pantalla muere
+durante un enlace, su desenlace se recoge con `getPendingAuthResult`: el mismo lugar por donde llega una entrada
+que quedó a medias. Lo que sigue es una decisión de esta app, no una cita: ese resultado no trae una etiqueta
+que aquí se use para saber si fue enlace o entrada. Leído siempre como entrada, un enlace cancelado se vería
+como «no pudiste entrar». Por eso la puerta guarda una nota en el teléfono antes de abrir el navegador para
+enlazar: «hay un enlace en curso». Es un sí o un no; no guarda cuentas, tokens ni claves. Al abrirse la app, la
+puerta de entrar no toma lo pendiente si esa nota está puesta, y `Tienda` le pregunta primero a tu enlace.
 
 **Mide el punto de partida.** Desde la raíz del repo:
 
@@ -164,8 +174,9 @@ private fun resultadoDe(falla: Exception): ResultadoDeEnlace = when {
    Revisa tres cosas: que `enlazar()` llame a la puerta del enlace y no vuelva a entrar; que `retomar()` no
    conteste siempre «enlazado»; y que nadie haya tocado las pruebas, las puertas ni las pantallas.
 
-4. **Corre el `verifica`:** `Resultado: 66 de 66 pruebas en verde`. Quedan en rojo las marcas de
-   `respuestas/06.md` que te falten.
+4. **Corre el `verifica`.** Las 66 pruebas pueden quedar en verde. La entrega todavía no está completa: faltan
+   las marcas «Escrito» de `respuestas/06.md`, y el nivel real del paso 5. El `verifica` lo dice al final, en
+   «Estado del objetivo 6.1».
 5. **Explica**, en tres líneas: por qué el enlace se hace sobre el usuario que ya entró, y no en la colisión.
 
 **Lo demuestra, y hasta dónde.** El `verifica` usa un proyecto de mentira (`ProyectoFalso.kt`) con dos
@@ -190,7 +201,8 @@ idéntico en `inicio/` y en `solucion/`.
 ## Paso 4 · Sin IA: ¿y si la app enlazara sola?
 
 Este es el ejercicio 6.2 y se hace **sin Claude Code**. La confirmación es un criterio de esta serie: enlazar le
-da a otra cuenta la entrada a este usuario, y eso lo decide su dueño, ya adentro. Aquí lo compruebas quitándola.
+da a otra cuenta la entrada a este usuario, y eso lo decide la persona que acaba de autenticarse con el
+proveedor de la cuenta que ya existe. Aquí lo compruebas quitándola.
 
 **1. Predice**, en `respuestas/06.md`: si la app enlazara en cuanto la persona entra, sin preguntar, ¿qué vería
 Ana? ¿Y qué podría pasar si la cuenta de Microsoft que chocó no fuera la suya?
@@ -211,7 +223,7 @@ pantalla = Pantalla.INICIO
 Corre el `verifica`. Esto dio el 18-nov-2026 (recortado):
 
 ```text
-❌ Estos archivos ya no son iguales en inicio/ y en solucion/, y no se tocan: …/Tienda.kt
+❌ Restricción de esta actividad (no del objetivo): estos archivos vienen dados y ya no son iguales … Tienda.kt
 ❌ La confirmación: 2 de 4 pruebas en verde. Nada se enlaza sin el toque de la persona, y solo se le ofrece …
 ❌ Al tocar «Enlazar Microsoft» no se enlaza, o después Microsoft no llega al mismo usuario (paso 3)
 Resultado: 63 de 66 pruebas en verde (3 en rojo, 0 con error, 0 saltadas), leído de …
@@ -233,21 +245,43 @@ aparte: 62 de 66.
 
 ## Paso 5 · En el teléfono: la prueba manual
 
-Pide el nivel real de la 05: tu registro en Entra funcionando y «una cuenta por correo» activa (paso 1).
+Es la evidencia real del 6.1, y **todavía no se puede completar con estas instrucciones**. Lo que sigue dice qué
+hay que observar y qué falta medir. Pide el nivel real de la 05, con tu registro en Entra funcionando, y «una
+cuenta por correo» activa (paso 1).
 
-Con una cuenta de Microsoft cuyo correo ya entró con Google: toca «Entrar con Microsoft» y lee el mensaje;
-entra con Google; acepta «Enlazar Microsoft». Después, los dos botones deberían llegar al mismo usuario, y tu
-proyecto debería tener un solo usuario con ese correo. Para comprobar el botón de Microsoft hay que salir
-primero, y esta app todavía no cierra sesión (lección 07).
+**El recorrido.** Con una cuenta de Microsoft cuyo correo ya entró con Google: toca «Entrar con Microsoft» y lee
+el mensaje; entra con Google; acepta «Enlazar Microsoft». Según la guía de Firebase, después de un enlace la
+persona puede entrar con cualquiera de los proveedores enlazados y llegar a los mismos datos.
 
-[pendiente: ensayo con cuenta — hacer esta prueba con el código de esta lección: cómo salir entre un intento y
-otro, dónde muestra la consola los dos proveedores de un usuario, y cerrar el proceso a medio enlace con
-`adb shell am kill` para ver la nota trabajar].
+**Lo que falta: salir.** Para comprobar el botón de Microsoft hay que volver a entrar desde cero, y esta app
+todavía no tiene cómo cerrar sesión: es la lección 07. La propuesta para el ensayo, sin adelantar código, es
+borrar los datos de la app en el teléfono:
 
-En el ensayo del 13-nov-2026, con un código de prueba, se vio el camino corto: ya adentro con Google se enlazó
-Microsoft, el mismo usuario quedó con los dos proveedores, y al salir y entrar con Microsoft se llegó a él.
+```bash
+adb shell pm clear mx.habil.ejemplo.tienda
+```
 
-**Lo demuestra:** es lo único que demuestra que Firebase enlazó tus cuentas.
+La documentación de `adb` dice que ese comando borra todos los datos asociados a una app. [pendiente: ensayo con
+cuenta — confirmar que con eso la app queda sin sesión, que el usuario y sus proveedores siguen en Firebase, y
+que al tocar «Entrar con Microsoft» se llega al mismo usuario; dónde muestra la consola los dos proveedores; y,
+aparte, cerrar el proceso a medio enlace con `adb shell am kill` para ver la nota trabajar. `am kill` no cierra
+la sesión: es otra prueba].
+
+**Tu registro.** Cuando la hagas, anota en `respuestas/06.md`, sin correos ni tokens:
+
+| Qué anotas | Ejemplo |
+|---|---|
+| La fecha, en una línea que empiece así | `prueba manual: 2026-11-30` |
+| Antes de enlazar | un usuario, con Google |
+| Después de enlazar | el mismo usuario, con Google y Microsoft |
+
+El `verifica` solo lee la primera línea, y aun con ella dice que no vio la prueba.
+
+En el ensayo del 13-nov-2026, con un código de prueba que sí tenía cómo salir, se vio el camino corto: ya
+adentro con Google se enlazó Microsoft, el mismo usuario quedó con los dos proveedores, y al salir y entrar con
+Microsoft se llegó a él.
+
+**Lo demuestra:** es lo único que demuestra que Firebase enlazó tus cuentas. Un 66 de 66 no lo sustituye.
 
 ---
 
@@ -257,7 +291,7 @@ El paso 4 se hace **sin IA**.
 
 | # | Haces | Está hecho cuando |
 |---|---|---|
-| 6.1 | Resuelves la colisión: la persona entra con el proveedor que ya tenía y enlaza el otro, con confirmación | Tres evidencias. La línea «una cuenta por correo: activa» en `respuestas/06.md`, después de revisarla en tu consola. Simulado: el `verifica` da 66 de 66, con un proyecto de mentira de dos personas; valida el orden, la confirmación, el enlace a medias y que los dos accesos llegan al mismo usuario **de mentira**. Real: la prueba manual del paso 5, que es lo único que valida que Firebase enlazó tus cuentas |
+| 6.1 | Resuelves la colisión: la persona entra con el proveedor que ya tenía y enlaza el otro, con confirmación | Tres evidencias, y las tres hacen falta. La línea «una cuenta por correo: activa» en `respuestas/06.md`, después de revisarla en tu consola. Simulado: «Estado del objetivo 6.1» dice nivel simulado completo, con un proyecto de mentira de dos personas; valida el orden, la confirmación, el enlace a medias y que los dos accesos llegan al mismo usuario **de mentira**. Real: la prueba manual del paso 5, con tu registro anotado; es lo único que valida que Firebase enlazó tus cuentas, y hoy está [pendiente: ensayo con cuenta] |
 | 6.2 | Explicas por qué la app pide confirmación antes de enlazar y qué pasaría si enlazara sola | Tu predicción, el rojo pegado y tu explicación están en `respuestas/06.md`, y coinciden con «Compara tus respuestas». La explicación la comparas tú |
 
 **Tiempo:** calcula una hora y media sin la prueba manual, y media hora más con ella. Es un estimado: lo
@@ -270,8 +304,8 @@ ajustamos con lo que tarde la primera cohorte.
 | Ves | Causa probable | Qué haces |
 |---|---|---|
 | `File google-services.json is missing.` | No copiaste tu archivo a `inicio/app/` | El `cp` de «Antes de empezar» |
-| ❌ «Estos archivos ya no son los de la solución de la lección 05» | Cambió algo heredado | `git diff -- <archivo>` y deshazlo a mano |
-| ❌ «Estos archivos ya no son iguales en inicio/ y en solucion/» con `Tienda.kt` | Vienes del paso 4 | Regresa la línea original |
+| ❌ «Restricción de esta actividad… lo heredado ya no es idéntico a la solución de la lección 05» | Cambió algo heredado | `git diff -- <archivo>` y deshazlo a mano |
+| ❌ «Restricción de esta actividad… ya no son iguales en inicio/ y en solucion/» con `Tienda.kt` | Vienes del paso 4 | Regresa la línea original |
 | ❌ «Enlazar sin haber entrado primero» | Tu `resultadoDe` no reconoce `NadieHaEntrado` | Paso 3 |
 | ❌ «Retomar el enlace» | `retomar()` no usa lo que regresa `enlazador.pendiente()`, o contesta siempre lo mismo | Paso 3 |
 | Entraste con Microsoft con un correo que ya había entrado con Google, y no salió el mensaje de la colisión | Tu proyecto permite varias cuentas por correo: Firebase creó otro usuario | Paso 1. No enlaces dos usuarios creados por separado como si fuera el caso de la lección |
@@ -285,9 +319,9 @@ En Linux, esta lección está [pendiente: medir en Linux Mint 22.3].
 
 **Contesta sin volver a leer:**
 
-1. ¿Qué opción de tu proyecto hace que exista la colisión, y qué pasa sin ella?
+1. ¿Qué opción de tu proyecto hace que aparezca el choque de esta lección, y qué pasa sin ella?
 2. ¿Por qué se entra primero y se enlaza después?
-3. Tu `verifica` da 66 de 66. Di una cosa que eso demuestra y una que no.
+3. Tu `verifica` da 66 de 66 y «nivel simulado: completo». Di una cosa que eso demuestra y una que no.
 4. ¿Por qué un enlace a medias no se puede leer como una entrada a medias?
 
 **Lo que sigue:** en la L07 la sesión se queda: la app te recuerda al volver, y aprendes a cerrarla.
@@ -301,13 +335,14 @@ orden es entrar primero y enlazar después, y por eso la puerta lanza `NadieHaEn
 
 **Paso 4.** Ana no vería nada: entraría al inicio y, por detrás, se le abriría el navegador para enlazar sin
 haberlo pedido. Y si la cuenta de Microsoft que chocó fuera de otra persona con acceso a ese correo, esa cuenta
-quedaría con entrada al usuario de Ana sin que ella lo decidiera. La confirmación pone la decisión en quien ya
-demostró ser la dueña: está adentro, con el proveedor con el que creó la cuenta.
+quedaría con entrada al usuario de Ana sin que ella lo decidiera. La confirmación pone la decisión en la persona
+que acaba de autenticarse con el proveedor de la cuenta que ya existe. Eso prueba que entró con ese proveedor;
+no prueba nada más sobre quién es.
 
 **Para cerrar:**
 
-1. «Una cuenta por correo». Sin ella, Firebase puede crear un segundo usuario con el mismo correo, y no hay
-   colisión que resolver.
+1. «Una cuenta por correo». Sin ella, Firebase puede crear un segundo usuario con el mismo correo, y no aparece
+   el choque de esta lección.
 2. Porque enlazar es sumarle un proveedor a un usuario que ya entró: antes de entrar no hay a quién.
 3. Demuestra qué pide tu enlace y qué contesta, que nada se enlaza sin el toque de la persona y que, en un
    proyecto de mentira, los dos accesos llegan al mismo usuario. No demuestra que Firebase enlace tus cuentas.
@@ -320,10 +355,11 @@ demostró ser la dueña: está adentro, con el proveedor con el que creó la cue
 
 Abiertas el 18-nov-2026.
 
-- Firebase. *Link Multiple Auth Providers to an Account on Android* (primero se entra y después se enlaza; el mismo identificador con cualquier proveedor. Su ejemplo usa `linkWithCredential`; para Microsoft, la guía de ese proveedor indica `startActivityForLinkWithProvider`). https://firebase.google.com/docs/auth/android/account-linking
+- Firebase. *Link Multiple Auth Providers to an Account on Android* (primero se entra y después se enlaza; el mismo identificador con cualquier proveedor; después de enlazar se puede entrar con cualquiera. Su ejemplo usa `linkWithCredential`; para Microsoft, la guía de ese proveedor indica `startActivityForLinkWithProvider`). https://firebase.google.com/docs/auth/android/account-linking
 - Firebase. *Authenticate Using Microsoft on Android* (enlazar Microsoft a un usuario que ya entró). https://firebase.google.com/docs/auth/android/microsoft-oauth
 - Firebase. *Authenticate Using Microsoft with JavaScript* (el caso Microsoft y Google con «una cuenta por correo»: entrar con el proveedor que ya existe y enlazar el otro). https://firebase.google.com/docs/auth/web/microsoft-oauth
 - Firebase. Referencia de `FirebaseUser` (`startActivityForLinkWithProvider` y su resultado pendiente). https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseUser
+- Android Developers. *Android Debug Bridge* (`pm clear`: borra todos los datos asociados a una app; `am kill`). https://developer.android.com/tools/adb
 - Firebase. Referencia de `FirebaseAuth` (`getPendingAuthResult`). https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseAuth
 - Firebase. Referencia de `FirebaseAuthUserCollisionException` (`ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL` solo con «una cuenta por correo», que recomienda). https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseAuthUserCollisionException
 - Ensayo de la serie, 13-nov-2026, Mac con Apple silicon, con un código de prueba: la colisión con una cuenta real, y el enlace después de entrar con Google.

@@ -20,6 +20,8 @@
 #   byte por byte, todo archivo que esta lección no cambia contra el de la solución de la 05. Los cuatro que
 #   SÍ cambian (Tienda.kt, PuertaDelNavegador.kt, MainActivity.kt y Armado.kt, por la confirmación, la nota y
 #   el armado del enlace) vienen dados y se comparan entre inicio/ y solucion/, salvo Armado.kt, que editas tú.
+#   Esas comparaciones son una RESTRICCIÓN DE ESTA ACTIVIDAD, no el objetivo: un cambio ahí puede ser código
+#   válido y aun así sale en rojo, porque la lección fija esos archivos para poder decir qué mide.
 # PRESENCIA TEXTUAL (busca palabras; no ejecuta ni valida que el código haga lo que dicen; los comentarios no
 #   cuentan): que EnlaceConMicrosoft.kt llame enlazador.enlazar( ; que Armado.kt nombre EnlaceConMicrosoft( ;
 #   que MainActivity.kt arme con Armado.kt y le pase el enlace a Tienda; que ningún .kt de la app nombre
@@ -33,6 +35,9 @@
 #   Firebase: de «una cuenta por correo» solo busca la línea que tú anotas. Tampoco repite la búsqueda de la
 #   clave de Entra: esa es del verifica de la lección 05. Por eso no demuestra que Firebase enlace tus
 #   cuentas: eso es la prueba manual (paso 5). Ni califica tu explicación del 6.2.
+# ESTADO DEL 6.1: al final dice, por separado, el nivel simulado y el nivel real. El real nunca lo da por
+#   hecho: solo lee si anotaste en respuestas/06.md la línea «prueba manual: AAAA-MM-DD», y aun entonces dice
+#   que no la vio. Un «66 de 66» no completa el objetivo 6.1 ni cambia ese estado.
 # Solo lee tu código y tus archivos: no los cambia. Gradle escribe sus resultados en build/, que no se sube.
 # Uso:  ./verifica             revisa tu trabajo en inicio/
 #       ./verifica solucion    revisa la solución de referencia. En un clon limpio sale en ROJO:
@@ -68,6 +73,8 @@ XMLRE="$DIRX/TEST-$PAQ.RecorridoConEnlaceTest.xml"
 XMLAE="$DIRX/TEST-$PAQ.ArranqueConEnlaceTest.xml"
 MARCA_CORREO="una cuenta por correo: activa"
 MARCA_ROMPE="Nada se enlaza sin el toque de la persona"
+MARCA_MANUAL='prueba manual: [0-9]{4}-[0-9]{2}-[0-9]{2}'
+
 echo "Revisando $PROY/ — nivel simulado (sin emulador, sin navegador, sin cuenta, sin hablar con Microsoft ni con Firebase)"
 
 # --- Andamiaje -------------------------------------------------------------------------------
@@ -87,7 +94,8 @@ if [ -d inicio ] && [ -d solucion ]; then
   if [ -z "$cambiados" ]; then
     si "Andamiaje: las pruebas del enlace, sus dobles, Enlace.kt, PuertaDelEnlace.kt, PantallaEnlace.kt, Tienda.kt, PuertaDelNavegador.kt y MainActivity.kt son los de la lección, sin cambios (11 archivos comparados). Con MainActivity.kt idéntico, onCreate le pasa a Tienda lo que arma Armado.kt"
   else
-    no "Estos archivos ya no son iguales en inicio/ y en solucion/, y no se tocan:$cambiados"
+    no "Restricción de esta actividad (no del objetivo): estos archivos vienen dados y ya no son iguales en inicio/ y en solucion/:$cambiados"
+    nota "Un cambio ahí puede ser válido como código, pero esta lección los fija: dos de ellos respaldan lo que ninguna prueba ve (que onCreate arme tus piezas y que la puerta de entrar respete la nota del enlace)."
     nota "Mira qué cambió con  git diff -- <archivo>  y deshazlo a mano. Si vienes del ejercicio 6.2, regresa la línea de Tienda.kt (paso 4)."
   fi
 fi
@@ -107,7 +115,7 @@ if [ -f "$L05/$DIRM/EntradaConMicrosoft.kt" ]; then
   elif [ -z "$cambiados" ]; then
     si "Andamiaje: lo heredado es idéntico a la solución de la lección 05 ($comparados archivos comparados: sus pruebas, sus dobles, sus puertas, tu EntradaConMicrosoft y las pantallas que no cambian)"
   else
-    no "Estos archivos ya no son los de la solución de la lección 05 y no se tocan:$cambiados"
+    no "Restricción de esta actividad (no del objetivo): lo heredado ya no es idéntico a la solución de la lección 05:$cambiados"
   fi
 else
   no "No encontré la solución de la lección 05 ($L05): sin ella no puedo comparar que lo heredado siga igual"
@@ -293,6 +301,27 @@ fi
 echo
 echo "Resultado: $verdes de $total pruebas en verde ($fallas en rojo, $errores con error, $saltadas saltadas), leído de"
 for x in "${TODOS[@]}"; do echo "  $x"; done
+# El número de arriba sale solo de los informes de pruebas. Las marcas de arriba (archivos, texto, lo escrito)
+# no lo cambian: por eso se dice aparte si quedó alguna en rojo.
+echo
+echo "Estado del objetivo 6.1 (son dos niveles, y uno no sustituye al otro):"
+if [ "$ok" -eq 0 ]; then
+  echo "  ✅ Nivel simulado: completo. Las $total pruebas y todas las marcas de arriba están en verde."
+else
+  echo "  ❌ Nivel simulado: incompleto. Hay marcas en rojo arriba, aunque el conteo diga $verdes de $total."
+fi
+if [ "$PROY" = "inicio" ]; then
+  fecha=""
+  [ -f "$RESP" ] && fecha=$(grep -oE "$MARCA_MANUAL" "$RESP" | head -1)
+  if [ -n "$fecha" ]; then
+    echo "  ⏳ Nivel real: anotaste «$fecha» en respuestas/06.md. Yo no vi esa prueba: no veo tu teléfono ni tu consola. Vale lo que tú observaste (paso 5)."
+  else
+    echo "  ⏳ Nivel real: PENDIENTE. Falta la prueba manual del paso 5: un solo usuario con los dos proveedores. Al hacerla, anota en respuestas/06.md  prueba manual: AAAA-MM-DD"
+  fi
+else
+  echo "  ⏳ Nivel real: no se revisa sobre solucion/. Es la prueba manual del paso 5, con tu proyecto."
+fi
+echo "  Un $verdes de $total no sustituye la evidencia real del 6.1."
 nota "Nivel simulado: demuestra qué le pide tu EnlaceConMicrosoft a la puerta del enlace, qué contesta en cada caso,"
 nota "  que nada se enlaza sin el toque de la persona y que un enlace a medias se retoma como enlace."
 nota "«El mismo usuario» es el de un proyecto de mentira que sigue «una cuenta por correo» escrita a mano: ninguna"
