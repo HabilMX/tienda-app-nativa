@@ -1,0 +1,286 @@
+#!/usr/bin/env bash
+# Revisa la lección 08, en el nivel SIMULADO: corre las pruebas en tu computadora
+# (./gradlew testDebugUnitTest), sin emulador, sin cuenta y sin red hacia Google, Microsoft ni Firebase, y lee
+# el conteo de los informes de resultados (XML). Esta lección no tiene nivel instrumentado.
+# SÍ revisa, corriendo PrimeraVezTest (le dan a tu esPrimeraVez un resultado de inicio de sesión de mentira,
+#   el de DoblesDePrimeraVez.kt): que con isNewUser en true diga que es la primera vez; que con false diga que
+#   no; y que con additionalUserInfo en null diga que no, sin tronar.
+# SÍ revisa, corriendo EntradaConPrimeraVezTest (le dan a tus dos entradas puertas de mentira que contestan si
+#   el usuario es nuevo): que con Google y con Microsoft el Resultado traiga la primera vez que dijo la puerta,
+#   nuevo y que vuelve; y que al retomar una entrada de Microsoft a medias también la traiga.
+# SÍ revisa, corriendo RecorridoConPrimeraVezTest (dibujan Tienda en memoria con tus clases y el proyecto de
+#   mentira de la lección 06): la bienvenida aparece la primera vez con Google y con Microsoft; al cerrar
+#   sesión y volver a entrar, ya no; al reabrir con sesión, tampoco; y al retomar con Microsoft un usuario
+#   nuevo, sí.
+# SÍ revisa lo heredado: corre las 81 pruebas de la lección 07 (que incluyen las de la 04, la 05 y la 06) y
+#   compara, byte por byte, todo archivo que esta lección no cambia contra el de la solución de la 07. Los que
+#   SÍ cambian y vienen dados (Entrada.kt, Puertas.kt, PuertaDelNavegador.kt, Tienda.kt e Inicio.kt) se comparan
+#   entre inicio/ y solucion/, igual que los nuevos que vienen dados. Esas comparaciones son una RESTRICCIÓN DE
+#   ESTA ACTIVIDAD, no el objetivo: un cambio ahí puede ser código válido y aun así sale en rojo.
+# PRESENCIA TEXTUAL (busca palabras; no ejecuta; los comentarios no cuentan): que PrimeraVez.kt nombre
+#   additionalUserInfo e isNewUser; que EntradaConGoogle.kt llame verificarConPrimeraVez( ; que
+#   EntradaConMicrosoft.kt llame abrirConPrimeraVez( y pendienteConPrimeraVez( ; que ningún .kt de la app nombre
+#   una pieza de pruebas; y que respuestas/08.md traiga tu predicción del 8.1, tus tres líneas del 8.2, tus
+#   tres juicios del 8.3, qué comprobaste y una fuente.
+# NO revisa: Firebase de verdad, ni tu teléfono. «Es nuevo» en las pruebas lo decide un doble, no Firebase.
+#   No ve qué contesta isNewUser con una cuenta real, ni al enlazar. No califica tus respuestas.
+# Solo lee tu código y tus archivos: no los cambia. Gradle escribe sus resultados en build/, que no se sube.
+# Uso:  ./verifica             revisa tu trabajo en inicio/
+#       ./verifica solucion    revisa la solución de referencia. En un clon limpio sale en ROJO:
+#                              google-services.json no se sube, y sin él el proyecto no compila.
+set -uo pipefail
+cd "$(dirname "$0")"
+PROY="${1:-inicio}"
+ok=0
+si() { echo "✅ $1"; }
+no() { echo "❌ $1"; ok=1; }
+nota() { echo "ℹ️  $1"; }
+case "$PROY" in
+  inicio|solucion) ;;
+  *) echo "Uso: ./verifica [inicio|solucion]"; exit 2 ;;
+esac
+[ $# -le 1 ] || { echo "Uso: ./verifica [inicio|solucion]   (esta lección no tiene nivel instrumentado)"; exit 2; }
+PAQ="mx.habil.ejemplo.tienda"
+DIRM="app/src/main/java/mx/habil/ejemplo/tienda"
+DIRP="app/src/test/java/mx/habil/ejemplo/tienda"
+MAIN="$PROY/app/src/main"
+JSON="$PROY/app/google-services.json"
+L07="../07-la-sesion-se-queda/solucion"
+RESP=../../respuestas/08.md
+DIRX="$PROY/app/build/test-results/testDebugUnitTest"
+x() { echo "$DIRX/TEST-$PAQ.$1.xml"; }
+HER=("$(x EntradaConGoogleTest)" "$(x RecorridoTest)" "$(x ArranqueTest)" "$(x EntradaConMicrosoftTest)"
+     "$(x RecorridoConMicrosoftTest)" "$(x ArranqueConMicrosoftTest)" "$(x EnlaceConMicrosoftTest)"
+     "$(x RecorridoConEnlaceTest)" "$(x ArranqueConEnlaceTest)" "$(x SesionDeLaTiendaTest)"
+     "$(x RecorridoConSesionTest)" "$(x ArranqueConSesionTest)")
+XMLP="$(x PrimeraVezTest)"
+XMLE="$(x EntradaConPrimeraVezTest)"
+XMLR="$(x RecorridoConPrimeraVezTest)"
+TODOS=("${HER[@]}" "$XMLP" "$XMLE" "$XMLR")
+
+echo "Revisando $PROY/ — nivel simulado (sin emulador, sin cuenta, sin hablar con Google, Microsoft ni Firebase)"
+
+# --- Andamiaje -------------------------------------------------------------------------------
+grep -q '^org.gradle.jvmargs=.*-Xmx4g' "$PROY/gradle.properties" 2>/dev/null \
+  && si "Andamiaje: gradle.properties le da 4 GB de memoria a Gradle (-Xmx4g)" \
+  || no "gradle.properties ya no trae -Xmx4g: regresa la línea  org.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8"
+
+# Lo que esta lección trae dado, comparado entre inicio/ y solucion/ (vale para los dos).
+if [ -d inicio ] && [ -d solucion ]; then
+  cambiados=""; n=0
+  for t in "$DIRP/PrimeraVezTest.kt" "$DIRP/EntradaConPrimeraVezTest.kt" "$DIRP/RecorridoConPrimeraVezTest.kt" \
+           "$DIRP/DoblesDePrimeraVez.kt" "$DIRM/Entrada.kt" "$DIRM/Puertas.kt" "$DIRM/PuertaDelNavegador.kt" \
+           "$DIRM/Tienda.kt" "$DIRM/Inicio.kt"; do
+    n=$((n + 1))
+    cmp -s "inicio/$t" "solucion/$t" || cambiados="$cambiados $t"
+  done
+  if [ -z "$cambiados" ]; then
+    si "Andamiaje: las pruebas de la primera vez, su doble, Entrada.kt, Puertas.kt, PuertaDelNavegador.kt, Tienda.kt e Inicio.kt son los de la lección, sin cambios ($n archivos comparados)"
+  else
+    no "Restricción de esta actividad (no del objetivo): estos archivos vienen dados y ya no son iguales en inicio/ y en solucion/:$cambiados"
+    nota "Mira qué cambió con  git diff -- <archivo>  y deshazlo a mano."
+  fi
+fi
+
+# Lo heredado: todo archivo de app/src que la solución de la 07 tiene y esta lección no cambia.
+if [ -f "$L07/$DIRM/SesionDeLaTienda.kt" ]; then
+  cambiados=""; comparados=0
+  while IFS= read -r t; do
+    case "$t" in
+      "$DIRM/Entrada.kt"|"$DIRM/Puertas.kt"|"$DIRM/PuertaDelNavegador.kt"|"$DIRM/Tienda.kt"|"$DIRM/Inicio.kt"|\
+      "$DIRM/EntradaConGoogle.kt"|"$DIRM/EntradaConMicrosoft.kt") continue ;;
+    esac
+    comparados=$((comparados + 1))
+    cmp -s "$PROY/$t" "$L07/$t" || cambiados="$cambiados $t"
+  done < <(cd "$L07" && find app/src -type f | sort)
+  if [ "$comparados" -lt 30 ]; then
+    no "Solo encontré $comparados archivos en la solución de la lección 07: no puedo decir que lo heredado siga igual"
+  elif [ -z "$cambiados" ]; then
+    si "Andamiaje: lo heredado es idéntico a la solución de la lección 07 ($comparados archivos comparados: sus pruebas, sus dobles, tu sesión, tu enlace y las pantallas que no cambian)"
+  else
+    no "Restricción de esta actividad (no del objetivo): lo heredado ya no es idéntico a la solución de la lección 07:$cambiados"
+  fi
+else
+  no "No encontré la solución de la lección 07 ($L07): sin ella no puedo comparar que lo heredado siga igual"
+fi
+
+# --- Las piezas, buscadas como texto (no se ejecutan) ----------------------------------------
+# Se CUENTA en lugar de usar «grep -q» al final de la tubería: con pipefail, grep -q corta al primer acierto
+# y la tubería puede contestar «no hay» habiendo encontrado.
+hay() { local n; n=$(grep -rh --include='*.kt' -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -cF -- "$1"); [ "${n:-0}" -gt 0 ]; }
+PV="$PROY/$DIRM/PrimeraVez.kt"
+GOO="$PROY/$DIRM/EntradaConGoogle.kt"
+MIC="$PROY/$DIRM/EntradaConMicrosoft.kt"
+# El «no hay» solo vale si la búsqueda sí lee: se comprueba con una palabra que seguro está.
+if ! hay 'fun esPrimeraVez' "$PV" || ! hay 'class EntradaConGoogle' "$GOO" || ! hay 'class EntradaConMicrosoft' "$MIC"; then
+  no "No pude leer PrimeraVez.kt, EntradaConGoogle.kt o EntradaConMicrosoft.kt (o ya no declaran su función y sus clases): sin ellos no reviso el texto"
+else
+  if hay 'additionalUserInfo' "$PV" && hay 'isNewUser' "$PV"; then
+    si "Texto: PrimeraVez.kt nombra additionalUserInfo e isNewUser (presencia textual: que decida bien lo miden las pruebas, abajo)"
+  else
+    no "PrimeraVez.kt no nombra additionalUserInfo e isNewUser: la decisión sale de ahí (paso 3)"
+  fi
+  hay 'verificarConPrimeraVez(' "$GOO" \
+    && si "Texto: EntradaConGoogle.kt llama verificarConPrimeraVez(" \
+    || no "EntradaConGoogle.kt no llama verificarConPrimeraVez( : con verificar( a secas nunca se entera de la primera vez (paso 3)"
+  if hay 'abrirConPrimeraVez(' "$MIC" && hay 'pendienteConPrimeraVez(' "$MIC"; then
+    si "Texto: EntradaConMicrosoft.kt llama abrirConPrimeraVez( y pendienteConPrimeraVez("
+  else
+    no "EntradaConMicrosoft.kt no llama abrirConPrimeraVez( y pendienteConPrimeraVez( : las dos formas de entrar con Microsoft traen la primera vez (paso 3)"
+  fi
+  sobran=""
+  for p in InformacionFalsa ResultadoFalso VerificadorConPrimeraVezFalso NavegadorConPrimeraVezFalso RecuerdoFalso \
+           RecuerdoDelProyecto ProyectoFalso EnlazadorFalso NavegadorFalso EntradaFalsa SelectorFalso VerificadorFalso AppDePruebas; do
+    hay "$p" "$MAIN" && sobran="$sobran $p"
+  done
+  [ -z "$sobran" ] \
+    && si "Texto: ningún .kt de la app nombra una pieza de pruebas" \
+    || no "La app nombra:$sobran. Las piezas de pruebas viven solo en src/test"
+fi
+
+# --- Tu archivo de la lección 03 -------------------------------------------------------------
+if [ ! -f "$JSON" ]; then
+  no "No existe $JSON: copia ahí el google-services.json que descargaste en la lección 03 (sigue ignorado por git)"
+  [ "$PROY" = "solucion" ] && nota "Sobre solucion/ este rojo es el esperado en un clon limpio: el archivo no se sube. Copia el tuyo a solucion/app/ y retíralo al terminar."
+fi
+if [ -z "${ANDROID_HOME:-}" ] && [ ! -f "$PROY/local.properties" ]; then
+  no "ANDROID_HOME no está definido: sin él Gradle no encuentra el SDK (lección 00, paso 2)"
+  echo; echo "Resultado: no se corrieron las pruebas."; exit 1
+fi
+
+# --- Las pruebas simuladas -------------------------------------------------------------------
+# --rerun obliga a correr las pruebas aunque nada haya cambiado: así el resultado es de ESTA corrida.
+marca=$(mktemp)
+salida=$(mktemp)
+echo "Corriendo las pruebas… (la primera vez tarda y necesita red para bajar librerías)"
+"./$PROY/gradlew" -p "$PROY" -q testDebugUnitTest --rerun >"$salida" 2>&1
+rc=$?
+
+frescos=1
+for f in "${TODOS[@]}"; do
+  { [ -f "$f" ] && [ "$f" -nt "$marca" ]; } || frescos=0
+done
+if [ "$frescos" -ne 1 ]; then
+  no "Las pruebas no llegaron a correr. Esto dijo Gradle:"
+  grep -E '^e: |error:|What went wrong|SDK location|Java heap|No matching client found|google-services.json is missing|Could not (find|resolve)' "$salida" \
+    | sed -e 's|file://.*/||' -e 's| in /.*google-services.json| en tu app/google-services.json|' | head -8 | sed 's/^/     /'
+  if grep -q 'google-services.json is missing' "$salida"; then
+    nota "Con el plugin aplicado, el proyecto no compila sin app/google-services.json: es el de TU proyecto de Firebase (lección 03)"
+  fi
+  nota "Para ver todo:  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+  rm -f "$marca" "$salida"
+  echo; echo "Resultado: 0 pruebas corridas."; exit 1
+fi
+rm -f "$marca" "$salida"
+
+# El conteo se lee de los informes de resultados (XML), no del código de salida de Gradle.
+# Son quince informes, uno por clase de pruebas, y se suman.
+attr() { sed -n 's/.*<testsuite [^>]*[[:space:]]'"$1"'="\([0-9]*\)".*/\1/p' "$2" | head -1; }
+suma() { a="$1"; shift; t=0; for f in "$@"; do v=$(attr "$a" "$f"); t=$((t + ${v:-0})); done; echo "$t"; }
+total=$(suma tests "${TODOS[@]}"); fallas=$(suma failures "${TODOS[@]}")
+errores=$(suma errors "${TODOS[@]}"); saltadas=$(suma skipped "${TODOS[@]}")
+verdes=$((total - fallas - errores - saltadas))
+
+# estado <nombre de la prueba> <informe> → paso | fallo | falta
+estado() {
+  awk -v n="$1" '
+    /<testcase / { enc = (index($0, "name=\"" n "\"") > 0); if (enc) { visto = 1; if ($0 ~ /\/>[[:space:]]*$/) { print "paso"; fin = 1; exit } } next }
+    enc && /<(failure|error|skipped)/ { print "fallo"; fin = 1; exit }
+    enc && /<\/testcase>/ { print "paso"; fin = 1; exit }
+    END { if (!fin) print (visto ? "fallo" : "falta") }' "$2"
+}
+# todas <informe> <prueba>… → cuántas de esas pruebas pasaron
+todas() { f="$1"; shift; n=0; for p in "$@"; do [ "$(estado "$p" "$f")" = "paso" ] && n=$((n + 1)); done; echo "$n"; }
+
+# --- Lo heredado sigue en verde ---------------------------------------------------------------
+th=$(suma tests "${HER[@]}")
+mh=$(( $(suma failures "${HER[@]}") + $(suma errors "${HER[@]}") + $(suma skipped "${HER[@]}") ))
+if [ "$th" -eq 81 ] && [ "$mh" -eq 0 ]; then
+  si "Simulado: las 81 pruebas heredadas de la lección 07 siguen en verde (incluyen las de la 04, la 05 y la 06): entrar, los dos botones, el enlace y la sesión no cambiaron"
+else
+  no "De las 81 pruebas heredadas de la lección 07 hay $((th - mh)) en verde de $th corridas: esta lección no debía cambiar lo que ya funcionaba. Corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+fi
+
+# --- 8.1 · La decisión ------------------------------------------------------------------------
+dec=$(todas "$XMLP" conUnUsuarioNuevoEsLaPrimeraVez conUnUsuarioQueVuelveNoEsLaPrimeraVez)
+[ "$dec" -eq 2 ] \
+  && si "Simulado: tu esPrimeraVez dice que sí con isNewUser en true y que no con false (2 de 2)" \
+  || no "La decisión: $dec de 2 pruebas en verde. esPrimeraVez contesta lo que diga resultado.additionalUserInfo?.isNewUser (paso 3)"
+[ "$(estado sinInformacionAdicionalNoEsLaPrimeraVezYNoTruena "$XMLP")" = "paso" ] \
+  && si "Simulado: sin additionalUserInfo (null), tu esPrimeraVez dice que no y no truena" \
+  || no "Con additionalUserInfo en null tu esPrimeraVez truena o dice que sí. Con ?. y == true, null queda en «no» (paso 3)"
+
+# --- 8.1 · Las dos entradas traen la primera vez ----------------------------------------------
+goo=$(todas "$XMLE" conGoogleUnUsuarioNuevoEntraPorPrimeraVez conGoogleUnUsuarioQueVuelveNoEsLaPrimeraVez)
+[ "$goo" -eq 2 ] \
+  && si "Simulado: con Google, tu entrada trae la primera vez que contestó la puerta, nuevo y que vuelve (2 de 2)" \
+  || no "Entrar con Google: $goo de 2 pruebas en verde. EntradaConGoogle debe llamar verificarConPrimeraVez y pasar primeraVez a Resultado.Entro (paso 3)"
+mic=$(todas "$XMLE" conMicrosoftUnUsuarioNuevoEntraPorPrimeraVez conMicrosoftUnUsuarioQueVuelveNoEsLaPrimeraVez)
+[ "$mic" -eq 2 ] \
+  && si "Simulado: con Microsoft, tu entrada trae la primera vez que contestó la puerta, nuevo y que vuelve (2 de 2)" \
+  || no "Entrar con Microsoft: $mic de 2 pruebas en verde. EntradaConMicrosoft debe llamar abrirConPrimeraVez y pasar primeraVez a Resultado.Entro (paso 3)"
+ret=$(todas "$XMLE" alRetomarConMicrosoftUnUsuarioNuevoEntraPorPrimeraVez alTocarElBotonConUnaEntradaPendienteSeRespetaSuPrimeraVez)
+[ "$ret" -eq 2 ] \
+  && si "Simulado: al retomar una entrada de Microsoft a medias, la primera vez también llega (2 de 2)" \
+  || no "Retomar con Microsoft: $ret de 2 pruebas en verde. retomar() y entrar() deben preguntar con pendienteConPrimeraVez (paso 3)"
+
+# --- 8.1 · La bienvenida, solo la primera vez -------------------------------------------------
+rg=$(todas "$XMLR" conGoogleLaPrimeraVezHayBienvenida conGoogleAlVolverAEntrarYaNoHayBienvenida)
+[ "$rg" -eq 2 ] \
+  && si "Simulado: con Google la bienvenida aparece la primera vez y, al cerrar sesión y volver a entrar, ya no (2 de 2)" \
+  || no "La bienvenida con Google: $rg de 2 pruebas en verde (paso 3)"
+rm_=$(todas "$XMLR" conMicrosoftLaPrimeraVezHayBienvenida conMicrosoftAlVolverAEntrarYaNoHayBienvenida)
+[ "$rm_" -eq 2 ] \
+  && si "Simulado: con Microsoft la bienvenida aparece la primera vez y, al cerrar sesión y volver a entrar, ya no (2 de 2)" \
+  || no "La bienvenida con Microsoft: $rm_ de 2 pruebas en verde (paso 3)"
+ro=$(todas "$XMLR" alReabrirConSesionNoHayBienvenida alRetomarConMicrosoftUnUsuarioNuevoHayBienvenida)
+[ "$ro" -eq 2 ] \
+  && si "Simulado: al reabrir con sesión no hay bienvenida; al retomar con Microsoft un usuario nuevo, sí (2 de 2)" \
+  || no "Reabrir y retomar: $ro de 2 pruebas en verde (paso 3)"
+
+[ "$total" -eq 96 ] || no "Esperaba 96 pruebas (81 heredadas de la lección 07; 3 de PrimeraVezTest, 6 de EntradaConPrimeraVezTest y 6 de RecorridoConPrimeraVezTest) y los informes traen $total"
+[ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+
+# --- Lo escrito · presencia mínima --------------------------------------------------------------
+if [ "$PROY" = "inicio" ]; then
+  n81=0; n82=0; n83=0; comp=0; fuente=0
+  if [ -f "$RESP" ]; then
+    n81=$(grep -ciE '^predicción 8\.1: .+' "$RESP")
+    for c in 'Firebase hizo' 'sin Firebase' 'todavía no hay'; do
+      [ "$(grep -ciE "^8\\.2 $c: .+" "$RESP")" -gt 0 ] && n82=$((n82 + 1))
+    done
+    # Cada letra cuenta una vez: tres líneas con la misma letra no son tres juicios.
+    n83=$(grep -oE '^8\.3-[ABC]: (correcta|exagerada|sin comprobar)' "$RESP" | cut -d: -f1 | sort -u | wc -l | tr -d ' ')
+    comp=$(grep -ciE '^8\.3 comprobé: .+' "$RESP")
+    fuente=$(grep -cE '^fuente 8\.3: https://(firebase\.google\.com|developer\.android\.com|kotlinlang\.org)/' "$RESP")
+  fi
+  [ "${n81:-0}" -ge 1 ] \
+    && si "Escrito: respuestas/08.md trae tu predicción del 8.1 (solo busco la línea: no la califico)" \
+    || no "respuestas/08.md no trae la línea  predicción 8.1: …  (paso 1)"
+  [ "${n82:-0}" -ge 3 ] \
+    && si "Escrito: respuestas/08.md trae tus tres líneas del 8.2 (no las califico: compáralas con «Compara tus respuestas»)" \
+    || no "respuestas/08.md trae $n82 de 3 líneas del 8.2: van como  8.2 Firebase hizo: …,  8.2 sin Firebase: …  y  8.2 todavía no hay: …  (paso 5, sin IA)"
+  if [ "${n83:-0}" -ge 3 ] && [ "${comp:-0}" -ge 1 ] && [ "${fuente:-0}" -ge 1 ]; then
+    si "Escrito: respuestas/08.md trae tus tres juicios del 8.3, qué comprobaste y una fuente oficial (no los califico)"
+  else
+    no "respuestas/08.md trae $n83 de 3 juicios del 8.3, ${comp:-0} líneas de lo que comprobaste y ${fuente:-0} fuentes: van como  8.3-A: correcta …,  8.3 comprobé: …  y  fuente 8.3: https://…  (paso 6)"
+  fi
+else
+  nota "Lo escrito en respuestas/08.md solo se busca sobre inicio/"
+fi
+
+echo
+echo "Resultado: $verdes de $total pruebas en verde ($fallas en rojo, $errores con error, $saltadas saltadas), leído de"
+for f in "${TODOS[@]}"; do echo "  $f"; done
+# El número de arriba sale solo de los informes de pruebas. Las marcas de arriba (archivos, texto, lo escrito)
+# no lo cambian: por eso se dice aparte si quedó alguna en rojo.
+echo
+if [ "$ok" -eq 0 ]; then
+  echo "✅ Nivel simulado: completo. Las $total pruebas y todas las marcas de arriba están en verde."
+else
+  echo "❌ Nivel simulado: incompleto. Hay marcas en rojo arriba, aunque el conteo diga $verdes de $total."
+fi
+nota "Nivel simulado: demuestra qué decide tu esPrimeraVez, que tus entradas pasan esa decisión y cuándo el inicio da la bienvenida."
+nota "No demuestra qué contesta isNewUser con una cuenta real: «es nuevo» lo dice un doble. Eso lo ves en el teléfono (paso 4)."
+nota "Las marcas «Texto:» son estructura mínima, no evidencia de integración."
+exit $ok

@@ -1,0 +1,55 @@
+package mx.habil.ejemplo.tienda
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+
+// La puerta de entrada de la app. Android crea esta clase al abrir la app
+// y setContent le dice qué función dibuja la pantalla.
+// Aquí se arman las piezas que usa la app de verdad y se le pasan a Tienda.
+// Desde la lección 05 este archivo viene dado y no se cambia: lo que se arma
+// para Microsoft se decide en Armado.kt.
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val entrada = crearEntrada()
+        val entradaConMicrosoft = crearEntradaConMicrosoft()
+        val enlace = crearEnlaceConMicrosoft()
+        val sesion = crearSesion()
+        setContent {
+            Tienda(entrada = entrada, entradaConMicrosoft = entradaConMicrosoft, enlace = enlace, sesion = sesion)
+        }
+    }
+
+    // Arma la Entrada de la app. Las dos puertas llegan por parámetro con su
+    // valor de verdad por omisión: la app llama crearEntrada() a secas, y una
+    // prueba puede pasarle puertas de mentira para leer qué audiencia se pidió.
+    fun crearEntrada(
+        selector: SelectorDeCuentas = SelectorConCredentialManager(this),
+        verificador: VerificadorDeToken = VerificadorConFirebase(),
+    ): Entrada = EntradaConGoogle(
+        // La audiencia: el ID de cliente web que el plugin google-services
+        // sacó de tu google-services.json al compilar.
+        idDeClienteWeb = getString(R.string.default_web_client_id),
+        selector = selector,
+        verificador = verificador,
+    )
+
+    // Arma la segunda Entrada, la de Microsoft. Igual que arriba: la puerta
+    // llega por parámetro con su valor de verdad por omisión, y una prueba
+    // puede pasarle una de mentira. Qué pieza se arma lo decide Armado.kt.
+    fun crearEntradaConMicrosoft(
+        navegador: NavegadorDeProveedor = NavegadorConFirebase(this),
+    ): EntradaQueSeRetoma = armarEntradaConMicrosoft(navegador)
+
+    // Arma el Enlace con Microsoft, con su propia puerta.
+    fun crearEnlaceConMicrosoft(
+        enlazador: EnlazadorDeProveedor = EnlazadorConFirebase(this),
+    ): Enlace = armarEnlaceConMicrosoft(enlazador)
+
+    // Nuevo en la lección 07: arma la Sesión, con su propia puerta. Igual que
+    // arriba, una prueba puede pasarle una de mentira.
+    fun crearSesion(
+        recuerdo: RecuerdoDeLaSesion = RecuerdoConFirebase(this),
+    ): Sesion = armarSesion(recuerdo)
+}
