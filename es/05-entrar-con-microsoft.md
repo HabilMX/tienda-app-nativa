@@ -203,9 +203,10 @@ val pendiente = entradaConMicrosoft?.retomar()
 if (pendiente != null) recibe(pendiente)
 ```
 
-Esas líneas van dentro de un `LaunchedEffect`. Con la misma clave, su bloque corre cuando esa parte de la
-pantalla entra en escena y no en cada redibujo; si la clave cambiara, Compose cancelaría ese trabajo y
-arrancaría otro, según su documentación. Aquí la clave no cambia: se pregunta una vez, al abrirse la app.
+Esas líneas van dentro de un `LaunchedEffect`, que es la forma de Compose de decir «haz esto una vez al
+aparecer, no cada vez que la pantalla se vuelva a dibujar». Lleva una clave: si la clave cambia, Compose
+cancela el trabajo y lo arranca de nuevo, según su documentación. Aquí la clave nunca cambia, así que la
+pregunta se hace una sola vez, al abrirse la app.
 
 **`MainActivity.kt` y `Armado.kt`.** `onCreate` arma las piezas y se las pasa a `Tienda`. Qué pieza se arma
 para Microsoft lo decide una función de `Armado.kt`, que por ahora regresa `MicrosoftSinConectar()`: no deja
@@ -283,11 +284,13 @@ regresa quién entró o `null`. Otra prueba abre `MainActivity`, le pasa la puer
 La puerta era de mentira: no se abrió ningún navegador. «Quedó algo a medias» lo dijo el doble; ninguna prueba
 cerró la app.
 
-**Que la app instalada use tu pieza** se respalda de dos formas, y ninguna es una prueba que lo vea de punta a
-punta. `MainActivity.kt` es idéntico al de la lección: con otro contenido, el `verifica` lo marca en rojo aunque
-las 44 pruebas den verde (medido el 18-nov-2026). Y si `Armado.kt` arma otra cosa, una prueba se pone roja (43
-de 44). Las marcas «Texto:» son estructura mínima, no evidencia de integración: la evidencia completa es el
-nivel real.
+**¿Y la app instalada usa tu pieza?** Ninguna prueba lo ve de punta a punta. Hay dos respaldos:
+
+- `MainActivity.kt` tiene que ser idéntico al de la lección. Si lo cambias, el `verifica` lo marca en rojo
+  aunque las 44 pruebas den verde (medido el 18-nov-2026).
+- Si `Armado.kt` arma otra cosa, una prueba se pone roja (43 de 44).
+
+Las marcas «Texto:» solo buscan palabras en tus archivos. La prueba completa es el nivel real, en el paso 9.
 
 ---
 
@@ -455,14 +458,21 @@ era inventado. Con tu archivo de verdad y Microsoft todavía sin habilitar en Fi
 ## Paso 8 · En las consolas: registrar la app sin que la clave toque un archivo
 
 Este paso y el siguiente piden el directorio de «Antes de empezar». Aquí no se escribe código. Abre las dos
-consolas en dos pestañas: vas a llevar un dato de Firebase a Entra, y dos de Entra a Firebase.
+consolas en dos pestañas, porque tres datos van a cruzar de una a otra:
+
+| Dato | Nace en | Se pega en |
+|---|---|---|
+| La dirección de retorno | Firebase | Entra |
+| El *Application (client) ID* | Entra | Firebase |
+| La clave de cliente | Entra | Firebase, y en ningún otro lugar |
 
 Los menús y botones van en inglés, como en la documentación. En español, el ensayo del 13-nov-2026 vio «Registros de aplicaciones», «Nuevo registro» y «Registrar una
 aplicación». [pendiente: ensayo con cuenta — recorrer el «Nuevo registro» de punta a punta y anotar cada rótulo
 en español, con capturas].
 
 **1. En Firebase, copia tu dirección de retorno.** En Authentication, pestaña *Sign-in method*, elige Microsoft
-y habilítalo. Todavía no guardes. En el ensayo, la dirección se copió de ese mismo panel. Tiene esta forma:
+y habilítalo. Todavía no guardes: el panel pide el ID y la clave, que aún no tienes. Deja esa pestaña abierta
+así, a medias; vuelves a ella en el punto 5. En el ensayo, la dirección se copió de ese mismo panel. Tiene esta forma:
 
 ```text
 https://<tu-proyecto>.firebaseapp.com/__/auth/handler
@@ -480,7 +490,8 @@ suscripción dio ahí el error `AADSTS16000`, y por Entra abrió su propio direc
   organizaciones y personales. Es la que usó el ensayo.
 - *Register*.
 
-La página *Overview* muestra el **Application (client) ID**. Ese sí se anota.
+La página *Overview* muestra el **Application (client) ID**. Ese sí se anota, y ya lo puedes pegar en la
+pestaña de Firebase. No es la clave: la clave todavía no existe.
 
 **4. Agrega la dirección de retorno.** Según la guía: *Manage* › *Authentication* › *Add Redirect URI* ›
 plataforma **Web** › pega la dirección del punto 1 › *Configure*. Pégala; no la escribas a mano. Microsoft pide
@@ -494,7 +505,7 @@ La clave aparece en la columna **Value**, y la guía avisa que no se vuelve a mo
 página. Con esa página abierta:
 
 - Cópiala con el botón de copiar y pégala **directo** en el campo de la clave del panel de Microsoft, en la
-  pestaña de Firebase. Pega también el *Application (client) ID*. *Save*.
+  pestaña de Firebase. Revisa que el *Application (client) ID* del punto 3 ya esté en su campo. *Save*.
 - No la pegues en ningún otro lugar. Después copia cualquier otro texto, para sacarla del portapapeles
   (recomendación de esta serie).
 - Anota la **fecha de caducidad**. Cuando llegue, la entrada con Microsoft deja de funcionar hasta que crees
