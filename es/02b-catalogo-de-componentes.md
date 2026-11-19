@@ -209,7 +209,7 @@ fun EtiquetaEstado(estado: EstadoOrden) {
 
    Las siete pruebas de la 02 deben seguir en verde: el inicio de la 02 sigue diciendo «Hola, Ana» y tiene tres cosas
    más. Medido el 19-nov-2026 en este punto: las marcas de los componentes, de `Inicio.kt` y de `MainActivity.kt` en
-   verde, `Resultado: 7 de 7 pruebas en verde`, y en rojo solo las de los pasos 3 a 6 (previews, `@ShowkaseRoot`,
+   verde, `Resultado: 7 de 18 pruebas esperadas en verde` (las once de captura todavía no existen), y en rojo solo las de los pasos 3 a 6 (previews, `@ShowkaseRoot`,
    imágenes, capturas, sabotaje y `respuestas/02b.md`). Ese rojo es el esperado ahora.
 5. **Explica** en dos líneas de `respuestas/02b.md`: ¿por qué `TarjetaProducto` no recibe ningún color, y de dónde lo
    saca?
@@ -394,8 +394,9 @@ referencias y `verifyRoborazziDebug` compara y falla si algo cambió. `./gradlew
 pruebas sin comparar nada: con el color roto del paso 6 dio 18 de 18 en verde (medido el 19-nov-2026). El `verifica`
 usa `verify`.
 
-**Las referencias de `solucion/` se grabaron en una Mac.** No se ha medido si coinciden en Linux. Si usas Linux,
-graba las tuyas en tu máquina con `recordRoborazziDebug`, como en el punto 4.
+**Las referencias de `solucion/` se grabaron en una Mac.** En Linux Mint 22.3 coincidieron las once (19-nov-2026): la
+solución dio 18 de 18 y el sabotaje del color puso 6 de 11 en rojo, como en la Mac. Si en tu máquina no coinciden,
+graba las tuyas con `recordRoborazziDebug`, como en el punto 4.
 
 **Lo demuestra:** once pruebas de captura en verde contra sus referencias (primera parte del objetivo 2B.4).
 

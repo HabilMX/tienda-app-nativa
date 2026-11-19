@@ -218,7 +218,7 @@ fun EtiquetaEstado(estado: EstadoOrden) {
 
    02's seven tests must stay green: 02's home screen still says «Hola, Ana» and has three more things. Measured on
    Nov 19, 2026 at this point: the marks for the components, for `Inicio.kt` and for `MainActivity.kt` green,
-   `Resultado: 7 de 7 pruebas en verde`, and red only those from steps 3 to 6 (previews, `@ShowkaseRoot`, images,
+   `Resultado: 7 de 18 pruebas esperadas en verde` (the eleven screenshot tests do not exist yet), and red only those from steps 3 to 6 (previews, `@ShowkaseRoot`, images,
    screenshots, sabotage and `respuestas/02b.md`). That red is the expected one now.
 5. **Explain** in two lines of `respuestas/02b.md`: why does `TarjetaProducto` receive no color, and where does it get
    it from?
@@ -410,8 +410,9 @@ again) the references and `verifyRoborazziDebug` compares and fails if something
 `./gradlew testDebugUnitTest` runs the tests without comparing anything: with step 6's broken color it gave 18 of 18
 green (measured on Nov 19, 2026). The `verifica` uses `verify`.
 
-**The references in `solucion/` were recorded on a Mac.** It has not been measured whether they match on Linux. If you
-use Linux, record yours on your machine with `recordRoborazziDebug`, as in point 4.
+**The references in `solucion/` were recorded on a Mac.** On Linux Mint 22.3 all eleven matched (Nov 19, 2026): the
+solution gave 18 of 18 and the color sabotage turned 6 of 11 red, as on the Mac. If they do not match on your machine,
+record yours with `recordRoborazziDebug`, as in point 4.
 
 **What proves it:** eleven screenshot tests green against their references (first part of objective 2B.4).
 

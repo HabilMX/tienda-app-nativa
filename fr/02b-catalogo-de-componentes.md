@@ -221,10 +221,10 @@ fun EtiquetaEstado(estado: EstadoOrden) {
 
    Les sept tests de la 02 doivent rester au vert : l'accueil de la 02 dit toujours « Hola, Ana » et contient trois
    choses de plus. Mesuré le 19 nov. 2026 à ce stade : les marques des composants, de `Inicio.kt` et de
-   `MainActivity.kt` au vert, `Resultado: 7 de 7 pruebas en verde`, et au rouge seulement celles des étapes 3 à 6
+   `MainActivity.kt` au vert, `Resultado: 7 de 18 pruebas esperadas en verde` (les onze tests de capture n'existent pas encore), et au rouge seulement celles des étapes 3 à 6
    (aperçus, `@ShowkaseRoot`, images, captures, sabotage et `respuestas/02b.md`). Ce rouge est attendu maintenant.
 
-   *(Résultat : 7 tests sur 7 au vert.)*
+   *(Résultat : 7 tests attendus sur 18 au vert.)*
 
 5. **Expliquez** en deux lignes de `respuestas/02b.md` : pourquoi `TarjetaProducto` ne reçoit-elle aucune couleur, et
    d'où la tire-t-elle ?
@@ -424,8 +424,9 @@ réenregistre) les références et `verifyRoborazziDebug` compare et échoue si 
 `./gradlew testDebugUnitTest` tout seul lance les tests sans rien comparer : avec la couleur cassée de l'étape 6, il a
 donné 18 sur 18 au vert (mesuré le 19 nov. 2026). Le `verifica` utilise `verify`.
 
-**Les références de `solucion/` ont été enregistrées sur un Mac.** On n'a pas mesuré si elles coïncident sous Linux. Si
-vous utilisez Linux, enregistrez les vôtres sur votre machine avec `recordRoborazziDebug`, comme au point 4.
+**Les références de `solucion/` ont été enregistrées sur un Mac.** Sous Linux Mint 22.3, les onze ont coïncidé
+(19 nov. 2026) : la solution a donné 18 sur 18 et le sabotage de la couleur en a mis 6 sur 11 au rouge, comme sur le Mac.
+Si elles ne coïncident pas sur votre machine, enregistrez les vôtres avec `recordRoborazziDebug`, comme au point 4.
 
 **Ce qui le prouve :** onze tests de capture au vert contre leurs références (première partie de l'objectif 2B.4).
 

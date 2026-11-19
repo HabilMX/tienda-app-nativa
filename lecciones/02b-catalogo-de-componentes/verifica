@@ -258,14 +258,21 @@ else
   nota "La evidencia escrita de respuestas/02b.md solo se busca sobre inicio/"
 fi
 
+# Las que se esperan: las 6 del recorrido y la del arranque de la 02, más una captura por variante. Si corrieron
+# menos (falta CapturasTest.kt, o le faltan variantes), el resultado lo dice: «7 de 7» se leería como éxito.
+TOTAL_ESPERADO=$((6 + 1 + ESPERADAS))
 echo
-echo "Resultado: $verdes de $total pruebas en verde ($rojas en rojo, $errores con error, $saltadas saltadas), leído de"
+if [ "$total" -eq "$TOTAL_ESPERADO" ]; then
+  echo "Resultado: $verdes de $total pruebas en verde ($rojas en rojo, $errores con error, $saltadas saltadas), leído de"
+else
+  echo "Resultado: $verdes de $TOTAL_ESPERADO pruebas esperadas en verde (solo corrieron $total: $rojas en rojo, $errores con error, $saltadas saltadas; faltan $((TOTAL_ESPERADO - total))), leído de"
+fi
 echo "  $XR"
 echo "  $XA"
 echo "  $XC"
 nota "Nivel simulado: demuestra que la 02 sigue funcionando con los componentes puestos, que cada variante"
 nota "  se ve igual que su imagen de referencia, y que un color cambiado a propósito las pone en rojo."
 nota "No demuestra cómo se ve el panel de previews ni el catálogo en el emulador: eso lo ves tú, y tu captura es la evidencia de 2B.2 y 2B.3."
-nota "Las imágenes de referencia de solucion/ se grabaron en una Mac; no se ha medido si coinciden en Linux."
+nota "Las imágenes de referencia de solucion/ se grabaron en una Mac; en Linux Mint 22.3 coincidieron las 11 (19-nov-2026)."
 nota "Las marcas «Texto:» solo buscan palabras en tus archivos: no demuestran que el código haga lo que dicen."
 exit $ok

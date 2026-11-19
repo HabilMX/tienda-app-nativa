@@ -228,10 +228,10 @@ fun EtiquetaEstado(estado: EstadoOrden) {
 
    Os sete testes da 02 devem continuar em verde: o início da 02 continua dizendo «Olá, Ana» («Hola, Ana») e tem mais três
    coisas. Medido em 19/11/2026 neste ponto: as marcas dos componentes, do `Inicio.kt` e da `MainActivity.kt` em
-   verde, `Resultado: 7 de 7 pruebas en verde`, e em vermelho só as dos passos 3 a 6 (previews, `@ShowkaseRoot`,
+   verde, `Resultado: 7 de 18 pruebas esperadas en verde` (os onze testes de captura ainda não existem), e em vermelho só as dos passos 3 a 6 (previews, `@ShowkaseRoot`,
    imagens, capturas, sabotagem e `respuestas/02b.md`). Esse vermelho é o esperado agora.
 
-   *(Em português: «Resultado: 7 de 7 testes em verde».)*
+   *(Em português: «Resultado: 7 de 18 testes esperados em verde».)*
 5. **Explique** em duas linhas de `respuestas/02b.md`: por que `TarjetaProducto` não recebe nenhuma cor, e de onde ela
    a tira?
 
@@ -433,8 +433,9 @@ referências e `verifyRoborazziDebug` compara e falha se algo mudou. `./gradlew 
 testes sem comparar nada: com a cor quebrada do passo 6 deu 18 de 18 em verde (medido em 19/11/2026). O `verifica`
 usa `verify`.
 
-**As referências de `solucion/` foram gravadas em um Mac.** Não se mediu se coincidem no Linux. No Linux,
-gravem-se as referências na própria máquina com `recordRoborazziDebug`, como no ponto 4.
+**As referências de `solucion/` foram gravadas em um Mac.** No Linux Mint 22.3 as onze coincidiram (19/11/2026): a
+solução deu 18 de 18 e a sabotagem da cor deixou 6 de 11 em vermelho, como no Mac. Se não coincidirem na própria
+máquina, gravem-se as referências com `recordRoborazziDebug`, como no ponto 4.
 
 **O que comprova:** onze testes de captura em verde contra as referências deles (primeira parte do objetivo 2B.4).
 
