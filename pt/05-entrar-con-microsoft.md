@@ -664,6 +664,7 @@ uns 15 minutos para aparecer como ativa.
 | «Nuevo registro» abre um painel sem formulário | A conta não tem diretório (medido em 13/11/2026 com uma conta recém-criada) | «Antes de começar»: é preciso ter um diretório primeiro |
 | «Ese correo ya entró a la tienda con otro botón…» (esse e-mail já entrou na loja com outro botão) | Esse e-mail já tem usuário no projeto, criado com outro provedor; nesta série, o Google | Entrar com o Google. Que os dois botões cheguem ao mesmo usuário é a lição 06 |
 | A tela da chave de acesso fica em «Verifying…» | Medido em 13/11/2026 no emulador | *Cancel* e entrar com a senha |
+| ❌ «EntradaConMicrosoft.kt nombra una puerta concreta» (EntradaConMicrosoft.kt nomeia uma porta concreta) | O código nomeia a porta de verdade (`NavegadorConFirebase`) ou um dublê dos testes. Os testes só lhe passam dublês: se o código pergunta qual lhe coube, o verde não diz o que ele faz com a de verdade | Que o código fale só com `NavegadorDeProveedor`. A porta de verdade é escolhida pela `MainActivity.kt`, que vem dada (passo 4) |
 
 No Linux Mint 22.3 (x86_64), o `verifica` desta lição saiu igual ao do Mac (18/11/2026), no nível
 simulado e com um arquivo de teste que trazia a impressão digital desse computador: sobre `inicio/`, 23 de 44 em verde;

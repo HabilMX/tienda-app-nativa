@@ -46,12 +46,10 @@ o ambiente pronto.
 | 00 | [Ambiente pronto](00-ambiente-listo.md) |
 | 01 | [Minha primeira tela roda](01-mi-primera-pantalla.md) |
 | 02 | [Telas que mudam](02-pantallas-que-cambian.md) |
-| 02-B | Catálogo de componentes da loja (prática) |
+| 02-B | [Catálogo de componentes da loja](02b-catalogo-de-componentes.md) (prática) |
 | 03 | [O app conhece o Firebase](03-la-app-conoce-a-firebase.md) |
 | 04 | [Entrar com o Google](04-entrar-con-google.md) |
 | 05 | [Entrar com a Microsoft](05-entrar-con-microsoft.md) |
 | 06 | [Dois botões, uma conta](06-dos-botones-una-cuenta.md) |
-| 07 | A sessão permanece |
-| 08 | A primeira vez |
-
-As lições sem link estão em preparação e são publicadas em ordem.
+| 07 | [A sessão permanece](07-la-sesion-se-queda.md) |
+| 08 | [A primeira vez](08-la-primera-vez.md) |
