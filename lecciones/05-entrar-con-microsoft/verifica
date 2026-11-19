@@ -203,6 +203,16 @@ ACT="$PROY/$DIRM/MainActivity.kt"
 if ! hay 'class EntradaConMicrosoft' "$ECM" || ! hay 'class MainActivity' "$ACT"; then
   no "No pude leer $DIRM/EntradaConMicrosoft.kt o MainActivity.kt (o ya no declaran su clase): sin ellos no reviso el texto"
 else
+  # Tu código solo conoce la interfaz de la puerta (NavegadorDeProveedor). Si nombra una puerta concreta, la de
+  # producción o un doble, puede portarse distinto con cada una, y las pruebas, que solo le pasan dobles, no
+  # verían lo que hace con la de verdad. Se busca la palabra completa, fuera de los comentarios.
+  PUERTAS='NavegadorConFirebase|NavegadorFalso|VerificadorConFirebase|SelectorConCredentialManager|EntradaFalsa'
+  n_puertas=$(grep -v '^[[:space:]]*//' "$ECM" 2>/dev/null | grep -cE -- "(^|[^A-Za-z])($PUERTAS)([^A-Za-z]|$)")
+  if [ "${n_puertas:-0}" -gt 0 ]; then
+    no "EntradaConMicrosoft.kt nombra una puerta concreta (de producción o de prueba): solo debe conocer NavegadorDeProveedor. Si pregunta cuál le tocó, las pruebas no ven lo que hace con la de verdad (paso 4)"
+  else
+    si "Texto: EntradaConMicrosoft.kt no nombra ninguna puerta concreta, ni la de producción ni los dobles: solo su interfaz"
+  fi
   if hay 'OAuthProvider' "$ECM" && hay '"microsoft.com"' "$ECM"; then
     si "Texto: EntradaConMicrosoft.kt nombra OAuthProvider y \"microsoft.com\""
   else
