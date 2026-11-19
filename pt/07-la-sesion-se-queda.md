@@ -329,7 +329,7 @@ com o tempo que a primeira turma levar.
 | O app abre nas boas-vindas, e a sessão aparece depois | O Firebase pode não ter terminado de se preparar quando o app fez a única leitura | Não apagar dados nem dar o teste por bom: anotar o caso. Esta lição faz uma leitura única; uma versão robusta escuta o `AuthStateListener` (passo 2) |
 | ❌ «SesionDeLaTienda solo programa contra RecuerdoDeLaSesion…» (SesionDeLaTienda só programa contra RecuerdoDeLaSesion…) | A classe nomeia uma porta concreta ou um dublê | Passo 3: a classe só conhece a interface |
 
-O `verifica` desta lição foi medido em um Mac com Apple silicon. Não foi medido no Linux.
+O `verifica` desta lição foi medido em um Mac com Apple silicon e no Linux Mint 22.3, em 19/11/2026: com a solução, 82 de 82 nos dois.
 
 ---
 

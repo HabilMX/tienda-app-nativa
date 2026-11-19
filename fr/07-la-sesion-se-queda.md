@@ -332,7 +332,7 @@ l'ajusterons avec le temps que prendra la première cohorte.
 | L'application s'ouvre sur la bienvenue, et la session apparaît après | Firebase peut ne pas avoir fini de se préparer quand l'application a fait sa lecture unique | N'effacez pas les données et ne donnez pas l'essai pour bon : notez le cas. Cette leçon fait une lecture unique ; une version robuste écoute l'`AuthStateListener` (étape 2) |
 | ❌ « SesionDeLaTienda solo programa contra RecuerdoDeLaSesion… » (`SesionDeLaTienda` ne programme que contre `RecuerdoDeLaSesion`…) | Votre classe nomme une porte concrète ou une doublure | Étape 3 : votre classe ne connaît que l'interface |
 
-Le `verifica` de cette leçon a été mesuré sur un Mac avec Apple silicon. Il n'a pas été mesuré sous Linux.
+Le `verifica` de cette leçon a été mesuré sur un Mac avec Apple silicon et sous Linux Mint 22.3, le 19 nov. 2026 : avec la solution, 82 sur 82 sur les deux.
 
 ---
 
