@@ -12,15 +12,17 @@
 #   sin pedir la cuenta; cerrar sesión y reabrir pide entrar otra vez y se llega al mismo usuario; y sin
 #   Sesión el inicio es el de la lección 06.
 # SÍ revisa, corriendo ArranqueConSesionTest (abren MainActivity): que la sesión que arma la app sea la tuya;
-#   y que con la puerta de VERDAD, en tu computadora, nadie siga adentro y olvidar en Firebase no truene (el aviso de
-#   verdad a Credential Manager no se llama: en tu computadora no contesta).
+#   que con la puerta de VERDAD, en tu computadora, nadie siga adentro y olvidar en Firebase no truene; y que,
+#   con esa puerta de verdad y tu sesión, cerrar le pida a Credential Manager que limpie. Para eso la puerta
+#   recibe un limpiador de mentira: el Credential Manager de verdad en tu computadora no contesta.
 # SÍ revisa lo heredado: corre las 66 pruebas de la lección 06 (que incluyen las de la 04 y la 05) y compara,
 #   byte por byte, todo archivo que esta lección no cambia contra el de la solución de la 06. Los que SÍ
 #   cambian (Tienda.kt, Inicio.kt y MainActivity.kt) vienen dados y se comparan entre inicio/ y solucion/,
 #   igual que los nuevos que vienen dados. Esas comparaciones son una RESTRICCIÓN DE ESTA ACTIVIDAD, no el
 #   objetivo: un cambio ahí puede ser código válido y aun así sale en rojo.
 # PRESENCIA TEXTUAL (busca palabras; no ejecuta; los comentarios no cuentan): que SesionDeLaTienda.kt llame
-#   recuerdo.olvidarEnFirebase( y recuerdo.olvidarEnElTelefono( ; que Armado.kt nombre SesionDeLaTienda( ;
+#   recuerdo.olvidarEnFirebase( y recuerdo.olvidarEnElTelefono( y que solo programe contra RecuerdoDeLaSesion
+#   (sin nombrar ninguna puerta concreta ni un doble); que Armado.kt nombre SesionDeLaTienda( ;
 #   que ningún .kt de la app nombre SesionSinConectar ni una pieza de pruebas; y que respuestas/07.md traiga
 #   tus dos predicciones del 7.1, tus cinco respuestas del 7.3 y una fuente.
 # NO revisa: Firebase de verdad, ni tu teléfono. «Reabrir» en las pruebas es dibujar Tienda desde cero con la
@@ -119,6 +121,15 @@ else
   else
     no "SesionDeLaTienda.kt no llama recuerdo.olvidarEnFirebase( y recuerdo.olvidarEnElTelefono( : cerrar sesión son las dos cosas (paso 3)"
   fi
+  # Tu clase solo conoce la interfaz: si pregunta qué puerta le tocó, puede portarse distinto con la de verdad
+  # que con los dobles, y las pruebas con dobles ya no dirían nada de la app.
+  concretas=""
+  for p in RecuerdoConFirebase RecuerdoFalso RecuerdoDelProyecto LimpiadorConCredentialManager LimpiadorFalso FirebaseAuth CredentialManager; do
+    hay "$p" "$SES" && concretas="$concretas $p"
+  done
+  [ -z "$concretas" ] \
+    && si "Texto: SesionDeLaTienda.kt solo programa contra RecuerdoDeLaSesion: no nombra ninguna puerta concreta ni un doble" \
+    || no "SesionDeLaTienda solo programa contra RecuerdoDeLaSesion, y nombra:$concretas. Así puede portarse distinto con la puerta de verdad que con los dobles (paso 3)"
   hayre '(^|[^A-Za-z])SesionDeLaTienda\(' "$ARM" \
     && si "Texto: Armado.kt nombra SesionDeLaTienda( (estructura mínima; que esa pieza funcione lo mide una prueba, abajo)" \
     || no "Armado.kt no nombra SesionDeLaTienda( : la app todavía no arma tu sesión (paso 3)"
@@ -217,15 +228,16 @@ rec=$(todas "$XMLRS" alCerrarSesionYReabrirSePideEntrarOtraVez cerrarSesionAvisa
 [ "$rec" -eq 2 ] \
   && si "Simulado: tocar «Cerrar sesión» regresa a la bienvenida; al reabrir se pide entrar otra vez, y al entrar se llega al mismo usuario (2 de 2)" \
   || no "Cerrar sesión y reabrir: $rec de 2 pruebas en verde. Después de «Cerrar sesión», reabrir debe pedir entrar (paso 3)"
-arr=$(todas "$XMLAS" laAppArmaSuSesionPreguntandoleAlTelefono conLaPuertaDeVerdadYSinNadieAdentroNadieSigueAdentro)
-[ "$arr" -eq 2 ] \
-  && si "Simulado: la sesión que arma MainActivity.crearSesion es la tuya, y con la puerta de verdad, sin nadie adentro, nadie sigue adentro (2 de 2)" \
-  || no "La sesión que arma la app: $arr de 2 pruebas en verde. Armado.kt debe armar SesionDeLaTienda (paso 3)"
+arr=$(todas "$XMLAS" laAppArmaSuSesionPreguntandoleAlTelefono conLaPuertaDeVerdadYSinNadieAdentroNadieSigueAdentro \
+  conLaPuertaDeVerdadCerrarLeAvisaACredentialManager)
+[ "$arr" -eq 3 ] \
+  && si "Simulado: la sesión que arma MainActivity.crearSesion es la tuya; con la puerta de verdad, sin nadie adentro, nadie sigue adentro; y al cerrar, esa puerta le pide a Credential Manager que limpie (3 de 3, con un limpiador de mentira)" \
+  || no "La sesión que arma la app: $arr de 3 pruebas en verde. Armado.kt debe armar SesionDeLaTienda, y cerrar() debe avisar al teléfono con cualquier puerta, también la de verdad (paso 3)"
 [ "$(estado sinSesionElInicioEsElDeLaLeccion06 "$XMLRS")" = "paso" ] \
   && si "Simulado: sin Sesión, el inicio es el de la lección 06, sin «Cerrar sesión»" \
   || no "Sin Sesión, el inicio ya no es el de la lección 06: Tienda.kt e Inicio.kt vienen dados"
 
-[ "$total" -eq 81 ] || no "Esperaba 81 pruebas (66 heredadas de la lección 06; 7 de SesionDeLaTiendaTest, 6 de RecorridoConSesionTest y 2 de ArranqueConSesionTest) y los informes traen $total"
+[ "$total" -eq 82 ] || no "Esperaba 82 pruebas (66 heredadas de la lección 06; 7 de SesionDeLaTiendaTest, 6 de RecorridoConSesionTest y 3 de ArranqueConSesionTest) y los informes traen $total"
 [ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
 
 # --- Lo escrito · presencia mínima --------------------------------------------------------------

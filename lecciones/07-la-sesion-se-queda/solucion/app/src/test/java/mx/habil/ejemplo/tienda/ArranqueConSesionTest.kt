@@ -14,11 +14,12 @@ import org.robolectric.RobolectricTestRunner
 // - con la puerta de mentira, que esa sesión sea la tuya: le pregunta al
 //   teléfono quién sigue adentro;
 // - con la puerta de VERDAD, que en tu computadora (donde Firebase no tiene
-//   a nadie) nadie sigue adentro, y que pedirle a Firebase que olvide no truena.
+//   a nadie) nadie sigue adentro, que pedirle a Firebase que olvide no truena,
+//   y que al cerrar sesión esa puerta le pide a Credential Manager que limpie.
 // NO ve un usuario real de Firebase: en tu computadora nunca lo hay.
-// NO llama al aviso de verdad a Credential Manager: en tu computadora no
-// contesta (medido el 19-nov-2026: 10 segundos sin respuesta). Ese aviso solo
-// se ve en el teléfono.
+// NO llama al Credential Manager de verdad: en tu computadora no contesta
+// (medido el 19-nov-2026: 10 segundos sin respuesta). En su lugar va un
+// limpiador de mentira. Lo que el teléfono ofrece después solo se ve ahí.
 // No cambies este archivo: el verifica revisa que siga igual al de solucion/.
 @RunWith(RobolectricTestRunner::class)
 class ArranqueConSesionTest {
@@ -42,5 +43,19 @@ class ArranqueConSesionTest {
         val puerta = RecuerdoConFirebase(app.activity)
         puerta.olvidarEnFirebase()
         assertNull(puerta.usuarioActual())
+    }
+
+    @Test
+    fun conLaPuertaDeVerdadCerrarLeAvisaACredentialManager() {
+        // La puerta de verdad, con un limpiador de mentira en lugar de
+        // Credential Manager (que en tu computadora no contesta).
+        val limpiador = LimpiadorFalso()
+        val sesion = app.activity.crearSesion(recuerdo = RecuerdoConFirebase(app.activity, limpiador = limpiador))
+        runBlocking { sesion.cerrar() }
+        assertEquals(
+            "Con la puerta de verdad, cerrar sesión debe pedirle a Credential Manager, una vez, que limpie",
+            1, limpiador.limpiezas
+        )
+        assertNull(sesion.quienSigueAdentro())
     }
 }
