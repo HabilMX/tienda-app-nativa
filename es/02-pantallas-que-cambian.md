@@ -489,7 +489,7 @@ Los mensajes en inglés son los que dio el compilador de la serie (Kotlin 2.4.21
 | ❌ en «solo al tocar Continuar» | `entrada.entrar()` quedó fuera del evento | Va dentro de `alContinuar = { … }` |
 | `RecorridoTest.kt` o `ArranqueTest.kt` cambió | Alguien (tú o Claude Code) tocó las pruebas | Mira qué cambió con el `git diff` que da el mensaje y deshazlo a mano. Restaurar el archivo con git descarta todo lo que tenga: hazlo solo después de revisar ese diff. Luego repite la petición pidiendo que no las toque |
 
-En Ubuntu, esta lección está [pendiente: medir en Ubuntu].
+En Linux Mint 22.3 (x86_64), el `verifica` de esta lección salió en verde sobre la solución: 7 de 7 (18-nov-2026).
 
 ---
 

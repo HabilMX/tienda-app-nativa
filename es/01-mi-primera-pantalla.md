@@ -369,7 +369,7 @@ Los mensajes en inglés son los que dio el compilador de la serie (Kotlin 2.4.21
 | ❌ en el saludo, aunque se ve «¡Hola!» | El saludo está siempre, no solo después de tocar | Va dentro del `if (saludando)` |
 | `BienvenidaTest.kt` cambió | Alguien (tú o Claude Code) tocó las pruebas | Recupéralo con el comando que da el mensaje y repite la petición pidiendo que no las toque |
 
-En Ubuntu, esta lección está [pendiente: medir en Ubuntu].
+En Linux Mint 22.3 (x86_64), el `verifica` de esta lección salió en verde sobre la solución: 4 de 4, en 64 segundos contando la primera compilación (18-nov-2026). Si tu SDK no trae `build-tools`, Gradle lo descarga solo la primera vez.
 
 ---
 
