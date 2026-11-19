@@ -472,8 +472,11 @@ Los mensajes en inglés son los que dio el plugin `google-services` 4.6.0 el 18-
 | ❌ «no trae un cliente de OAuth web (tipo 3)» | Lo bajaste antes de habilitar Google | Habilita Google y descarga otra vez |
 | ❌ «Git sí rastrea un google-services.json» | Se agregó antes de existir el `.gitignore` | `git rm --cached <archivo>` lo saca de git sin borrar tu copia |
 | `keytool -list -v` termina con `MissingFormatArgumentException` | Pasó en la Mac de la serie con Java 25 y el sistema en español (18-nov-2026) | Usa `./gradlew signingReport`, que es lo que pide la lección |
+| No existe `~/.android/debug.keystore` y no tienes la huella | Todavía no compilas nada en esta computadora: el almacén lo crea la primera compilación de depuración, no `signingReport` (medido en Linux Mint 22.3, 18-nov-2026) | Corre `./gradlew assembleDebug` y luego `./gradlew signingReport` |
 
-En Linux, esta lección está [pendiente: medir en Linux Mint 22.3].
+En Linux Mint 22.3 (x86_64), el `verifica` de esta lección salió igual que en la Mac (18-nov-2026): sobre `inicio/`, 11 de
+18 en verde; sobre `solucion/` sin tu archivo, «0 pruebas corridas» con el aviso; y con un archivo de prueba que traía la
+huella de esa computadora, 18 de 18. Las dependencias de Firebase le sumaron unos 200 MB a `~/.gradle`.
 
 ---
 
