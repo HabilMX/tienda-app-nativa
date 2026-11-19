@@ -37,7 +37,7 @@ respuesta, tus puertas solo sacan el nombre. Esta lección la rescata.
 
 ## Antes de empezar
 
-**Qué necesitas:** la [07](07-la-sesion-se-queda.md) terminada (su `verifica` en 81 de 81). Los pasos 1 a 3,
+**Qué necesitas:** la [07](07-la-sesion-se-queda.md) terminada (su `verifica` en 82 de 82). Los pasos 1 a 3,
 5 y 6 no piden ninguna cuenta. El paso 4 es en tu teléfono o emulador, con tu cuenta de Google de la 04 y, si
 hiciste la parte opcional, tu registro de Microsoft de la 05.
 
@@ -62,7 +62,7 @@ resultado de un inicio de sesión trae tokens; las puertas de esta app solo saca
 
 **Lo que no hace esta lección.** No crea un perfil de la tienda: no guarda dirección, órdenes ni preferencias.
 No cambia lo que hacen las pantallas de la 04 a la 07: entrar, los dos botones, el enlace, reabrir y cerrar
-sesión se portan igual, y sus 81 pruebas lo vigilan.
+sesión se portan igual, y sus 82 pruebas lo vigilan.
 
 ---
 
@@ -92,7 +92,7 @@ predicción 8.1: …
 ```
 
 El 19-nov-2026, con un archivo inventado, la última línea del conteo fue
-`Resultado: 83 de 96 pruebas en verde (13 en rojo, 0 con error, 0 saltadas)`. Son 96: las 81 que heredas de la
+`Resultado: 84 de 97 pruebas en verde (13 en rojo, 0 con error, 0 saltadas)`. Son 97: las 82 que heredas de la
 07, ya en verde, y 15 de la primera vez. De esas, dos ya pasan con el andamiaje (las de «el usuario que vuelve»:
 hoy tu app nunca dice que es la primera vez, y en ese caso acierta) y trece esperan tu código.
 
@@ -178,7 +178,7 @@ Resultado.Entro(quien.nombre, quien.primeraVez)
    cambia una, la otra sigue tirando la primera vez. Y que nadie haya tocado las pruebas, las puertas ni las
    pantallas.
 
-4. **Corre el `verifica`.** Las 96 pruebas pueden quedar en verde. La entrega todavía no está completa: faltan tus
+4. **Corre el `verifica`.** Las 97 pruebas pueden quedar en verde. La entrega todavía no está completa: faltan tus
    líneas del 8.1, del 8.2 y del 8.3 en `respuestas/08.md`, y el `verifica` lo dice al final.
 5. **Explica**, en tres líneas: por qué la decisión vive dentro de la puerta y hacia las pantallas solo sale un
    `Boolean`.
@@ -194,13 +194,14 @@ Los sabotajes se midieron sobre la solución el 19-nov-2026:
 
 | Sabotaje | Resultado |
 |---|---|
-| `esPrimeraVez` con `!= false`: un `null` cuenta como nuevo | 95 de 96 |
-| `esPrimeraVez` con `additionalUserInfo!!` | 95 de 96 |
-| `esPrimeraVez` al revés (`isNewUser == false`) | 94 de 96 |
-| `EntradaConGoogle` que no pasa la `primeraVez` | 92 de 96 |
-| `EntradaConMicrosoft` que no la pasa en `entrar()` | 92 de 96 |
-| `EntradaConMicrosoft` que no la pasa en `retomar()` | 94 de 96 |
-| `EntradaConGoogle` que siempre dice que es la primera vez | 91 de 96, y tres de las rojas son heredadas de lecciones anteriores |
+| `esPrimeraVez` con `!= false`: un `null` cuenta como nuevo | 96 de 97 |
+| `esPrimeraVez` con `additionalUserInfo!!` | 96 de 97 |
+| `esPrimeraVez` al revés (`isNewUser == false`) | 95 de 97 |
+| `EntradaConGoogle` que no pasa la `primeraVez` | 93 de 97 |
+| `EntradaConMicrosoft` que no la pasa en `entrar()` | 93 de 97 |
+| `EntradaConMicrosoft` que no la pasa en `retomar()` | 95 de 97 |
+| `EntradaConGoogle` que siempre dice que es la primera vez | 92 de 97, y tres de las rojas son heredadas de lecciones anteriores |
+| `EntradaConGoogle` que falla solo cuando la puerta es `VerificadorConFirebase` | 97 de 97: las pruebas no lo ven, porque solo le pasan dobles. Lo atrapa la marca de la puerta concreta |
 
 Cada uno deja además su marca en rojo en la salida, con el paso que lo arregla.
 
@@ -326,7 +327,7 @@ El paso 5 se hace **sin IA**.
 
 | # | Haces | Está hecho cuando |
 |---|---|---|
-| 8.1 | Decides con `isNewUser` si se muestra la bienvenida y demuestras que aparece solo la primera vez | El `verifica` dice «Nivel simulado: completo», con las 96 pruebas en verde, y tu `predicción 8.1` está comparada con lo que viste. Es el nivel simulado; el paso 4 es tu prueba en el teléfono |
+| 8.1 | Decides con `isNewUser` si se muestra la bienvenida y demuestras que aparece solo la primera vez | El `verifica` dice «Nivel simulado: completo», con las 97 pruebas en verde, y tu `predicción 8.1` está comparada con lo que viste. Es el nivel simulado; el paso 4 es tu prueba en el teléfono |
 | 8.2 | Explicas qué hizo Firebase por ti, qué construirías sin él y qué todavía no hay | Tus tres líneas `8.2` cubren lo de «Compara tus respuestas», escritas sin IA |
 | 8.3 | Juzgas una respuesta de Claude Code sobre la seguridad del inicio de sesión | Tus tres juicios coinciden con «Compara tus respuestas», cada uno con su porqué, y hay una comprobación con fuente oficial |
 
@@ -343,10 +344,11 @@ lo que tarde la primera cohorte.
 | `NotImplementedError` en las pruebas de la primera vez | `PrimeraVez.kt` sigue con su `TODO` | Paso 3 |
 | ❌ «Con additionalUserInfo en null tu esPrimeraVez truena o dice que sí» | Usaste `!!`, o `!= false` | Paso 3: `?.` y `== true` |
 | ❌ «Retomar con Microsoft» y lo demás de Microsoft en verde | Cambiaste `entrar()` pero no `retomar()`, o al revés | Paso 3: las dos funciones |
-| ❌ «De las 81 pruebas heredadas…» | Tu entrada siempre dice que es la primera vez, y el `Resultado` ya no es el que esperan las pruebas de antes | Pasa la `primeraVez` que contestó la puerta, nada más |
+| ❌ «De las 82 pruebas heredadas…» | Tu entrada siempre dice que es la primera vez, y el `Resultado` ya no es el que esperan las pruebas de antes | Pasa la `primeraVez` que contestó la puerta, nada más |
 | ❌ «Restricción de esta actividad… ya no son iguales en inicio/ y en solucion/» | Cambió un archivo dado | `git diff -- <archivo>` y deshazlo a mano |
 | En el teléfono, nunca sale la bienvenida | Tu cuenta ya existía en tu proyecto, desde la 04 | Paso 4: otra cuenta, o borra tu usuario |
 | En el teléfono, sale la bienvenida cada vez que entras | Borraste el usuario en la consola entre una entrada y otra, o algo distinto que no hemos visto | Revisa Authentication › Users; si el usuario sigue ahí y sale cada vez, cuéntanos |
+| ❌ «EntradaConGoogle.kt o EntradaConMicrosoft.kt nombra una puerta concreta» | Una de tus entradas nombra una puerta de verdad (`VerificadorConFirebase`, `NavegadorConFirebase`) o un doble de las pruebas. Las pruebas solo les pasan dobles: si tu código pregunta cuál le tocó, el verde no dice qué hace con la de verdad | Que tus entradas hablen solo con las interfaces de sus puertas. La puerta de verdad la escoge `MainActivity.kt`, que viene dado (paso 3) |
 
 El `verifica` de esta lección se midió en una Mac con Apple silicon. No se ha medido en Linux.
 
@@ -358,7 +360,7 @@ El `verifica` de esta lección se midió en una Mac con Apple silicon. No se ha 
 
 1. ¿Quién sabe si es la primera vez: tu app o Firebase? ¿Por qué tu app no lo puede saber sola, hoy?
 2. ¿Por qué `== true` y no `!!`?
-3. Tu `verifica` da 96 de 96. Di una cosa que eso demuestra y una que no.
+3. Tu `verifica` da 97 de 97. Di una cosa que eso demuestra y una que no.
 4. Al reabrir con sesión, ¿por qué no hay bienvenida, aunque sea la segunda vez que abres la app ese día?
 
 **Cierre del tramo.** Empezaste con un ambiente vacío. Hoy tienes una app Android nativa, en Kotlin y Compose, de
@@ -368,7 +370,7 @@ da la bienvenida solo la primera vez. Cada pieza pasó por la misma vuelta: pred
 explicar. Y en el paso 5 dijiste, con tus palabras, qué parte puso Firebase y qué parte pusiste tú.
 
 **Lo que sigue: el tramo 2.** La misma tienda, en iPhone, con SwiftUI. No se traduce el código de Android línea
-por línea: la app que terminaste hoy es la **especificación** de lo que la de iPhone tiene que hacer, y tus 96
+por línea: la app que terminaste hoy es la **especificación** de lo que la de iPhone tiene que hacer, y tus 97
 pruebas dicen, caso por caso, qué es «hacerlo». Para compilar una app de iPhone hace falta una Mac con Xcode, así
 que ese tramo es solo en Mac. Se publica cuando esté probado de punta a punta, como éste.
 

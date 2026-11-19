@@ -12,7 +12,7 @@
 #   mentira de la lección 06): la bienvenida aparece la primera vez con Google y con Microsoft; al cerrar
 #   sesión y volver a entrar, ya no; al reabrir con sesión, tampoco; y al retomar con Microsoft un usuario
 #   nuevo, sí.
-# SÍ revisa lo heredado: corre las 81 pruebas de la lección 07 (que incluyen las de la 04, la 05 y la 06) y
+# SÍ revisa lo heredado: corre las 82 pruebas de la lección 07 (que incluyen las de la 04, la 05 y la 06) y
 #   compara, byte por byte, todo archivo que esta lección no cambia contra el de la solución de la 07. Los que
 #   SÍ cambian y vienen dados (Entrada.kt, Puertas.kt, PuertaDelNavegador.kt, Tienda.kt e Inicio.kt) se comparan
 #   entre inicio/ y solucion/, igual que los nuevos que vienen dados. Esas comparaciones son una RESTRICCIÓN DE
@@ -115,6 +115,16 @@ MIC="$PROY/$DIRM/EntradaConMicrosoft.kt"
 if ! hay 'fun esPrimeraVez' "$PV" || ! hay 'class EntradaConGoogle' "$GOO" || ! hay 'class EntradaConMicrosoft' "$MIC"; then
   no "No pude leer PrimeraVez.kt, EntradaConGoogle.kt o EntradaConMicrosoft.kt (o ya no declaran su función y sus clases): sin ellos no reviso el texto"
 else
+  # Tus dos entradas solo conocen las interfaces de sus puertas. Si nombran una puerta concreta, la de
+  # producción o un doble, pueden portarse distinto con cada una, y las pruebas, que solo les pasan dobles, no
+  # verían lo que hacen con la de verdad. Se busca la palabra completa, fuera de los comentarios.
+  PUERTAS='VerificadorConFirebase|SelectorConCredentialManager|NavegadorConFirebase|EnlazadorConFirebase|RecuerdoConFirebase|LimpiadorConCredentialManager|VerificadorFalso|VerificadorConPrimeraVezFalso|NavegadorConPrimeraVezFalso|RecuerdoFalso|LimpiadorFalso|SelectorFalso|NavegadorFalso|EnlazadorFalso|EntradaFalsa|ProyectoFalso'
+  n_puertas=$(cat "$GOO" "$MIC" 2>/dev/null | grep -v '^[[:space:]]*//' | grep -cE -- "(^|[^A-Za-z])($PUERTAS)([^A-Za-z]|$)")
+  if [ "${n_puertas:-0}" -gt 0 ]; then
+    no "EntradaConGoogle.kt o EntradaConMicrosoft.kt nombra una puerta concreta (de producción o de prueba): solo deben conocer sus interfaces. Si preguntan cuál les tocó, las pruebas no ven lo que hacen con la de verdad (paso 3)"
+  else
+    si "Texto: EntradaConGoogle.kt y EntradaConMicrosoft.kt no nombran ninguna puerta concreta, ni la de producción ni los dobles: solo sus interfaces"
+  fi
   if hay 'additionalUserInfo' "$PV" && hay 'isNewUser' "$PV"; then
     si "Texto: PrimeraVez.kt nombra additionalUserInfo e isNewUser (presencia textual: que decida bien lo miden las pruebas, abajo)"
   else
@@ -195,10 +205,10 @@ todas() { f="$1"; shift; n=0; for p in "$@"; do [ "$(estado "$p" "$f")" = "paso"
 # --- Lo heredado sigue en verde ---------------------------------------------------------------
 th=$(suma tests "${HER[@]}")
 mh=$(( $(suma failures "${HER[@]}") + $(suma errors "${HER[@]}") + $(suma skipped "${HER[@]}") ))
-if [ "$th" -eq 81 ] && [ "$mh" -eq 0 ]; then
-  si "Simulado: las 81 pruebas heredadas de la lección 07 siguen en verde (incluyen las de la 04, la 05 y la 06): entrar, los dos botones, el enlace y la sesión no cambiaron"
+if [ "$th" -eq 82 ] && [ "$mh" -eq 0 ]; then
+  si "Simulado: las 82 pruebas heredadas de la lección 07 siguen en verde (incluyen las de la 04, la 05 y la 06): entrar, los dos botones, el enlace y la sesión no cambiaron"
 else
-  no "De las 81 pruebas heredadas de la lección 07 hay $((th - mh)) en verde de $th corridas: esta lección no debía cambiar lo que ya funcionaba. Corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+  no "De las 82 pruebas heredadas de la lección 07 hay $((th - mh)) en verde de $th corridas: esta lección no debía cambiar lo que ya funcionaba. Corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
 fi
 
 # --- 8.1 · La decisión ------------------------------------------------------------------------
@@ -238,7 +248,7 @@ ro=$(todas "$XMLR" alReabrirConSesionNoHayBienvenida alRetomarConMicrosoftUnUsua
   && si "Simulado: al reabrir con sesión no hay bienvenida; al retomar con Microsoft un usuario nuevo, sí (2 de 2)" \
   || no "Reabrir y retomar: $ro de 2 pruebas en verde (paso 3)"
 
-[ "$total" -eq 96 ] || no "Esperaba 96 pruebas (81 heredadas de la lección 07; 3 de PrimeraVezTest, 6 de EntradaConPrimeraVezTest y 6 de RecorridoConPrimeraVezTest) y los informes traen $total"
+[ "$total" -eq 97 ] || no "Esperaba 97 pruebas (82 heredadas de la lección 07; 3 de PrimeraVezTest, 6 de EntradaConPrimeraVezTest y 6 de RecorridoConPrimeraVezTest) y los informes traen $total"
 [ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
 
 # --- Lo escrito · presencia mínima --------------------------------------------------------------

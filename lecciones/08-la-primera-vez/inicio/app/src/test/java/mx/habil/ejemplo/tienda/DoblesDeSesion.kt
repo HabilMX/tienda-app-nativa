@@ -45,3 +45,13 @@ class RecuerdoDelProyecto(private val proyecto: ProyectoFalso) : RecuerdoDeLaSes
         avisosAlTelefono++
     }
 }
+
+// Doble del limpiador de Credential Manager: cuenta cuántas veces le pidieron
+// limpiar. Sirve para ver que la puerta de VERDAD (RecuerdoConFirebase) lo llama.
+class LimpiadorFalso : LimpiadorDeCredenciales {
+    var limpiezas = 0
+
+    override suspend fun limpiar() {
+        limpiezas++
+    }
+}
