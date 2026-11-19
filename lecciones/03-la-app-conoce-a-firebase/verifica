@@ -1,0 +1,257 @@
+#!/usr/bin/env bash
+# Revisa la lección 03 en el nivel SIMULADO: corre las pruebas en tu computadora (./gradlew testDebugUnitTest),
+# sin emulador y sin red hacia Firebase, y lee el conteo de los informes de resultados (XML).
+# SÍ revisa, corriendo las pruebas de ConfiguracionTest sobre el TEXTO de tu app/google-services.json:
+#   que alguna app del archivo sea del paquete mx.habil.ejemplo.tienda; que esa app traiga un cliente de OAuth
+#   de Android (tipo 1); que ese cliente traiga la huella SHA-1 del almacén de depuración de ESTA computadora
+#   (el debug.keystore de tu carpeta .android); y que traiga un cliente web (tipo 3).
+# SÍ revisa, con esas mismas pruebas: que la app compilada lleve el project_id y el google_app_id de tu archivo
+#   (los genera el plugin google-services), y que la librería de Firebase, cuando la prueba le pide arrancar,
+#   quede con ese proyecto.
+# SÍ revisa, con cuatro pruebas sobre archivos inventados (src/test/resources/configuraciones): que el revisor
+#   distingue un archivo completo de uno sin clientes de OAuth, de uno de otro paquete y de uno con otra huella.
+# SÍ revisa que las 7 pruebas de la lección 02 (recorrido y arranque) sigan en verde.
+# SÍ revisa, buscando texto en tus archivos (no los ejecuta): que app/build.gradle.kts nombre el plugin
+#   google-services, el BoM de Firebase y el applicationId de la serie; que el .gitignore del proyecto traiga la línea google-services.json;
+#   que exista app/google-services.json.example; y que respuestas/03.md traiga pegado el error del «Rompe uno
+#   a propósito». Y le pregunta a git si rastrea algún google-services.json en el repo.
+# NO revisa: que tu proyecto exista en Firebase, que la huella esté registrada ahí ni que Google esté
+#   habilitado: solo lee el archivo que descargaste, y un archivo bien formado de un proyecto borrado pasa
+#   igual. Tampoco que la app instalada hable con Firebase, ni que puedas entrar con Google (lección 04).
+#   No compara otra huella que la de depuración de esta computadora. Y no califica tus explicaciones (3.2, 3.3).
+# Solo lee tu código y tu archivo: no los cambia. Gradle escribe sus resultados en build/, que no se sube.
+# Uso:  ./verifica             revisa tu trabajo en inicio/
+#       ./verifica solucion    revisa la solución de referencia (también necesita tu archivo en solucion/app/)
+set -uo pipefail
+cd "$(dirname "$0")"
+PROY="${1:-inicio}"
+ok=0
+si() { echo "✅ $1"; }
+no() { echo "❌ $1"; ok=1; }
+nota() { echo "ℹ️  $1"; }
+
+case "$PROY" in
+  inicio|solucion) ;;
+  *) echo "Uso: ./verifica [inicio|solucion]"; exit 2 ;;
+esac
+PAQ="mx.habil.ejemplo.tienda"
+DIRP="app/src/test/java/mx/habil/ejemplo/tienda"
+DIRC="app/src/test/resources/configuraciones"
+JSON="$PROY/app/google-services.json"
+DIRX="$PROY/app/build/test-results/testDebugUnitTest"
+XMLC="$DIRX/TEST-$PAQ.ConfiguracionTest.xml"
+XMLR="$DIRX/TEST-$PAQ.RecorridoTest.xml"
+XMLA="$DIRX/TEST-$PAQ.ArranqueTest.xml"
+ERR_PAQUETE="No matching client found for package name"
+echo "Revisando $PROY/ — nivel simulado (sin emulador, sin hablar con Firebase)"
+
+# --- Andamiaje · lo que el proyecto ya trae -------------------------------------------------
+grep -q '^org.gradle.jvmargs=.*-Xmx4g' "$PROY/gradle.properties" 2>/dev/null \
+  && si "Andamiaje: gradle.properties le da 4 GB de memoria a Gradle (-Xmx4g)" \
+  || no "gradle.properties ya no trae -Xmx4g: regresa la línea  org.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8"
+if [ "$PROY" = "inicio" ]; then
+  cambiados=""
+  for t in "$DIRP/ConfiguracionTest.kt" "$DIRP/RevisorDeConfiguracion.kt" "$DIRP/RecorridoTest.kt" \
+           "$DIRP/ArranqueTest.kt" "$DIRP/EntradaFalsa.kt" "$DIRC/falso-completo.json" \
+           "$DIRC/falso-sin-clientes.json" "$DIRC/falso-otro-paquete.json"; do
+    cmp -s "inicio/$t" "solucion/$t" || cambiados="$cambiados inicio/$t"
+  done
+  if [ -z "$cambiados" ]; then
+    si "Andamiaje: las pruebas y sus archivos inventados son los de la lección, sin cambios (8 archivos comparados)"
+  else
+    no "Estos archivos de pruebas cambiaron y no se tocan:$cambiados"
+    nota "Mira qué cambió con  git diff -- <archivo>  y deshazlo a mano. Restaurar con git descarta lo que tenga: revisa el diff antes."
+  fi
+fi
+
+# --- 3.1 · El plugin y la librería, buscados como texto (no se ejecutan) --------------------
+# hay <expresión> <archivo>: ¿alguna línea que no sea comentario (//) la contiene?
+hay() { grep -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -qE -- "$1"; }
+GR="$PROY/app/build.gradle.kts"
+hay 'com\.google\.gms\.google-services|libs\.plugins\.google\.services' "$GR" \
+  && si "Texto: app/build.gradle.kts nombra el plugin google-services" \
+  || no "app/build.gradle.kts no nombra el plugin google-services: sin él tu archivo no llega a la app (paso 4)"
+hay 'applicationId[[:space:]]*=[[:space:]]*"'"$PAQ"'"' "$GR" \
+  && si "Texto: app/build.gradle.kts dice applicationId = \"$PAQ\"" \
+  || no "app/build.gradle.kts ya no dice  applicationId = \"$PAQ\" : es el paquete de la serie y con el que registraste la app (paso 1). Si vienes del «Rompe uno», regrésalo"
+hay 'firebase-bom|libs\.firebase\.bom' "$GR" \
+  && si "Texto: app/build.gradle.kts nombra el BoM de Firebase" \
+  || no "app/build.gradle.kts no nombra el BoM de Firebase (paso 4)"
+
+# --- 3.2 · Lo que no se sube ----------------------------------------------------------------
+if grep -qxE '[[:space:]]*/?(app/)?google-services\.json[[:space:]]*' "$PROY/.gitignore" 2>/dev/null; then
+  si "Texto: $PROY/.gitignore trae la línea google-services.json"
+else
+  no "$PROY/.gitignore no existe o no trae una línea que diga  google-services.json  (paso 2)"
+fi
+[ -f "$PROY/app/google-services.json.example" ] \
+  && si "Existe app/google-services.json.example (el molde sin datos de nadie; no reviso su contenido)" \
+  || no "Falta $PROY/app/google-services.json.example: venía con el proyecto"
+# El cero de rastreados solo vale si git sí contesta por un archivo que seguro rastrea.
+if git ls-files --error-unmatch "$PROY/gradle.properties" >/dev/null 2>&1; then
+  rastreados=$(git ls-files "$(git rev-parse --show-toplevel)" | grep -E '(^|/)google-services\.json$' || true)
+  [ -z "$rastreados" ] \
+    && si "Git: el repo no rastrea ningún archivo llamado google-services.json (git ls-files)" \
+    || no "Git sí rastrea un google-services.json: $(echo $rastreados). Sácalo con  git rm --cached <archivo>  (no borra tu copia)"
+else
+  nota "No pude preguntarle a git (¿bajaste el repo sin git?): no revisé si algún google-services.json está rastreado"
+fi
+
+# --- 3.4 · Tu archivo, antes de compilar (búsqueda de texto) -------------------------------
+hay_json=0
+if [ -f "$JSON" ]; then
+  hay_json=1
+  if grep -qE '"package_name"[[:space:]]*:[[:space:]]*"'"$PAQ"'"' "$JSON"; then
+    si "Texto: tu app/google-services.json nombra el paquete $PAQ"
+  else
+    otros=$(sed -n 's/.*"package_name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$JSON" | sort -u | tr '\n' ' ')
+    no "Tu app/google-services.json es de otro paquete (trae: ${otros:-ninguno}) y esta app es $PAQ"
+    nota "Firebase no deja cambiar el paquete de una app registrada: registra otra app con $PAQ y descarga SU archivo (paso 3)"
+  fi
+else
+  no "No existe $JSON: descárgalo de la consola de Firebase al terminar el paso 3 y ponlo en esa carpeta"
+fi
+if [ -z "${ANDROID_HOME:-}" ] && [ ! -f "$PROY/local.properties" ]; then
+  no "ANDROID_HOME no está definido: sin él Gradle no encuentra el SDK (lección 00, paso 2)"
+  echo; echo "Resultado: no se corrieron las pruebas."; exit 1
+fi
+
+# --- Las pruebas simuladas -------------------------------------------------------------------
+# --rerun obliga a correr las pruebas aunque nada haya cambiado: así el resultado es de ESTA corrida.
+marca=$(mktemp)
+salida=$(mktemp)
+echo "Corriendo las pruebas… (la primera vez tarda y necesita red para bajar librerías)"
+"./$PROY/gradlew" -p "$PROY" -q testDebugUnitTest --rerun >"$salida" 2>&1
+rc=$?
+
+frescos=1
+for x in "$XMLC" "$XMLR" "$XMLA"; do
+  { [ -f "$x" ] && [ "$x" -nt "$marca" ]; } || frescos=0
+done
+if [ "$frescos" -ne 1 ]; then
+  no "Las pruebas no llegaron a correr. Esto dijo Gradle:"
+  grep -E '^e: |error:|What went wrong|SDK location|Java heap|'"$ERR_PAQUETE"'|google-services.json is missing|Could not (find|resolve)' "$salida" \
+    | sed -e 's|file://.*/||' -e 's| in /.*google-services.json| en tu app/google-services.json|' | head -8 | sed 's/^/     /'
+  if grep -q "$ERR_PAQUETE" "$salida"; then
+    nota "«$ERR_PAQUETE»: el plugin buscó en tu archivo una app con el paquete de esta y no la halló (objetivo 3.4)"
+  fi
+  if grep -q 'google-services.json is missing' "$salida"; then
+    nota "Con el plugin aplicado, el proyecto no compila sin app/google-services.json: es el de TU proyecto de Firebase (paso 3)"
+  fi
+  nota "Para ver todo:  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+  rm -f "$marca" "$salida"
+  echo; echo "Resultado: 0 pruebas corridas."; exit 1
+fi
+rm -f "$marca" "$salida"
+
+# El conteo se lee de los informes de resultados (XML), no del código de salida de Gradle.
+# Son tres informes, uno por clase de pruebas, y se suman.
+attr() { sed -n 's/.*<testsuite [^>]*[[:space:]]'"$1"'="\([0-9]*\)".*/\1/p' "$2" | head -1; }
+suma() { t=0; for x in "$XMLC" "$XMLR" "$XMLA"; do v=$(attr "$1" "$x"); t=$((t + ${v:-0})); done; echo "$t"; }
+total=$(suma tests); fallas=$(suma failures); errores=$(suma errors); saltadas=$(suma skipped)
+verdes=$((total - fallas - errores - saltadas))
+
+# estado <nombre de la prueba> [informe] → paso | fallo | falta
+estado() {
+  awk -v n="$1" '
+    /<testcase / { enc = (index($0, "name=\"" n "\"") > 0); if (enc) { visto = 1; if ($0 ~ /\/>[[:space:]]*$/) { print "paso"; fin = 1; exit } } next }
+    enc && /<(failure|error|skipped)/ { print "fallo"; fin = 1; exit }
+    enc && /<\/testcase>/ { print "paso"; fin = 1; exit }
+    END { if (!fin) print (visto ? "fallo" : "falta") }' "${2:-$XMLC}"
+}
+revisa() { # nombre · qué demostró · qué falta
+  case "$(estado "$1")" in
+    paso)  si "$2" ;;
+    fallo) no "$3" ;;
+    *)     no "La prueba $1 no corrió: revisa que ConfiguracionTest.kt esté completo" ;;
+  esac
+}
+
+# --- El revisor, contra los archivos inventados ----------------------------------------------
+revisor=0
+for p in elRevisorNoLePoneFaltasAUnArchivoCompleto elRevisorVeQueFaltanLosClientesDeOAuth \
+         elRevisorVeUnArchivoDeOtroPaquete elRevisorVeUnaHuellaQueNoEsLaPedida; do
+  [ "$(estado "$p")" = "paso" ] && revisor=$((revisor + 1))
+done
+if [ "$revisor" -eq 4 ]; then
+  si "Simulado: el revisor distingue un archivo inventado completo de uno sin clientes de OAuth, de uno de otro paquete y de uno con otra huella (4 de 4)"
+else
+  no "El revisor falló con los archivos inventados ($revisor de 4): las marcas de «tu archivo» de abajo no son de fiar. Revisa que no hayan cambiado las pruebas"
+fi
+
+# --- 3.1, 3.4 y 3.5 · Tu archivo ------------------------------------------------------------
+if [ "$hay_json" -ne 1 ]; then
+  for p in tuConfiguracionEsDeEstePaquete tuConfiguracionTraeUnClienteDeAndroid elClienteDeAndroidTraeTuHuella \
+           tuConfiguracionTraeElClienteWeb laAppCompiladaLlevaLosDatosDeTuArchivo firebaseArrancaConTuProyecto; do
+    case "$(estado "$p")" in
+      paso) no "$p pasó sin que exista tu archivo: no debería. Revisa que no hayan cambiado las pruebas" ;;
+      *)    no "$p quedó en rojo, pero depende de que exista app/google-services.json: consigue primero tu archivo" ;;
+    esac
+  done
+else
+  revisa tuConfiguracionEsDeEstePaquete \
+    "Simulado: una app de tu archivo es del paquete $PAQ" \
+    "Ninguna app de tu archivo es del paquete $PAQ, o el archivo no se pudo leer como JSON (paso 3)"
+  if [ "$(estado tuConfiguracionEsDeEstePaquete)" = "paso" ]; then
+    revisa tuConfiguracionTraeUnClienteDeAndroid \
+      "Simulado: tu archivo trae un cliente de OAuth de Android (tipo 1)" \
+      "Tu archivo no trae un cliente de OAuth de Android (tipo 1): lo bajaste antes de registrar la huella o de habilitar Google. Descárgalo otra vez después de la huella (paso 3)"
+    if [ "$(estado tuConfiguracionTraeUnClienteDeAndroid)" = "paso" ]; then
+      revisa elClienteDeAndroidTraeTuHuella \
+        "Simulado: ese cliente trae la huella SHA-1 del almacén de depuración de esta computadora" \
+        "Ningún cliente de Android de tu archivo trae la huella de depuración de esta computadora (o no existe tu debug.keystore: corre ./$PROY/gradlew -p $PROY signingReport). Registra ESA huella y descárgalo otra vez después de la huella (paso 3)"
+    else
+      no "elClienteDeAndroidTraeTuHuella quedó en rojo, pero depende de la marca anterior: sin cliente de Android no hay huella que comparar"
+    fi
+    revisa tuConfiguracionTraeElClienteWeb \
+      "Simulado: tu archivo trae un cliente de OAuth web (tipo 3), el que usará el botón de Google en la lección 04" \
+      "Tu archivo no trae un cliente de OAuth web (tipo 3): lo bajaste antes de habilitar Google en Authentication. Descárgalo otra vez después de la huella y de habilitar Google (paso 3)"
+  else
+    for p in tuConfiguracionTraeUnClienteDeAndroid elClienteDeAndroidTraeTuHuella tuConfiguracionTraeElClienteWeb; do
+      no "$p quedó en rojo, pero depende de la marca anterior: primero el archivo tiene que ser de este paquete"
+    done
+  fi
+  revisa laAppCompiladaLlevaLosDatosDeTuArchivo \
+    "Simulado: la app compilada lleva el project_id y el google_app_id de tu archivo (los generó el plugin google-services)" \
+    "La app compilada no lleva el project_id y el google_app_id de tu archivo: falta aplicar el plugin google-services en app/build.gradle.kts (paso 4)"
+  revisa firebaseArrancaConTuProyecto \
+    "Simulado: la librería de Firebase, cuando la prueba le pide arrancar, queda con el proyecto de tu archivo" \
+    "La librería de Firebase no está entre las dependencias de la app, o no arrancó con el proyecto de tu archivo: revisa el BoM y firebase-auth en app/build.gradle.kts (paso 4)"
+fi
+
+# --- Lo de la lección 02 sigue funcionando ---------------------------------------------------
+t02=$(( $(attr tests "$XMLR") + $(attr tests "$XMLA") ))
+m02=$(( $(attr failures "$XMLR") + $(attr errors "$XMLR") + $(attr skipped "$XMLR") + $(attr failures "$XMLA") + $(attr errors "$XMLA") + $(attr skipped "$XMLA") ))
+if [ "$t02" -eq 7 ] && [ "$m02" -eq 0 ]; then
+  si "Simulado: las 7 pruebas de la lección 02 (6 del recorrido y 1 del arranque) siguen en verde"
+else
+  no "De las 7 pruebas de la lección 02 corrieron $t02 y $m02 no quedaron en verde: conectar Firebase no debía cambiar las pantallas. Corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+fi
+
+[ "$total" -eq 17 ] || no "Esperaba 17 pruebas (10 de la configuración, 6 del recorrido y 1 del arranque) y los informes traen $total"
+[ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+
+# --- 3.4 · Presencia mínima de la evidencia escrita (no califica su contenido) -------------
+if [ "$PROY" = "inicio" ]; then
+  R=../../respuestas/03.md
+  if [ -f "$R" ] && grep -qF "$ERR_PAQUETE" "$R"; then
+    si "Escrito: respuestas/03.md trae pegado el error del «Rompe uno a propósito» (no califico tu diagnóstico)"
+  else
+    no "respuestas/03.md no trae pegado el error del «Rompe uno a propósito» (paso 5): la línea que contiene «$ERR_PAQUETE»"
+  fi
+else
+  nota "El error pegado en respuestas/03.md solo se busca sobre inicio/"
+fi
+
+echo
+echo "Resultado: $verdes de $total pruebas en verde ($fallas en rojo, $errores con error, $saltadas saltadas), leído de"
+echo "  $XMLC"
+echo "  $XMLR"
+echo "  $XMLA"
+nota "Nivel simulado: demuestra qué trae el TEXTO de tu google-services.json (paquete, cliente de Android con la"
+nota "  huella de depuración de esta computadora, cliente web) y que la app compilada lleva esos datos."
+nota "No demuestra que tu proyecto exista en Firebase, que la huella esté registrada ni que Google esté habilitado:"
+nota "  el archivo es una copia de lo que la consola tenía cuando lo bajaste. Eso se comprueba al entrar, en la lección 04."
+nota "Las marcas «Texto:» solo buscan palabras en tus archivos: no demuestran que el código haga lo que dicen."
+nota "No califica tus explicaciones (3.2 y 3.3): compáralas con «Compara tus respuestas»."
+exit $ok

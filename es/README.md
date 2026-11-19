@@ -41,7 +41,7 @@ listo tu ambiente.
 | 01 | [Mi primera pantalla corre](01-mi-primera-pantalla.md) |
 | 02 | [Pantallas que cambian](02-pantallas-que-cambian.md) |
 | 02-B | Catálogo de componentes de la tienda (práctica) |
-| 03 | La app conoce a Firebase |
+| 03 | [La app conoce a Firebase](03-la-app-conoce-a-firebase.md) |
 | 04 | Entrar con Google |
 | 05 | Entrar con Microsoft |
 | 06 | La sesión se queda |
