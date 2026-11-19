@@ -209,7 +209,7 @@ fun EtiquetaEstado(estado: EstadoOrden) {
 
    Las siete pruebas de la 02 deben seguir en verde: el inicio de la 02 sigue diciendo «Hola, Ana» y tiene tres cosas
    más. Medido el 19-nov-2026 en este punto: las marcas de los componentes, de `Inicio.kt` y de `MainActivity.kt` en
-   verde, `Resultado: 7 de 18 pruebas esperadas en verde` (las once de captura todavía no existen), y en rojo solo las de los pasos 3 a 6 (previews, `@ShowkaseRoot`,
+   verde, `Resultado: 7 de 18 pruebas esperadas en verde (solo corrieron 7…` (las once de captura todavía no existen), y en rojo solo las de los pasos 3 a 6 (previews, `@ShowkaseRoot`,
    imágenes, capturas, sabotaje y `respuestas/02b.md`). Ese rojo es el esperado ahora.
 5. **Explica** en dos líneas de `respuestas/02b.md`: ¿por qué `TarjetaProducto` no recibe ningún color, y de dónde lo
    saca?
@@ -566,3 +566,5 @@ Abiertas el 19-nov-2026.
 - Medición propia: Mac con Apple silicon, 19-nov-2026 (el `verifica` sobre `inicio/` y `solucion/`, un sabotaje por
   marca, el color en rojo y en una unidad, el catálogo en un emulador Pixel 9 con Android 37, y la falla de los
   íconos).
+- Medición en Linux Mint 22.3, 19-nov-2026: el `verifica` sobre `solucion/` desde un clon nuevo, 18 de 18, las once
+  capturas iguales a sus referencias y el sabotaje del color con 6 de 11 en rojo.

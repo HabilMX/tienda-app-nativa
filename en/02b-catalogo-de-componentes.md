@@ -218,7 +218,7 @@ fun EtiquetaEstado(estado: EstadoOrden) {
 
    02's seven tests must stay green: 02's home screen still says «Hola, Ana» and has three more things. Measured on
    Nov 19, 2026 at this point: the marks for the components, for `Inicio.kt` and for `MainActivity.kt` green,
-   `Resultado: 7 de 18 pruebas esperadas en verde` (the eleven screenshot tests do not exist yet), and red only those from steps 3 to 6 (previews, `@ShowkaseRoot`, images,
+   `Resultado: 7 de 18 pruebas esperadas en verde (solo corrieron 7…` (the eleven screenshot tests do not exist yet), and red only those from steps 3 to 6 (previews, `@ShowkaseRoot`, images,
    screenshots, sabotage and `respuestas/02b.md`). That red is the expected one now.
 5. **Explain** in two lines of `respuestas/02b.md`: why does `TarjetaProducto` receive no color, and where does it get
    it from?
@@ -580,3 +580,5 @@ Opened on Nov 19, 2026.
 - Roborazzi (README: `record` and `verify` tasks, `@GraphicsMode`, comparator). https://github.com/takahirom/roborazzi
 - Maven Central (versions of Roborazzi, Showkase, KSP, Paparazzi and Robolectric). https://repo1.maven.org/maven2/io/github/takahirom/roborazzi/roborazzi/
 - Our own measurement: Mac with Apple silicon, Nov 19, 2026 (the `verifica` on `inicio/` and `solucion/`, one sabotage per mark, the color in red and by one unit, the catalog on a Pixel 9 emulator with Android 37, and the icons failure).
+- Measurement on Linux Mint 22.3, Nov 19, 2026: the `verifica` on `solucion/` from a fresh clone, 18 of 18, the eleven
+  screenshots identical to their references and the color sabotage with 6 of 11 red.

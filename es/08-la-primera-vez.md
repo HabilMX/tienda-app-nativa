@@ -474,3 +474,4 @@ Abiertas el 19-nov-2026.
 - Medición propia: Mac con Apple silicon, 19-nov-2026. El `verifica` sobre `inicio/` y `solucion/`, cada paso y cada
   sabotaje, con archivos inventados y sin tocar la consola de Firebase ni ninguna cuenta. Versiones del proyecto:
   las de la serie (AGP 9.4.1, Kotlin 2.4.21, Firebase BOM 35.2.0, que trae `firebase-auth` 25.0.0).
+- Medición en Linux Mint 22.3, 19-nov-2026: el `verifica` sobre `solucion/` desde un clon nuevo, 97 de 97.

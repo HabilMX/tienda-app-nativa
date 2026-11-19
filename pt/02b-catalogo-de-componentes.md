@@ -228,7 +228,7 @@ fun EtiquetaEstado(estado: EstadoOrden) {
 
    Os sete testes da 02 devem continuar em verde: o início da 02 continua dizendo «Olá, Ana» («Hola, Ana») e tem mais três
    coisas. Medido em 19/11/2026 neste ponto: as marcas dos componentes, do `Inicio.kt` e da `MainActivity.kt` em
-   verde, `Resultado: 7 de 18 pruebas esperadas en verde` (os onze testes de captura ainda não existem), e em vermelho só as dos passos 3 a 6 (previews, `@ShowkaseRoot`,
+   verde, `Resultado: 7 de 18 pruebas esperadas en verde (solo corrieron 7…` (os onze testes de captura ainda não existem), e em vermelho só as dos passos 3 a 6 (previews, `@ShowkaseRoot`,
    imagens, capturas, sabotagem e `respuestas/02b.md`). Esse vermelho é o esperado agora.
 
    *(Em português: «Resultado: 7 de 18 testes esperados em verde».)*
@@ -605,3 +605,5 @@ Abertas em 19/11/2026.
 - Medição própria: Mac com Apple silicon, 19/11/2026 (o `verifica` sobre `inicio/` e `solucion/`, uma sabotagem por
   marca, a cor em vermelho e em uma unidade, o catálogo em um emulador Pixel 9 com Android 37, e a falha dos
   ícones).
+- Medição no Linux Mint 22.3, 19/11/2026: o `verifica` sobre `solucion/` a partir de um clone novo, 18 de 18, as onze
+  capturas iguais às referências e a sabotagem da cor com 6 de 11 em vermelho.

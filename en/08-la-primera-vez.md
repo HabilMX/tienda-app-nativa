@@ -474,3 +474,4 @@ Opened on Nov 19, 2026.
 - Kotlin. *Null safety* (the `?.` operator returns `null` if what is on the left is `null`). https://kotlinlang.org/docs/null-safety.html
 - Series trial, Nov 13, 2026, Mac with Apple silicon, with test code and real accounts: "(primera vez)" showed up only on the first sign-in, with Google and with Microsoft.
 - Our own measurement: Mac with Apple silicon, Nov 19, 2026. The `verifica` on `inicio/` and `solucion/`, each step and each sabotage, with invented files and without touching the Firebase console or any account. Project versions: the series' own (AGP 9.4.1, Kotlin 2.4.21, Firebase BOM 35.2.0, which brings `firebase-auth` 25.0.0).
+- Measurement on Linux Mint 22.3, Nov 19, 2026: the `verifica` on `solucion/` from a fresh clone, 97 of 97.

@@ -332,7 +332,7 @@ l'ajusterons avec le temps que prendra la première cohorte.
 | L'application s'ouvre sur la bienvenue, et la session apparaît après | Firebase peut ne pas avoir fini de se préparer quand l'application a fait sa lecture unique | N'effacez pas les données et ne donnez pas l'essai pour bon : notez le cas. Cette leçon fait une lecture unique ; une version robuste écoute l'`AuthStateListener` (étape 2) |
 | ❌ « SesionDeLaTienda solo programa contra RecuerdoDeLaSesion… » (`SesionDeLaTienda` ne programme que contre `RecuerdoDeLaSesion`…) | Votre classe nomme une porte concrète ou une doublure | Étape 3 : votre classe ne connaît que l'interface |
 
-Le `verifica` de cette leçon a été mesuré sur un Mac avec Apple silicon et sous Linux Mint 22.3, le 19 nov. 2026 : avec la solution, 82 sur 82 sur les deux.
+Le `verifica` de cette leçon a été mesuré sur un Mac avec Apple silicon et sous Linux Mint 22.3, le 19 nov. 2026 : avec la solution, 82 sur 82 sur les deux machines.
 
 ---
 
@@ -404,3 +404,4 @@ Ouvertes le 19 nov. 2026.
 - Android Developers. Référence de `CredentialManager` (`clearCredentialState` : quand l'appeler et pour quoi). https://developer.android.com/reference/kotlin/androidx/credentials/CredentialManager
 - Essai de la série, 13 nov. 2026, Mac avec Apple silicon, avec un code de test et un compte réel : en rouvrant, l'application a salué avant que l'on touche le bouton ; en se reconnectant avec Microsoft, sa page montrait déjà le compte connecté.
 - Nos propres mesures : Mac avec Apple silicon, 19 nov. 2026. Le `verifica` sur `inicio/` et `solucion/`, deux fois de suite chacun, chaque étape et chaque sabotage, avec des fichiers inventés et sans toucher à la console de Firebase ni à aucun compte.
+- Mesure sous Linux Mint 22.3, 19 nov. 2026 : le `verifica` sur `solucion/` depuis un clone neuf, 82 sur 82.

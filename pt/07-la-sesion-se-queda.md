@@ -397,3 +397,4 @@ Abertas em 19/11/2026.
 - Android Developers. Referência de `CredentialManager` (`clearCredentialState`: quando chamá-lo e para quê). https://developer.android.com/reference/kotlin/androidx/credentials/CredentialManager
 - Ensaio da série, 13/11/2026, Mac com Apple silicon, com um código de teste e uma conta real: ao reabrir, o app deu o olá antes de se tocar no botão; ao voltar a entrar com a Microsoft, a página dela já mostrava a conta iniciada.
 - Medição própria: Mac com Apple silicon, 19/11/2026. O `verifica` sobre `inicio/` e `solucion/`, duas vezes seguidas cada um, cada passo e cada sabotagem, com arquivos inventados e sem tocar no console do Firebase nem em nenhuma conta.
+- Medição no Linux Mint 22.3, 19/11/2026: o `verifica` sobre `solucion/` a partir de um clone novo, 82 de 82.

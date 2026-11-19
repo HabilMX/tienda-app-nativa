@@ -393,3 +393,4 @@ Firebase иска друг с този за обновяване.
 - Android Developers. Справочник на `CredentialManager` (`clearCredentialState`: кога да се вика и за какво). https://developer.android.com/reference/kotlin/androidx/credentials/CredentialManager
 - Изпробване на поредицата, 13 ноември 2026 г., Mac с Apple silicon, с пробен код и истински акаунт: при повторно отваряне приложението поздрави, преди да се докосне бутонът; при повторно влизане с Microsoft неговата страница вече показваше влезлия акаунт.
 - Собствено измерване: Mac с Apple silicon, 19 ноември 2026 г. `verifica` върху `inicio/` и `solucion/`, по два пъти поред всеки, всяка стъпка и всеки саботаж, с измислени файлове и без да се докосва конзолата на Firebase, нито някакъв акаунт.
+- Измерване на Linux Mint 22.3, 19 ноември 2026 г.: `verifica` върху `solucion/` от ново копие на хранилището, 82 от 82.

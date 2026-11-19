@@ -221,7 +221,7 @@ fun EtiquetaEstado(estado: EstadoOrden) {
 
    Les sept tests de la 02 doivent rester au vert : l'accueil de la 02 dit toujours « Hola, Ana » et contient trois
    choses de plus. Mesuré le 19 nov. 2026 à ce stade : les marques des composants, de `Inicio.kt` et de
-   `MainActivity.kt` au vert, `Resultado: 7 de 18 pruebas esperadas en verde` (les onze tests de capture n'existent pas encore), et au rouge seulement celles des étapes 3 à 6
+   `MainActivity.kt` au vert, `Resultado: 7 de 18 pruebas esperadas en verde (solo corrieron 7…` (les onze tests de capture n'existent pas encore), et au rouge seulement celles des étapes 3 à 6
    (aperçus, `@ShowkaseRoot`, images, captures, sabotage et `respuestas/02b.md`). Ce rouge est attendu maintenant.
 
    *(Résultat : 7 tests attendus sur 18 au vert.)*
@@ -593,3 +593,5 @@ Ouvertes le 19 nov. 2026.
 - Roborazzi (README : tâches `record` et `verify`, `@GraphicsMode`, comparateur). https://github.com/takahirom/roborazzi
 - Maven Central (versions de Roborazzi, Showkase, KSP, Paparazzi et Robolectric). https://repo1.maven.org/maven2/io/github/takahirom/roborazzi/roborazzi/
 - Nos propres mesures : Mac avec Apple silicon, 19 nov. 2026 (le `verifica` sur `inicio/` et `solucion/`, un sabotage par marque, la couleur en rouge et d'une unité, le catalogue dans un émulateur Pixel 9 avec Android 37, et la panne des icônes).
+- Mesure sous Linux Mint 22.3, 19 nov. 2026 : le `verifica` sur `solucion/` depuis un clone neuf, 18 sur 18, les onze
+  captures identiques à leurs références et le sabotage de la couleur avec 6 sur 11 au rouge.

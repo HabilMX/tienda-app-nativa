@@ -218,7 +218,7 @@ fun EtiquetaEstado(estado: EstadoOrden) {
 
    Седемте теста от урок 02 трябва да останат зелени: началният екран от урок 02 все още казва „Здравейте, Ана“
    („Hola, Ana“) и има още три неща. Измерено на 19 ноември 2026 г. в тази точка: знаците на компонентите, на
-   `Inicio.kt` и на `MainActivity.kt` в зелено, `Resultado: 7 de 18 pruebas esperadas en verde` *(Резултат: 7 от 18 очаквани
+   `Inicio.kt` и на `MainActivity.kt` в зелено, `Resultado: 7 de 18 pruebas esperadas en verde (solo corrieron 7…` *(Резултат: 7 от 18 очаквани
    теста са зелени; единадесетте теста със снимка още не съществуват)*, и в червено само тези от стъпки 3 до 6 (preview-та, `@ShowkaseRoot`, изображения, снимки, саботаж и
    `respuestas/02b.md`). Това червено сега се очаква.
 5. **Обяснете** в два реда на `respuestas/02b.md`: защо `TarjetaProducto` не получава никакъв цвят и откъде го взема?
@@ -572,3 +572,5 @@ preview-то във всеки вариант и живее в телефона.
 - Roborazzi (README: задачите `record` и `verify`, `@GraphicsMode`, компараторът). https://github.com/takahirom/roborazzi
 - Maven Central (версиите на Roborazzi, Showkase, KSP, Paparazzi и Robolectric). https://repo1.maven.org/maven2/io/github/takahirom/roborazzi/roborazzi/
 - Собствено измерване: Mac с Apple silicon, 19 ноември 2026 г. (`verifica` върху `inicio/` и `solucion/`, един саботаж за всеки знак, цветът в червено и с една единица, каталогът в емулатор Pixel 9 с Android 37 и грешката с иконите).
+- Измерване на Linux Mint 22.3, 19 ноември 2026 г.: `verifica` върху `solucion/` от ново копие на хранилището, 18 от 18,
+  единадесетте снимки съвпадат с еталоните, а саботажът на цвета прави 6 от 11 червени.

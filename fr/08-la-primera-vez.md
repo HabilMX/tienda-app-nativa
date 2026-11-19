@@ -378,7 +378,7 @@ l'ajusterons avec le temps que prendra la première cohorte.
 | ❌ « EntradaConGoogle.kt o EntradaConMicrosoft.kt nombra una puerta concreta » (`EntradaConGoogle.kt` ou `EntradaConMicrosoft.kt` nomme une porte concrète) | L'une de vos connexions nomme une vraie porte (`VerificadorConFirebase`, `NavegadorConFirebase`) ou une doublure des tests. Les tests ne leur passent que des doublures : si votre code demande laquelle lui est échue, le vert ne dit pas ce qu'il fait avec la vraie | Que vos connexions ne parlent qu'aux interfaces de leurs portes. La vraie porte, c'est `MainActivity.kt` qui la choisit, et il est fourni (étape 3) |
 | ❌ « Las pruebas no llegaron a correr » (les tests n'ont pas pu se lancer) et ce qui suit ne dit pas la cause | Gradle a échoué pour quelque chose que le `verifica` ne reconnaît pas ; il vous montre ses dernières lignes | Lancez `./inicio/gradlew -p inicio testDebugUnitTest --stacktrace` et lisez la fin. Si vous la partagez, retirez d'abord les jetons et les chemins de votre ordinateur |
 
-Le `verifica` de cette leçon a été mesuré sur un Mac avec Apple silicon et sous Linux Mint 22.3, le 19 nov. 2026 : avec la solution, 97 sur 97 sur les deux.
+Le `verifica` de cette leçon a été mesuré sur un Mac avec Apple silicon et sous Linux Mint 22.3, le 19 nov. 2026 : avec la solution, 97 sur 97 sur les deux machines.
 
 ---
 
@@ -491,3 +491,4 @@ Ouvertes le 19 nov. 2026.
 - Kotlin. *Null safety* (l'opérateur `?.` renvoie `null` si ce qui est à gauche est `null`). https://kotlinlang.org/docs/null-safety.html
 - Essai de la série, 13 nov. 2026, Mac avec Apple silicon, avec un code de test et des comptes réels : « (primera vez) » n'est apparu qu'à la première connexion, avec Google et avec Microsoft.
 - Nos propres mesures : Mac avec Apple silicon, 19 nov. 2026. Le `verifica` sur `inicio/` et `solucion/`, chaque étape et chaque sabotage, avec des fichiers inventés et sans toucher à la console de Firebase ni à aucun compte. Versions du projet : celles de la série (AGP 9.4.1, Kotlin 2.4.21, Firebase BOM 35.2.0, qui apporte `firebase-auth` 25.0.0).
+- Mesure sous Linux Mint 22.3, 19 nov. 2026 : le `verifica` sur `solucion/` depuis un clone neuf, 97 sur 97.

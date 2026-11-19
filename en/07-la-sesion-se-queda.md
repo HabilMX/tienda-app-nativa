@@ -392,3 +392,4 @@ Opened on Nov 19, 2026.
 - Android Developers. `CredentialManager` reference (`clearCredentialState`: when to call it and what for). https://developer.android.com/reference/kotlin/androidx/credentials/CredentialManager
 - Series trial, Nov 13, 2026, Mac with Apple silicon, with test code and a real account: on reopening, the app greeted before the button was tapped; on signing in with Microsoft again, its page already showed the signed-in account.
 - Our own measurement: Mac with Apple silicon, Nov 19, 2026. The `verifica` on `inicio/` and `solucion/`, twice in a row each, each step and each sabotage, with invented files and without touching the Firebase console or any account.
+- Measurement on Linux Mint 22.3, Nov 19, 2026: the `verifica` on `solucion/` from a fresh clone, 82 of 82.
