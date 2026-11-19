@@ -36,7 +36,7 @@ not.
 And here is the strange part. That app had no database. It did not keep a list of who had already signed in. It
 wrote nothing on the phone. How did it know that the second time was no longer the first?
 
-It did not know it. Firebase told it, in a single word that can come hidden in the sign-in's response. Your app
+The app did not know it on its own. Firebase told it, in a single word that can come hidden in the sign-in's response. Your app
 has been receiving it since lesson 04, and has thrown it in the trash every time: of that response, your gates
 only take out the name. This lesson rescues it. Since that word may not come, your app will ask in a safe way: if
 it is missing, there is no welcome.
@@ -130,7 +130,7 @@ whether the user is new or existing". In Kotlin it reads like a property: `resul
 - The same reference says it returns information "if the provider is Facebook, GitHub, Google or Twitter".
   Microsoft is not on that list. But the `AdditionalUserInfo` page, in `getProfile()`, does name Microsoft, and in
   the Nov 13 trial the sign-in with Microsoft said "(primera vez)" the first time and not the second. The
-  documentation is not even here, and that is why the code assumes nothing: if there is no information, there is
+  documentation is not consistent here, and that is why the code assumes nothing: if there is no information, there is
   no welcome.
 
 **What changed in the app.** One file is new and five changed with respect to 07's solution; in the tests, three new
@@ -386,7 +386,7 @@ This lesson's `verifica` was measured on a Mac with Apple silicon. It has not be
 
 **Closing the stage.** You started with an empty environment. Today you have a native Android app, in Kotlin and
 Compose, for a store where you sign in with Google or with Microsoft; where a person with the same email in both
-reaches a single user, because she confirmed it; that remembers you when you open it again and forgets you when you
+reaches a single user, because that person confirmed it; that remembers you when you open it again and forgets you when you
 ask it to; and that welcomes you only the first time. Each piece went through the same loop: predict, ask, read,
 run and explain. And in step 5 you said, in your own words, which part Firebase put and which part you put.
 

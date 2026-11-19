@@ -66,8 +66,8 @@ oscura, cuatro estilos de letra y una función `TemaTienda(oscuro) { … }` que 
 **Por qué Roborazzi para las capturas.** Se eligió con un solo criterio: que siga funcionando igual para la siguiente
 cohorte. La herramienta oficial de Google no lo cumple hoy (19-nov-2026): su página dice que el plugin
 `com.android.compose.screenshot` «ya no se mantiene», y su instalación todavía pide la bandera
-`android.experimental.enableScreenshotTest=true`. Google recomienda migrar a las *test suites* de AGP, que piden AGP 9.5 o
-más; esta serie está fijada en AGP 9.4.1, y actualizarla es una decisión aparte. Paparazzi, la otra opción conocida, va en
+`android.experimental.enableScreenshotTest=true`. Google recomienda migrar a las *test suites* de AGP, que piden AGP 9.6.0-alpha03 o
+más, una versión preliminar; esta serie está fijada en AGP 9.4.1, y actualizarla es una decisión aparte. Paparazzi, la otra opción conocida, va en
 2.0.0-alpha05. Roborazzi tiene versión estable en Maven Central y corre sobre Robolectric, que la serie ya usa desde la
 01.
 

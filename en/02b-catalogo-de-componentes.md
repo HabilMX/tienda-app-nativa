@@ -73,7 +73,7 @@ it before step 1: you are going to use it in every step.
 next cohort. Google's official tool does not meet it today (Nov 19, 2026): its page says the
 `com.android.compose.screenshot` plugin "is no longer maintained", and its installation still asks for the
 `android.experimental.enableScreenshotTest=true` flag. Google recommends migrating to AGP's *test suites*, which
-ask for AGP 9.5 or more; this series is pinned to AGP 9.4.1, and updating it is a separate decision. Paparazzi, the
+ask for AGP 9.6.0-alpha03 or higher, a preview version; this series is pinned to AGP 9.4.1, and updating it is a separate decision. Paparazzi, the
 other well-known option, is at 2.0.0-alpha05. Roborazzi has a stable version on Maven Central and runs on Robolectric,
 which the series has used since 01.
 
@@ -550,7 +550,7 @@ preview's title in each variant and lives on the phone.
 enabled button, the long-text one and the price on the two light cards use it. The «Entregada» label uses it
 directly with `colorDe`, without going through the theme: that is why it also changes in dark. The ones that do not
 change are the disabled button, which uses a gray from the theme; the button and the card in dark, whose primary is
-`VerdeClaro`; nor «Recibida» and «Enviada», which have their own color.
+`VerdeClaro`; and «Recibida» and «Enviada», which have their own color.
 
 **To wrap up:**
 
