@@ -158,18 +158,12 @@ Entra como sempre: **prever → pedir → ler o que ele gerou → rodar o `verif
 
 1. **Preveja**, em `respuestas/07.md`: se `cerrar()` pedisse ao Firebase que esquecesse e o aviso ao telefone
    falhasse, a pessoa fica dentro ou fora?
-2. **Peça** ao Claude Code, parado em `inicio/`: «En `SesionDeLaTienda.kt`, `quienSigueAdentro()` regresa lo
-   que diga `recuerdo.usuarioActual()`. `cerrar()` primero llama `recuerdo.olvidarEnFirebase()` y después
-   `recuerdo.olvidarEnElTelefono()` dentro de un `try`: `CancellationException` se deja pasar y
-   `ClearCredentialException` se atrapa sin hacer nada más, porque la sesión ya quedó cerrada. En `Armado.kt`
-   cambia solo el cuerpo de `armarSesion` para que regrese `SesionDeLaTienda`, y borra ahí `SesionSinConectar`.
-   No cambies ningún otro archivo.»
-
-   *(Em português: em `SesionDeLaTienda.kt`, `quienSigueAdentro()` devolve o que `recuerdo.usuarioActual()` disser.
-   `cerrar()` primeiro chama `recuerdo.olvidarEnFirebase()` e depois `recuerdo.olvidarEnElTelefono()` dentro de um
-   `try`: `CancellationException` se deixa passar e `ClearCredentialException` se captura sem fazer mais nada, porque a
-   sessão já ficou encerrada. Em `Armado.kt`, mude só o corpo de `armarSesion` para que devolva `SesionDeLaTienda`, e
-   apague ali `SesionSinConectar`. Não mude nenhum outro arquivo.)*
+2. **Peça** ao Claude Code, parado em `inicio/`: «Em `SesionDeLaTienda.kt`, `quienSigueAdentro()` devolve o que
+   `recuerdo.usuarioActual()` disser. `cerrar()` primeiro chama `recuerdo.olvidarEnFirebase()` e depois
+   `recuerdo.olvidarEnElTelefono()` dentro de um `try`: `CancellationException` se deixa passar e
+   `ClearCredentialException` se captura sem fazer mais nada, porque a sessão já ficou encerrada. Em `Armado.kt`, mude
+   só o corpo de `armarSesion` para que devolva `SesionDeLaTienda`, e apague ali `SesionSinConectar`. Não mude nenhum
+   outro arquivo.»
 3. **Leia.** O centro deve se parecer com isto:
 
 ```kotlin

@@ -161,28 +161,16 @@ explicar com palavras próprias.**
 
 1. **Preveja.** Escreva em `respuestas/02b.md`: quais destes arquivos vão mudar? `Inicio.kt`,
    `MainActivity.kt`, `Tienda.kt`, `Tema.kt`.
-2. **Peça** ao Claude Code, parado em `inicio/`: «Crea `TarjetaProducto.kt` con un composable
-   `TarjetaProducto(nombre: String, precio: String)`: una `Card` de ancho completo, esquinas de 16 dp y color de
-   superficie del tema; adentro, el nombre con el estilo `titleMedium` en a lo más dos renglones y con «…» si no cabe,
-   y debajo el precio en negritas con el color primario del tema. Crea `EtiquetaEstado.kt` con un
-   `enum class EstadoOrden(val texto: String)` con `RECIBIDA("Recibida")`, `ENVIADA("Enviada")` y
-   `ENTREGADA("Entregada")`; una función `colorDe(estado)` que regrese `AzulRecibida`, `AmbarEnviada` y `VerdeTienda`
-   de `Tema.kt`; y un composable `EtiquetaEstado(estado: EstadoOrden)`: una píldora de ese color con el texto en blanco
-   y el estilo `labelSmall`. En `Inicio.kt`, debajo de los dos textos, agrega una `TarjetaProducto` de "Audífonos
-   inalámbricos" a "$899.00", una `EtiquetaEstado(EstadoOrden.ENVIADA)` y un `BotonPrincipal("Ver mis órdenes")`
-   que por ahora no haga nada. En `MainActivity`, envuelve `Tienda` con `TemaTienda(oscuro = isSystemInDarkTheme())`.
-   No cambies `Tema.kt`, `Tienda.kt` ni las pruebas.»
-
-   *(Em português: crie `TarjetaProducto.kt` com um composable `TarjetaProducto(nombre: String, precio: String)`: um
-   `Card` de largura total, cantos de 16 dp e cor de superfície do tema; dentro, o nome com o estilo `titleMedium` em no
-   máximo duas linhas e com «…» se não couber, e embaixo o preço em negrito com a cor primária do tema. Crie
-   `EtiquetaEstado.kt` com um `enum class EstadoOrden(val texto: String)` com `RECIBIDA("Recibida")`,
-   `ENVIADA("Enviada")` e `ENTREGADA("Entregada")`; uma função `colorDe(estado)` que devolva `AzulRecibida`,
-   `AmbarEnviada` e `VerdeTienda` do `Tema.kt`; e um composable `EtiquetaEstado(estado: EstadoOrden)`: uma pílula dessa
-   cor com o texto em branco e o estilo `labelSmall`. Em `Inicio.kt`, embaixo dos dois textos, acrescente um
-   `TarjetaProducto` de "Audífonos inalámbricos" a "$899.00", um `EtiquetaEstado(EstadoOrden.ENVIADA)` e um
-   `BotonPrincipal("Ver mis órdenes")` que por ora não faça nada. Na `MainActivity`, envolva `Tienda` com
-   `TemaTienda(oscuro = isSystemInDarkTheme())`. Não mude `Tema.kt`, `Tienda.kt` nem os testes.)*
+2. **Peça** ao Claude Code, parado em `inicio/`: «Crie `TarjetaProducto.kt` com um composable `TarjetaProducto(nombre:
+   String, precio: String)`: um `Card` de largura total, cantos de 16 dp e cor de superfície do tema; dentro, o nome
+   com o estilo `titleMedium` em no máximo duas linhas e com «…» se não couber, e embaixo o preço em negrito com a cor
+   primária do tema. Crie `EtiquetaEstado.kt` com um `enum class EstadoOrden(val texto: String)` com
+   `RECIBIDA("Recibida")`, `ENVIADA("Enviada")` e `ENTREGADA("Entregada")`; uma função `colorDe(estado)` que devolva
+   `AzulRecibida`, `AmbarEnviada` e `VerdeTienda` do `Tema.kt`; e um composable `EtiquetaEstado(estado: EstadoOrden)`:
+   uma pílula dessa cor com o texto em branco e o estilo `labelSmall`. Em `Inicio.kt`, embaixo dos dois textos,
+   acrescente um `TarjetaProducto` de "Audífonos inalámbricos" a "$899.00", um `EtiquetaEstado(EstadoOrden.ENVIADA)` e
+   um `BotonPrincipal("Ver mis órdenes")` que por ora não faça nada. Na `MainActivity`, envolva `Tienda` com
+   `TemaTienda(oscuro = isSystemInDarkTheme())`. Não mude `Tema.kt`, `Tienda.kt` nem os testes.»
 3. **Leia** a mudança antes de aceitá-la. Os nomes acima são o contrato desta prática: as previews, o
    catálogo e as capturas os chamam assim. A peça mais difícil de ler é a etiqueta:
 
@@ -324,16 +312,11 @@ o projeto aberto. O Showkase, do Airbnb, o monta com as mesmas `@Preview`: ao co
 que roda junto com o compilador do Kotlin) procura as previews e escreve o código que as junta.
 
 1. **Preveja.** Por que o catálogo deve ir em `src/debug` e não em `src/main`?
-2. **Peça** ao Claude Code, parado em `inicio/`: «Crea `app/src/debug/java/mx/habil/ejemplo/tienda/Catalogo.kt` con
-   una clase `CatalogoTienda` marcada con `@ShowkaseRoot` que implemente `ShowkaseRootModule`, y una
-   `CatalogoActivity` que en `onCreate` abra `Showkase.getBrowserIntent(this)` y se cierre con `finish()`. Crea
-   `app/src/debug/AndroidManifest.xml` que registre `CatalogoActivity` con su propio ícono de inicio y la etiqueta
-   «Catálogo». No toques nada de `src/main`.»
-
-   *(Em português: crie `Catalogo.kt` em `app/src/debug/java/mx/habil/ejemplo/tienda/` com uma classe `CatalogoTienda`
-   marcada com `@ShowkaseRoot` que implemente `ShowkaseRootModule`, e uma `CatalogoActivity` que em `onCreate` abra
-   `Showkase.getBrowserIntent(this)` e se feche com `finish()`. Crie `app/src/debug/AndroidManifest.xml` que registre
-   `CatalogoActivity` com o próprio ícone de início e o rótulo «Catálogo». Não toque em nada de `src/main`.)*
+2. **Peça** ao Claude Code, parado em `inicio/`: «Crie `Catalogo.kt` em `app/src/debug/java/mx/habil/ejemplo/tienda/`
+   com uma classe `CatalogoTienda` marcada com `@ShowkaseRoot` que implemente `ShowkaseRootModule`, e uma
+   `CatalogoActivity` que em `onCreate` abra `Showkase.getBrowserIntent(this)` e se feche com `finish()`. Crie
+   `app/src/debug/AndroidManifest.xml` que registre `CatalogoActivity` com o próprio ícone de início e o rótulo
+   «Catálogo». Não toque em nada de `src/main`.»
 3. **Leia** a mudança. Deve trazer estas peças:
 
 ```kotlin
@@ -378,19 +361,13 @@ em vermelho. O que se vê no emulador, quem conta é quem estuda, e a captura é
 Ver as variantes serve enquanto alguém as olha. Um teste de captura as olha cada vez que os testes rodam.
 
 1. **Preveja.** Quantas imagens de referência vão existir ao terminar?
-2. **Peça** ao Claude Code, parado em `inicio/`: «Crea `app/src/test/java/mx/habil/ejemplo/tienda/CapturasTest.kt`:
-   una prueba de Robolectric con `ParameterizedRobolectricTestRunner` y `@GraphicsMode(GraphicsMode.Mode.NATIVE)`,
-   con un caso por cada variante de `VariantesBoton`, `VariantesTarjeta` y `VariantesEtiqueta`, llamados
-   `boton_<nombre>`, `tarjeta_<nombre>` y `etiqueta_<nombre>` con los espacios cambiados por guion bajo. Cada caso
-   dibuja su preview con `createComposeRule()` y llama a `onRoot().captureRoboImage("src/test/capturas/<caso>.png")`.
-   La lista de casos debe salir de los mismos proveedores, no escrita a mano. No toques nada más.»
-
-   *(Em português: crie `CapturasTest.kt` em `app/src/test/java/mx/habil/ejemplo/tienda/`: um teste do Robolectric com
-   `ParameterizedRobolectricTestRunner` e `@GraphicsMode(GraphicsMode.Mode.NATIVE)`, com um caso por variante de
-   `VariantesBoton`, `VariantesTarjeta` e `VariantesEtiqueta`, chamados `boton_<nombre>`, `tarjeta_<nombre>` e
-   `etiqueta_<nombre>` com os espaços trocados por sublinhado. Cada caso desenha a preview dele com `createComposeRule()` e
-   chama `onRoot().captureRoboImage("src/test/capturas/<caso>.png")`. A lista de casos deve sair dos mesmos provedores,
-   não escrita à mão. Não toque em mais nada.)*
+2. **Peça** ao Claude Code, parado em `inicio/`: «Crie `CapturasTest.kt` em
+   `app/src/test/java/mx/habil/ejemplo/tienda/`: um teste do Robolectric com `ParameterizedRobolectricTestRunner` e
+   `@GraphicsMode(GraphicsMode.Mode.NATIVE)`, com um caso por variante de `VariantesBoton`, `VariantesTarjeta` e
+   `VariantesEtiqueta`, chamados `boton_<nombre>`, `tarjeta_<nombre>` e `etiqueta_<nombre>` com os espaços trocados
+   por sublinhado. Cada caso desenha a preview dele com `createComposeRule()` e chama
+   `onRoot().captureRoboImage("src/test/capturas/<caso>.png")`. A lista de casos deve sair dos mesmos provedores, não
+   escrita à mão. Não toque em mais nada.»
 3. **Leia** a mudança. O coração é este:
 
 ```kotlin

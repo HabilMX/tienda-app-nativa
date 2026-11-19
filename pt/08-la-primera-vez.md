@@ -162,19 +162,12 @@ Entra como sempre: **prever → pedir → ler o que ele gerou → rodar o `verif
 
 1. **Preveja**, em `respuestas/08.md`, em uma linha livre: se `additionalUserInfo` vier `null` e se escrever
    `resultado.additionalUserInfo!!.isNewUser`, o que acontece com a pessoa que tenta entrar?
-2. **Peça** ao Claude Code, parado em `inicio/`: «En `PrimeraVez.kt`, `esPrimeraVez` regresa `true` solo si
-   `resultado.additionalUserInfo?.isNewUser` es `true`; con `null` regresa `false`. En `EntradaConGoogle.kt`
-   cambia `verificador.verificar(token)` por `verificador.verificarConPrimeraVez(token)` y pasa su nombre y su
-   `primeraVez` a `Resultado.Entro`. En `EntradaConMicrosoft.kt`, en `retomar()` y en `entrar()`, usa
-   `navegador.pendienteConPrimeraVez()` y `navegador.abrirConPrimeraVez(proveedor)` en lugar de `pendiente()` y
-   `abrir(proveedor)`, y pasa igual el nombre y la `primeraVez`. No cambies ningún otro archivo.»
-
-   *(Em português: em `PrimeraVez.kt`, `esPrimeraVez` devolve `true` só se `resultado.additionalUserInfo?.isNewUser` for
-   `true`; com `null` devolve `false`. Em `EntradaConGoogle.kt`, troque `verificador.verificar(token)` por
-   `verificador.verificarConPrimeraVez(token)` e passe o nome e a `primeraVez` a `Resultado.Entro`. Em
-   `EntradaConMicrosoft.kt`, em `retomar()` e em `entrar()`, use `navegador.pendienteConPrimeraVez()` e
-   `navegador.abrirConPrimeraVez(proveedor)` em vez de `pendiente()` e `abrir(proveedor)`, e passe igualmente o nome e a
-   `primeraVez`. Não mude nenhum outro arquivo.)*
+2. **Peça** ao Claude Code, parado em `inicio/`: «Em `PrimeraVez.kt`, `esPrimeraVez` devolve `true` só se
+   `resultado.additionalUserInfo?.isNewUser` for `true`; com `null` devolve `false`. Em `EntradaConGoogle.kt`, troque
+   `verificador.verificar(token)` por `verificador.verificarConPrimeraVez(token)` e passe o nome e a `primeraVez` a
+   `Resultado.Entro`. Em `EntradaConMicrosoft.kt`, em `retomar()` e em `entrar()`, use
+   `navegador.pendienteConPrimeraVez()` e `navegador.abrirConPrimeraVez(proveedor)` em vez de `pendiente()` e
+   `abrir(proveedor)`, e passe igualmente o nome e a `primeraVez`. Não mude nenhum outro arquivo.»
 3. **Leia.** O centro deve se parecer com isto:
 
 ```kotlin
