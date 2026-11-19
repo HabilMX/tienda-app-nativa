@@ -2,6 +2,8 @@
 
 **Par Dorian Chávez, fondateur de Hábil et architecte d'intégration.**
 
+**Page du cours :** [habil.mx/fr/cours/tienda-app-nativa/](https://www.habil.mx/fr/cours/tienda-app-nativa/), avec le programme et les leçons en cinq langues.
+
 **À qui il s'adresse :** à toute personne qui programme déjà dans un langage, utilise le terminal et git, et a réalisé
 au moins une interface, web ou de bureau. Kotlin, Android et OAuth ne sont pas supposés connus : vous les apprenez ici.
 
