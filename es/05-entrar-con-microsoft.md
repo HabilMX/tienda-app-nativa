@@ -644,7 +644,9 @@ unos 15 minutos en aparecer como activa.
 | «Ese correo ya entró a la tienda con otro botón…» | Ese correo ya tiene usuario en tu proyecto, creado con otro proveedor; en esta serie, Google | Entra con Google. Que los dos botones lleguen al mismo usuario es la lección 06 |
 | La pantalla de la llave de acceso se queda en «Verifying…» | Medido el 13-nov-2026 en el emulador | *Cancel* y entra con la contraseña |
 
-En Linux, esta lección está [pendiente: medir en Linux Mint 22.3].
+En Linux Mint 22.3 (x86_64), el `verifica` de esta lección salió igual que en la Mac (18-nov-2026), en el nivel
+simulado y con un archivo de prueba que traía la huella de esa computadora: sobre `inicio/`, 23 de 44 en verde;
+sobre `solucion/`, 44 de 44. El nivel instrumentado no se midió en Linux.
 
 ---
 
