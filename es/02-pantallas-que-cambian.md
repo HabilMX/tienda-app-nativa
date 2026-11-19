@@ -476,7 +476,8 @@ El 2.1, el paso 2 y el 2.3 se hacen **sin IA**.
 | 2.3 | Rompes el estado y explicas por qué la pantalla deja de actualizarse | Tu evidencia son las cuatro casillas del paso 4, escritas por ti. El `verifica` solo confirma que el proyecto quedó reparado (7 de 7) y que pegaste el rojo |
 | 2.4 | Separas la decisión de entrar en `Entrada` y muestras que cambiarla no toca las pantallas | Las pruebas con las dos implementaciones y la del arranque están en verde, pegaste tu salida de `grep` **y** leíste que `src/main` no trae otra entrada |
 
-**Tiempo:** [pendiente: medir el tiempo de la lección con un alumno]
+**Tiempo:** calcula unas tres horas, con el «Rompe uno a propósito». Es un estimado: lo ajustamos con lo que tarde la
+primera cohorte.
 
 ---
 

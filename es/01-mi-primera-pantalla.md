@@ -352,7 +352,8 @@ compáralos tú con «Compara tus respuestas» y conserva lo que escribiste.
 4. En `MainActivity.kt` dice `savedInstanceState: Bundle?`. ¿Qué te avisa ese `?`?
 5. `val lema: String? = null`. ¿Qué pasa con `lema.length`, con `lema?.length` y con `lema?.length ?: 0`?
 
-**Tiempo:** [pendiente: medir el tiempo de la lección con un alumno]
+**Tiempo:** calcula unas dos horas, con la compilación y tus predicciones. Es un estimado: lo ajustamos con lo que
+tarde la primera cohorte.
 
 ---
 
