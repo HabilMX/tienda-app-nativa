@@ -11,8 +11,11 @@
 #   regresarlo vuelven a verde. Si tus capturas no detectan un color cambiado, no sirven, aunque pasen.
 # SÍ revisa, buscando texto en tus archivos (no los ejecuta): que existen los tres componentes y el enum de
 #   estados; que Inicio.kt los usa; que MainActivity.kt pone TemaTienda; que cada componente tiene su
-#   @Preview con @PreviewParameter; que la raíz de Showkase (@ShowkaseRoot) vive en src/debug y no en
-#   src/main; y que respuestas/02b.md trae pegada una ruta de diferencia (_compare.png) del paso 6.
+#   @Preview con @PreviewParameter; que @ShowkaseRoot no aparece en src/main; que src/debug abre el
+#   catálogo con Showkase.getBrowserIntent y le da un ícono LAUNCHER; y que respuestas/02b.md trae pegada
+#   una ruta de diferencia (_compare.png) del paso 6.
+# SÍ revisa, en lo que Showkase GENERÓ al compilar (2B.3): que existe la raíz del catálogo y que trae los
+#   tres grupos. Una cadena con las letras «@ShowkaseRoot» no genera nada y queda en rojo.
 #   En los .kt, las líneas de comentario (//) no cuentan.
 # NO revisa: cómo se ve el panel de previews de Android Studio (2B.2) ni el catálogo en el emulador
 #   (2B.3): eso lo ves tú y lo cuentas en respuestas/02b.md. Tampoco califica tus predicciones ni tus
@@ -104,13 +107,15 @@ if [ -z "${ANDROID_HOME:-}" ] && [ ! -f "$PROY/local.properties" ]; then
 fi
 
 # --- Corre las pruebas en modo «comparar» ------------------------------------------------------
-# corre <carpeta del proyecto> <archivo de salida>: verifyRoborazziDebug con --rerun, para que el
-# resultado sea de ESTA corrida aunque nada haya cambiado. Deja en $marca un archivo anterior a la corrida.
+# corre <carpeta del proyecto> <archivo de salida>: las pruebas en modo comparar de Roborazzi
+# (testDebugUnitTest con roborazzi.test.verify=true), con --rerun sobre ESA tarea para que el resultado sea de
+# esta corrida aunque nada haya cambiado. (Con verifyRoborazziDebug --rerun, una segunda corrida seguida no
+# volvía a escribir los informes: medido el 19-nov-2026.) Deja en $marca un archivo anterior a la corrida.
 corre() {
   rm -f "${marca:-}"
   marca=$(mktemp)
   sleep 1
-  "./$PROY/gradlew" -p "$1" -q verifyRoborazziDebug --rerun >"$2" 2>&1
+  "./$PROY/gradlew" -p "$1" -q testDebugUnitTest -Proborazzi.test.verify=true --rerun >"$2" 2>&1
 }
 # attr <atributo> <informe>: un número del encabezado <testsuite> de un informe XML.
 attr() { sed -n 's/.*<testsuite [^>]*[[:space:]]'"$1"'="\([0-9]*\)".*/\1/p' "$2" 2>/dev/null | head -1; }
@@ -162,6 +167,31 @@ if fresco "$XC"; then
 else
   no "No corrió ninguna prueba de captura: falta CapturasTest.kt en app/src/test (paso 5)"; capturas_ok=0; tC=0; vC=0; fC=0; eC=0; sC=0
 fi
+# --- 2B.3 · El catálogo, medido en lo que Showkase generó al compilar (no en el texto) ---------
+# Showkase solo genera su código si encuentra una clase con @ShowkaseRoot de verdad: una cadena con
+# esas letras no genera nada. Las pruebas de arriba ya compilaron la app de depuración, así que lo
+# generado corresponde a tus archivos de ahora (Gradle lo regenera, o lo borra, si cambian).
+GEN="$PROY/app/build/generated/ksp/debug"
+raiz=$(find "$GEN" -name '*ShowkaseExtensionFunctionsCodegen.kt' 2>/dev/null | head -1)
+if [ -n "$raiz" ]; then
+  si "Compilado: Showkase generó la raíz del catálogo ($(basename "$raiz" | sed 's/ShowkaseExtensionFunctionsCodegen.kt//'))"
+else
+  no "Showkase no generó la raíz del catálogo: falta una clase con @ShowkaseRoot que implemente ShowkaseRootModule en src/debug (paso 4)"
+fi
+faltan=""
+for g in Botones Etiquetas Tarjetas; do
+  grep -rqF "group = \"$g\"" "$GEN" 2>/dev/null || faltan="$faltan$g "
+done
+[ -z "$faltan" ] \
+  && si "Compilado: el catálogo trae los tres grupos (Botones, Etiquetas y Tarjetas)" \
+  || no "El catálogo generado no trae los grupos: $faltan(el «group» de cada @Preview, paso 3)"
+MAN="$DEBUG/AndroidManifest.xml"
+if hay 'Showkase.getBrowserIntent(' "$DEBUG" && grep -q 'android.intent.category.LAUNCHER' "$MAN" 2>/dev/null; then
+  si "Texto: src/debug abre el catálogo con Showkase.getBrowserIntent y su manifiesto le da un ícono propio"
+else
+  no "src/debug no abre el catálogo: falta Showkase.getBrowserIntent(this) en una actividad, o su ícono LAUNCHER en src/debug/AndroidManifest.xml (paso 4)"
+fi
+
 total=$((tR + tA + tC)); verdes=$((vR + vA + vC))
 rojas=$((fR + fA + fC)); errores=$((eR + eA + eC)); saltadas=$((sR + sA + sC))
 
@@ -235,7 +265,7 @@ echo "  $XA"
 echo "  $XC"
 nota "Nivel simulado: demuestra que la 02 sigue funcionando con los componentes puestos, que cada variante"
 nota "  se ve igual que su imagen de referencia, y que un color cambiado a propósito las pone en rojo."
-nota "No demuestra cómo se ve el panel de previews ni el catálogo en el emulador: eso lo ves tú."
+nota "No demuestra cómo se ve el panel de previews ni el catálogo en el emulador: eso lo ves tú, y tu captura es la evidencia de 2B.2 y 2B.3."
 nota "Las imágenes de referencia de solucion/ se grabaron en una Mac; no se ha medido si coinciden en Linux."
 nota "Las marcas «Texto:» solo buscan palabras en tus archivos: no demuestran que el código haga lo que dicen."
 exit $ok

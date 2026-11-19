@@ -66,12 +66,14 @@ oscura, cuatro estilos de letra y una función `TemaTienda(oscuro) { … }` que 
 **Por qué Roborazzi para las capturas.** Se eligió con un solo criterio: que siga funcionando igual para la siguiente
 cohorte. La herramienta oficial de Google no lo cumple hoy (19-nov-2026): su página dice que el plugin
 `com.android.compose.screenshot` «ya no se mantiene», y su instalación todavía pide la bandera
-`android.experimental.enableScreenshotTest=true`. Su reemplazo, las *test suites* de AGP, está marcado como
-experimental y pide AGP 9.6.0-alpha03 o más; esta serie usa AGP 9.4.1. Paparazzi, la otra opción conocida, va en
+`android.experimental.enableScreenshotTest=true`. Google recomienda migrar a las *test suites* de AGP, que piden AGP 9.5 o
+más; esta serie está fijada en AGP 9.4.1, y actualizarla es una decisión aparte. Paparazzi, la otra opción conocida, va en
 2.0.0-alpha05. Roborazzi tiene versión estable en Maven Central y corre sobre Robolectric, que la serie ya usa desde la
 01.
 
-**Las versiones**, cotejadas el 19-nov-2026:
+**Las versiones**, fijadas y probadas con esta práctica el 19-nov-2026. Las de Roborazzi, Showkase, KSP y
+`material-icons-core` eran las últimas publicadas ese día; AGP 9.4.1 y el BOM 2026.09.00 de la serie no (ya había
+AGP 9.5.1 y el BOM 2026.11.01), y se quedan para no mover la serie a media cohorte:
 
 | Pieza | Versión | Para qué | Fuente |
 |---|---|---|---|
@@ -285,7 +287,8 @@ Toma una captura del panel con las cuatro variantes del botón y guárdala como 
 predicción del paso 1, anota qué acertaste.
 
 **Lo demuestra:** tu captura del panel y tu predicción, comparadas (objetivo 2B.2). El `verifica` solo comprueba que
-cada componente trae su `@Preview` con `@PreviewParameter`: no ve el panel.
+cada componente trae su `@Preview` con `@PreviewParameter`: no ve el panel. Y que lo hayas hecho sin IA es una regla de
+trabajo que declaras en tu respuesta: ni una captura ni el `verifica` lo pueden demostrar.
 
 ---
 
@@ -334,7 +337,9 @@ class CatalogoActivity : ComponentActivity() {
 5. **Explica** en `respuestas/02b.md` qué viste distinto entre el panel del paso 3 y el catálogo.
 
 **Lo demuestra:** el catálogo abre en el emulador con los tres grupos y sus variantes (objetivo 2B.3). El `verifica`
-solo comprueba que `@ShowkaseRoot` está en `src/debug` y no en `src/main`; lo que se ve en el emulador lo cuentas tú.
+comprueba lo que Showkase generó al compilar: la raíz del catálogo y sus tres grupos, que una actividad de `src/debug`
+lo abre con su ícono propio, y que `src/main` no lo nombra. Una cadena que diga «@ShowkaseRoot» no genera nada y queda
+en rojo. Lo que se ve en el emulador lo cuentas tú, y tu captura es la evidencia.
 
 ---
 
@@ -443,9 +448,10 @@ diferencia, lo regresa y exige las once en verde. Si tus capturas no detectan el
 las once pasen.
 
 **Un límite, medido.** Un cambio de una sola unidad en el azul, de `0xFF0B6E4F` a `0xFF0B6E4E`, dio 11 de 11 en verde
-(19-nov-2026). El README de Roborazzi muestra que su comparador trae una distancia máxima por pixel (0.001 por
-omisión) y opciones para tolerar más, pensadas para el suavizado de bordes. Una captura detecta cambios que se ven, no
-cada número.
+(19-nov-2026). Estas capturas usan la tolerancia por omisión de Roborazzi 1.79.0: `CapturasTest` no le pasa ninguna
+opción de comparación. Su README describe esa distancia máxima por pixel (0.001 por omisión) y las opciones para
+tolerar más, pensadas para el suavizado de bordes. Por eso el criterio de esta práctica es el cambio de verde a rojo
+que se ve, no detectar cada número.
 
 El 2B.4 está terminado cuando puedes marcar las cuatro:
 
@@ -467,7 +473,7 @@ El paso 1, el 2B.2 (paso 3) y el paso 6 se hacen **sin IA**.
 |---|---|---|
 | 2B.1 | Escribes el botón y revisas la tarjeta y la etiqueta que generó Claude Code; la pantalla de inicio los usa | Las marcas «Texto» de los componentes y de `Inicio.kt` en verde, y las 7 pruebas de la 02 en verde |
 | 2B.2 | Escribes las previews con `@PreviewParameter` y lees el panel sin emulador | Tienes `respuestas/02b-panel.png` y tu predicción comparada |
-| 2B.3 | Armas el catálogo en `src/debug` y lo abres en el emulador | Escribiste qué viste en el catálogo y en qué difiere del panel |
+| 2B.3 | Armas el catálogo en `src/debug` y lo abres en el emulador | Las marcas «Compilado» del catálogo en verde, y escribiste qué viste en el catálogo y en qué difiere del panel |
 | 2B.4 | Conviertes cada preview en una captura y rompes un color | Las cuatro casillas del paso 6, y el `verifica` en 18 de 18 |
 
 **Tiempo:** calcula unas dos horas y media, con el emulador ya instalado. Es un estimado: lo ajustamos con lo que tarde
@@ -485,6 +491,7 @@ la primera cohorte.
 | ❌ «CapturasTest corrió 10 pruebas y esperaba 11» | Falta una variante en un proveedor, o la lista de casos se escribió a mano | Compara tus proveedores con la tabla del paso 3 |
 | ❌ «N de 11 capturas no coinciden» sin que hayas roto nada | Cambiaste un componente a propósito, o tus referencias son de otra máquina | Si el cambio es el que querías, vuelve a grabar con `./gradlew recordRoborazziDebug` y revisa las imágenes nuevas antes de subirlas |
 | ❌ «Tema.kt cambió» | El color del paso 6 no regresó | Regresa la línea a mano y mira `git diff` |
+| ❌ «Las pruebas no llegaron a correr» y las líneas que muestra no bastan | El `verifica` solo enseña las primeras líneas del error | Desde la carpeta del proyecto corre `./gradlew verifyRoborazziDebug --stacktrace > fallo.txt 2>&1` y lee las últimas 40 líneas de `fallo.txt` antes de concluir que es un error de compilación |
 
 ---
 
