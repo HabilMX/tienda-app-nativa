@@ -29,6 +29,8 @@
 #                              no se sube, y con el plugin aplicado no compila sin él. Para revisarla, copia tu
 #                              archivo a solucion/app/ (sigue ignorado) y retíralo al terminar.
 set -uo pipefail
+# grep -c en vez de grep -q al final de una tubería: con pipefail, grep -q sale al primer hallazgo,
+# el comando de la izquierda recibe SIGPIPE y la tubería da «no está» aunque sí esté (medido 18-nov-2026).
 cd "$(dirname "$0")"
 PROY="${1:-inicio}"
 ok=0
@@ -72,7 +74,7 @@ fi
 
 # --- 3.1 · El plugin y la librería, buscados como texto (no se ejecutan) --------------------
 # hay <expresión> <archivo>: ¿alguna línea que no sea comentario (//) la contiene?
-hay() { grep -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -qE -- "$1"; }
+hay() { grep -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -cE -- "$1" >/dev/null; }
 GR="$PROY/app/build.gradle.kts"
 hay 'com\.google\.gms\.google-services|libs\.plugins\.google\.services' "$GR" \
   && si "Texto: app/build.gradle.kts nombra el plugin google-services" \

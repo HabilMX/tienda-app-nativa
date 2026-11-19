@@ -2,6 +2,8 @@
 # Comprueba la lección 00: la máquina sirve, el SDK y el emulador están, y la app de la tienda corre.
 # Solo lee: no instala ni cambia nada. Uso:  ./verifica
 set -uo pipefail
+# grep -c en vez de grep -q al final de una tubería: con pipefail, grep -q sale al primer hallazgo,
+# el comando de la izquierda recibe SIGPIPE y la tubería da «no está» aunque sí esté (medido 18-nov-2026).
 cd "$(dirname "$0")"
 ok=0
 si() { echo "✅ $1"; }
@@ -13,7 +15,7 @@ case "$(uname -s)" in
   Linux)
     [ "$(uname -m)" = "x86_64" ] && si "Procesador x86_64" || no "Tu procesador es $(uname -m): Android Studio no tiene soporte oficial en Linux con ARM"
     [ -e /dev/kvm ] && si "/dev/kvm existe (virtualización encendida)" || no "/dev/kvm no existe: virtualización apagada en el BIOS/UEFI, estás dentro de otra máquina virtual o KVM no está instalado (paso 1)"
-    id -nG | tr ' ' '\n' | grep -qx kvm && si "Tu usuario está en el grupo kvm" \
+    id -nG | tr ' ' '\n' | grep -cx kvm >/dev/null && si "Tu usuario está en el grupo kvm" \
       || no "Tu usuario no está en el grupo kvm: pide permiso a quien administra el equipo para  sudo gpasswd -a \"\$USER\" kvm  y vuelve a entrar a la sesión (paso 1)" ;;
   Darwin)
     si "Mac ($(uname -m)); la aceleración la da Hypervisor.Framework" ;;
@@ -41,7 +43,7 @@ g=$(./inicio/gradlew -p inicio -version 2>/dev/null | awk '/^Gradle /{print $2}'
 
 # --- 0.3 · Emulador con aceleración, o tu teléfono ----------------------------------------
 if command -v emulator >/dev/null; then
-  emulator -accel-check 2>/dev/null | grep -qx accel && si "El emulador tiene aceleración (-accel-check dice «accel»)" \
+  emulator -accel-check 2>/dev/null | grep -cx accel >/dev/null && si "El emulador tiene aceleración (-accel-check dice «accel»)" \
     || no "El emulador no tiene aceleración: corre  emulator -accel-check  y revisa el paso 1"
 else
   no "No encuentro el comando emulator: revisa tu PATH (paso 2)"
@@ -71,7 +73,7 @@ fi
 
 # --- 0.5 · La app de la tienda corre ------------------------------------------------------
 if [ -n "$dev" ]; then
-  adb shell pm list packages mx.habil.ejemplo.tienda 2>/dev/null | grep -qx 'package:mx.habil.ejemplo.tienda' \
+  adb shell pm list packages mx.habil.ejemplo.tienda 2>/dev/null | grep -cx 'package:mx.habil.ejemplo.tienda' >/dev/null \
     && si "La app de la tienda está instalada" || no "La app no está instalada: en inicio/, corre  ./gradlew installDebug"
   adb shell pidof mx.habil.ejemplo.tienda >/dev/null 2>&1 \
     && si "La app de la tienda está abierta" || no "La app no está abierta: installDebug instala pero no abre; ábrela desde el cajón de apps (paso 5)"

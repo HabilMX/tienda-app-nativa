@@ -45,6 +45,8 @@
 #       ./verifica inicio instrumentado     además corre el nivel instrumentado (pide un emulador abierto o un
 #       ./verifica solucion instrumentado   teléfono conectado; si no hay, sale en rojo y lo dice)
 set -uo pipefail
+# grep -c en vez de grep -q al final de una tubería: con pipefail, grep -q sale al primer hallazgo,
+# el comando de la izquierda recibe SIGPIPE y la tubería da «no está» aunque sí esté (medido 18-nov-2026).
 cd "$(dirname "$0")"
 PROY="${1:-inicio}"
 ok=0
@@ -100,7 +102,7 @@ cmp -s "$PROY/$DIRP/Dobles.kt" "$PROY/$DIRA/Dobles.kt" \
 # --- 4.2 · Las piezas, buscadas como texto (no se ejecutan) ---------------------------------
 # hay <texto> <carpeta o archivo>: ¿algún .kt lo contiene en una línea que no sea comentario (//)?
 # Los comentarios no cuentan: una pieza nombrada en un comentario no existe, y tampoco estorba.
-hay() { grep -rh --include='*.kt' -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -qF -- "$1"; }
+hay() { grep -rh --include='*.kt' -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -cF -- "$1" >/dev/null; }
 ECG="$PROY/$DIRM/EntradaConGoogle.kt"
 ACT="$PROY/$DIRM/MainActivity.kt"
 # El «no hay» solo vale si la búsqueda sí lee: se comprueba con una palabra que seguro está.
