@@ -440,8 +440,8 @@ Abre «La tienda», toca «Entrar» y luego «Entrar con Google».
 **Lo que se vio en el ensayo del 13-nov-2026** (Mac, emulador con imagen `google_apis_playstore` y una cuenta
 agregada): se abrió la ventana de cuentas de Android, se eligió la cuenta y la app saludó con el nombre de esa
 cuenta. Ese ensayo usó un código de prueba con las mismas llamadas, no el de `solucion/`:
-[pendiente: repetir la entrada real con el código de esta lección; la clase `VerificadorConFirebase` solo se ha
-compilado, no se ha ejecutado contra Firebase].
+la clase `VerificadorConFirebase` de esta lección compila, pero todavía no la corrimos contra un proyecto real
+de Firebase. Si al probarla ves algo distinto de lo que describe este paso, cuéntanos qué apareció.
 
 **Si tu cuenta usa llave de acceso (passkey).** En el ensayo, Google pidió escanear un código QR con el
 teléfono, y eso no completó en el emulador. Se tocó **«Try another way»** y se entró con la contraseña o con el
@@ -449,7 +449,7 @@ aviso en el teléfono (lección 00, ejercicio 0.4).
 
 **El cuadro de permisos.** Según la ayuda de Google, al elegir «Sign in with Google» aceptas compartir con esa
 app tres datos: nombre, correo y foto de perfil. Con ellos la app puede crear tu cuenta.
-[pendiente: el texto exacto del cuadro, con captura; del ensayo no quedó registrado].
+El texto exacto del cuadro no lo capturamos en el ensayo; si el tuyo dice otra cosa, cuéntanos cómo dice.
 
 Este es el ejercicio 4.4. Clasifica cada dato en `respuestas/04.md` antes de mirar la tabla de «Compara tus
 respuestas»: **qué es, para qué se pide y si tu app lo recibe.**
@@ -496,7 +496,7 @@ ajustamos con lo que tarde la primera cohorte.
 | En las pruebas instrumentadas, `NoSuchMethodException: android.hardware.input.InputManager.getInstance` | Se quitó la línea de Espresso 3.7.0 del andamiaje y quedó el que Compose trae por omisión (medido el 18-nov-2026 en Android 37) | Regresa `androidTestImplementation(libs.espresso.core)` |
 | En el teléfono se abre una pantalla de Google para iniciar sesión | El emulador no tiene ninguna cuenta (medido el 18-nov-2026) | Agrega tu cuenta ahí, o en Ajustes (lección 00, ejercicio 0.4) |
 | Google pide escanear un código QR | Tu cuenta usa llave de acceso | «Try another way» |
-| En el teléfono, «No se pudo entrar…» | [pendiente: medir qué causa da este mensaje con un proyecto real: huella sin registrar, Google sin habilitar o sin red] | Revisa la lección 03, paso 3, y que el emulador tenga red |
+| En el teléfono, «No se pudo entrar…» | Con un proyecto real todavía no medimos cuál de las causas lo da. Las tres más probables: la huella sin registrar, Google sin habilitar en Firebase o el emulador sin red | Revisa la lección 03, paso 3, y que el emulador tenga red |
 | `GetCredentialProviderConfigurationException` | Según la guía de Android, falta la librería `credentials-play-services-auth`. No se midió aquí | Revisa que `app/build.gradle.kts` siga trayendo las tres líneas del andamiaje |
 | Cambiaste de computadora y no tienes la huella de depuración de ésta | Sin `google-services.json` el proyecto no compila, y el almacén de depuración lo crea la primera compilación: un círculo (medido en Linux Mint 22.3, 18-nov-2026) | Copia a `inicio/app/` tu archivo de la 03 aunque traiga la huella de la otra computadora, corre `./gradlew assembleDebug` (compila igual), saca la huella con `./gradlew signingReport`, regístrala en Firebase y vuelve a bajar tu archivo |
 

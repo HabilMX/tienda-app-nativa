@@ -77,8 +77,8 @@ Búscala en la configuración de Authentication de tu consola y comprueba que es
 una cuenta por correo: activa
 ```
 
-El `verifica` no ve tu consola: solo busca esa línea. [pendiente: ensayo con cuenta — la ruta exacta de esa
-opción en la consola].
+El `verifica` no ve tu consola: solo busca esa línea. La ruta exacta de esa opción en la
+consola no la recorrimos con una cuenta; si no la encuentras, cuéntanos dónde estaba.
 
 **Lo demuestra:** tu revisión, a mano. Es parte de la evidencia del 6.1.
 
@@ -261,11 +261,11 @@ borrar los datos de la app en el teléfono:
 adb shell pm clear mx.habil.ejemplo.tienda
 ```
 
-La documentación de `adb` dice que ese comando borra todos los datos asociados a una app. [pendiente: ensayo con
-cuenta — confirmar que con eso la app queda sin sesión, que el usuario y sus proveedores siguen en Firebase, y
-que al tocar «Entrar con Microsoft» se llega al mismo usuario; dónde muestra la consola los dos proveedores; y,
-aparte, cerrar el proceso a medio enlace con `adb shell am kill` para ver la nota trabajar. `am kill` no cierra
-la sesión: es otra prueba].
+La documentación de `adb` dice que ese comando borra todos los datos asociados a una app. Con una cuenta real todavía no
+comprobamos tres cosas: que la app queda sin sesión, que el usuario y sus proveedores siguen en Firebase, y que
+al tocar «Entrar con Microsoft» se llega al mismo usuario. Tampoco medimos dónde muestra la consola los dos
+proveedores, ni cerramos el proceso a medio enlace con `adb shell am kill` (que no cierra la sesión: es otra
+prueba). Si lo pruebas, cuéntanos qué viste.
 
 **Tu registro.** Cuando la hagas, anota en `respuestas/06.md`, sin correos ni tokens:
 
@@ -291,7 +291,7 @@ El paso 4 se hace **sin IA**.
 
 | # | Haces | Está hecho cuando |
 |---|---|---|
-| 6.1 | Resuelves la colisión: la persona entra con el proveedor que ya tenía y enlaza el otro, con confirmación | Tres evidencias, y las tres hacen falta. La línea «una cuenta por correo: activa» en `respuestas/06.md`, después de revisarla en tu consola. Simulado: «Estado del objetivo 6.1» dice nivel simulado completo, con un proyecto de mentira de dos personas; valida el orden, la confirmación, el enlace a medias y que los dos accesos llegan al mismo usuario **de mentira**. Real: la prueba manual del paso 5, con tu registro anotado; es lo único que valida que Firebase enlazó tus cuentas, y hoy está [pendiente: ensayo con cuenta] |
+| 6.1 | Resuelves la colisión: la persona entra con el proveedor que ya tenía y enlaza el otro, con confirmación | Tres evidencias, y las tres hacen falta. La línea «una cuenta por correo: activa» en `respuestas/06.md`, después de revisarla en tu consola. Simulado: «Estado del objetivo 6.1» dice nivel simulado completo, con un proyecto de mentira de dos personas; valida el orden, la confirmación, el enlace a medias y que los dos accesos llegan al mismo usuario **de mentira**. Real: la prueba manual del paso 5, con tu registro anotado; es lo único que valida que Firebase enlazó tus cuentas, y todavía no la corrimos con una cuenta real |
 | 6.2 | Explicas por qué la app pide confirmación antes de enlazar y qué pasaría si enlazara sola | Tu predicción, el rojo pegado y tu explicación están en `respuestas/06.md`, y coinciden con «Compara tus respuestas». La explicación la comparas tú |
 
 **Tiempo:** calcula una hora y media sin la prueba manual, y media hora más con ella. Es un estimado: lo

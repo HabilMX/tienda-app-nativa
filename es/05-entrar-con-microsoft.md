@@ -368,7 +368,7 @@ proveedor se creó el usuario.
 **Lo demuestra:** el `verifica` simulado, los tres casos. Cada caso lleva pruebas de dos tipos: unas le lanzan
 la excepción a tu clase y leen qué contestó; otra dibuja la pantalla con tu clase y busca su mensaje. Las
 excepciones las armó un doble, con códigos escritos a mano: ninguna vino de Firebase. Qué excepción da en un
-teléfono cerrar la pestaña del navegador está [pendiente: ensayo con cuenta].
+teléfono real cerrar la pestaña del navegador todavía no lo medimos con una cuenta.
 
 ---
 
@@ -450,8 +450,8 @@ no cerró ninguna app.
 se tocó «Entrar con Microsoft» (18-nov-2026). No se abrió ninguna página. La app mostró «No se pudo entrar.
 Revisa tu conexión y vuelve a intentar.», y el registro del sistema dijo
 `[GetAuthDomainTask] Error getting project config. Failed with API key not valid`. Es lo esperado: el archivo
-era inventado. Con tu archivo de verdad y Microsoft todavía sin habilitar en Firebase, el resultado está
-[pendiente: ensayo con cuenta].
+era inventado. Con tu archivo de verdad y Microsoft todavía sin habilitar en Firebase, el resultado no lo
+medimos todavía; si lo ves, cuéntanos qué mensaje te dio.
 
 ---
 
@@ -467,8 +467,8 @@ consolas en dos pestañas, porque tres datos van a cruzar de una a otra:
 | La clave de cliente | Entra | Firebase, y en ningún otro lugar |
 
 Los menús y botones van en inglés, como en la documentación. En español, el ensayo del 13-nov-2026 vio «Registros de aplicaciones», «Nuevo registro» y «Registrar una
-aplicación». [pendiente: ensayo con cuenta — recorrer el «Nuevo registro» de punta a punta y anotar cada rótulo
-en español, con capturas].
+aplicación». El resto de los rótulos en español no lo recorrimos de punta a punta: si tu consola dice otra cosa,
+guíate por la versión en inglés de cada uno y cuéntanos cómo aparece.
 
 **1. En Firebase, copia tu dirección de retorno.** En Authentication, pestaña *Sign-in method*, elige Microsoft
 y habilítalo. Todavía no guardes: el panel pide el ID y la clave, que aún no tienes. Deja esa pestaña abierta
@@ -580,8 +580,8 @@ prueba con las mismas llamadas, no el de `solucion/`:
 | Un correo que ya entró con Google | La excepción de colisión del paso 5 |
 | La app cerrada a media entrada | Lo del paso 6: el resultado pendiente entregó la entrada |
 
-[pendiente: ensayo con cuenta — repetir la entrada real con el código de esta lección; la clase
-`NavegadorConFirebase` solo se ha ejecutado hasta el error del archivo inventado del paso 7].
+La clase `NavegadorConFirebase` de esta lección solo la corrimos hasta el error del archivo inventado del paso 7;
+la entrada completa con una cuenta real todavía no. Si al probarla ves algo distinto, cuéntanos qué apareció.
 
 **Si tu cuenta usa llave de acceso (passkey).** En el ensayo, la pantalla «Sign in with your passkey» se quedó
 en «Verifying…» en el emulador. Se tocó *Cancel* y se entró con la contraseña.
@@ -637,7 +637,7 @@ unos 15 minutos en aparecer como activa.
 | ❌ «Hay un texto con forma de clave de cliente de Entra» | Una clave, o algo con su forma, está en un archivo | Si es tu clave: bórrala del archivo, elimínala en Entra y crea otra (paso 8). Si es la inventada del control: borra esa línea |
 | En las pruebas, `Default FirebaseApp is not initialized` | Se cambió `robolectric.properties` o `AppDePruebas.kt` (medido el 18-nov-2026 sin ellos) | Regrésalos: son andamiaje |
 | En las pruebas instrumentadas, `NoSuchMethodException: android.hardware.input.InputManager.getInstance` | Se quitó la línea de Espresso 3.7.0 y quedó el que Compose trae por omisión. Medido el 18-nov-2026 en Android 37: 0 de 9 | Regresa `androidTestImplementation(libs.espresso.core)` |
-| En el teléfono, «No se pudo entrar…» sin que se abra ninguna página | Con un archivo inventado, el registro dijo `API key not valid` (medido el 18-nov-2026). Con tu archivo: [pendiente: ensayo con cuenta — medir qué da con Microsoft sin habilitar o con la clave vencida] | Revisa que copiaste tu `google-services.json` y el paso 8 |
+| En el teléfono, «No se pudo entrar…» sin que se abra ninguna página | Con un archivo inventado, el registro dijo `API key not valid` (medido el 18-nov-2026). Con tu archivo, qué da con Microsoft sin habilitar o con la clave vencida todavía no lo medimos | Revisa que copiaste tu `google-services.json` y el paso 8 |
 | En el navegador, un error `AADSTS50011` | Según Microsoft: la dirección de retorno de la solicitud no coincide con ninguna de las registradas. No se midió aquí | Paso 8, punto 4: pégala otra vez, completa |
 | En `portal.azure.com`, `AADSTS16000` | Medido el 13-nov-2026 con una cuenta sin suscripción | Entra por `entra.microsoft.com` |
 | «Nuevo registro» abre un panel sin formulario | Tu cuenta no tiene directorio (medido el 13-nov-2026 con una cuenta recién creada) | «Antes de empezar»: necesitas un directorio primero |
