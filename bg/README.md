@@ -33,12 +33,10 @@
 | 00 | [Средата е готова](00-ambiente-listo.md) |
 | 01 | [Първият ми екран работи](01-mi-primera-pantalla.md) |
 | 02 | [Екрани, които се променят](02-pantallas-que-cambian.md) |
-| 02-B | Каталог на компонентите на магазина (практика) |
+| 02-B | [Каталог на компонентите на магазина (практика)](02b-catalogo-de-componentes.md) |
 | 03 | [Приложението опознава Firebase](03-la-app-conoce-a-firebase.md) |
 | 04 | [Вход с Google](04-entrar-con-google.md) |
 | 05 | [Вход с Microsoft](05-entrar-con-microsoft.md) |
 | 06 | [Два бутона, един акаунт](06-dos-botones-una-cuenta.md) |
-| 07 | Сесията остава |
-| 08 | Първият път |
-
-Уроците без връзка са в подготовка и се публикуват по ред.
+| 07 | [Сесията остава](07-la-sesion-se-queda.md) |
+| 08 | [Първият път](08-la-primera-vez.md) |
