@@ -28,12 +28,12 @@ o cumprimento «Olá!» («¡Hola!»).
 
 ## A cena
 
-Pede-se a tela de boas-vindas ao Claude Code. Em pouco tempo há um arquivo curto de Kotlin. Ele compila. Os testes
-saem em verde. O app é instalado, toca-se em «Entrar» e o cumprimento aparece. Fecha-se o computador.
+Quem estuda pede a tela de boas-vindas ao Claude Code. Em pouco tempo há um arquivo curto de Kotlin. Ele compila. Os testes
+saem em verde. O app é instalado, a pessoa toca em «Entrar» e o cumprimento aparece. Ela fecha o computador.
 
 No dia seguinte alguém abre o app ao lado do esboço e pergunta: «por que o cumprimento aparece acima do botão, se aqui
-ele vai abaixo?». Abre-se o arquivo. Veem-se `remember`, `mutableStateOf`, `Modifier`, um `if` no meio da tela.
-Não se sabe qual dessas linhas move o cumprimento.
+ele vai abaixo?». Abre o arquivo. Vê `remember`, `mutableStateOf`, `Modifier`, um `if` no meio da tela.
+Não sabe qual dessas linhas move o cumprimento.
 
 Esse código existe: é a listagem do exercício 1.3, e os testes dele saem 4 de 4 em verde com o cumprimento no lugar
 errado (medido em 18 de novembro de 2026). O verde diz que o cumprimento aparece. Não diz onde.
@@ -128,9 +128,9 @@ Para prever, leia a função de fora para dentro:
 ./gradlew installDebug      # compila e instala; não abre o app
 ```
 
-Abra-a pela gaveta de apps e compare com as três linhas. Se uma previsão falhou, não a apague: escreva embaixo que
+Abra-o pela gaveta de apps e compare com as três linhas. Se uma previsão falhou, não a apague: escreva embaixo que
 linha do código teria dado a resposta. No emulador do teste (Pixel 9, Android 37, 18/11/2026) apareceram dois
-textos, «Aquí va tu pantalla» e embaixo «Lección 01», na metade da altura e colados à esquerda.
+textos, «Aquí va tu pantalla» (A tela vai aqui) e embaixo «Lección 01» (Lição 01), na metade da altura e colados à esquerda.
 
 **Segunda previsão.** E se o `Column` for removido e os dois `Text` ficarem soltos? Segundo a documentação do
 Android, o Compose empilha um texto sobre o outro. Experimente, anote o que aparece e devolva o `Column`.
@@ -169,7 +169,7 @@ Três detalhes que mudam em relação a outras linguagens:
 
 ---
 
-## Passo 3 · Escrever a boas-vindas, à mão
+## Passo 3 · Escrever a tela de boas-vindas, à mão
 
 Este passo é de quem estuda, sem Claude Code: são umas dez linhas.
 
@@ -338,7 +338,7 @@ as quatro caixas podem ser marcadas:
 - [ ] Estão os cinco tipos: estado, texto, modificador, evento e função.
 - [ ] Cada um diz um efeito que se vê na tela.
 - [ ] Foi explicado por que o cumprimento aparecia acima e por que os testes não o detectaram.
-- [ ] Depois de movê-lo, o 4 de 4 continua em verde **e** no app instalado se viu «Olá!» embaixo de «Entrar». Anote
+- [ ] Depois de movê-lo, o 4 de 4 continua em verde **e** no app instalado se viu «¡Hola!» embaixo de «Entrar». Anote
       essa observação junto da correção.
 
 **O que comprova:** exercício 1.3 (objetivo 1.3).
@@ -381,7 +381,7 @@ As mensagens em inglês são as que o compilador da série (Kotlin 2.4.21) deu e
 | `Property delegate must have a 'getValue(…)' method` | Usou-se `by` sem os dois `import` | Acrescentar `getValue` e `setValue` (passo 4) |
 | «Las pruebas no llegaron a correr» (os testes não chegaram a rodar) | O código não compila | Ler a linha que começa com `e:`: traz arquivo, linha e coluna |
 | ❌ no botão, com «Entrar» visível | É um `Text`, solto ou com `clickable`: não se declara botão | Tem que ser um `Button` com o `Text` dentro |
-| ❌ no cumprimento, embora «Olá!» apareça | O cumprimento está sempre ali, não só depois do toque | Vai dentro do `if (saludando)` |
+| ❌ no cumprimento, embora «¡Hola!» apareça | O cumprimento está sempre ali, não só depois do toque | Vai dentro do `if (saludando)` |
 | `BienvenidaTest.kt` mudou | Alguém (quem estuda ou o Claude Code) mexeu nos testes | Recuperá-lo com o comando que a mensagem dá e repetir o pedido, pedindo que não os toque |
 
 No Linux Mint 22.3 (x86_64), o `verifica` desta lição saiu em verde sobre a solução: 4 de 4, em 64 segundos contando a primeira compilação (18/11/2026). Se o SDK não traz `build-tools`, o Gradle os baixa sozinho na primeira vez.

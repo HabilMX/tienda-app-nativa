@@ -501,7 +501,7 @@ cada quien, así que cada computadora tiene su certificado y su huella. El proye
 
 **Paso 3.** En el ensayo del 13-nov-2026, ninguno de los dos: el archivo bajado antes de la huella y de
 habilitar Google no traía el tipo 1 (Android, con `certificate_hash`) ni el tipo 3 (web). Es una observación de
-ese día. Lo que la documentación de Firebase sí garantiza es lo contrario: el archivo **actualizado**, bajado
+ese día. Lo que la documentación de Firebase sí afirma es lo contrario: el archivo **actualizado**, bajado
 después de esos dos pasos, trae la información de OAuth que el botón necesita. Por eso se descarga al final.
 
 **Paso 4.** Cambian tres archivos: `gradle/libs.versions.toml`, el `build.gradle.kts` de la raíz y

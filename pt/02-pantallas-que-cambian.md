@@ -224,11 +224,11 @@ fun Tienda() {
 **4. Que o app inicie em `Tienda`.** No `MainActivity.kt`, a linha de `setContent` passa a ser
 `setContent { Tienda() }`.
 
-**Comprove no app.** `./gradlew installDebug`, abra-o e toque em «Entrar»: deve ficar a tela «Entre na conta» e a de
+**Comprove no app.** `./gradlew installDebug`, abra-o e toque em «Entrar»: deve ficar a tela «Entra a tu cuenta» e a de
 boas-vindas já não deve aparecer. «Continuar» ainda não faz nada.
 Com a solução pronta, no emulador do teste (Pixel 9, Android 37, 18/11/2026) viu-se isto: a tela de boas-vindas
-com «A loja», «Os pedidos, no bolso» e «Entrar»; ao tocar em «Entrar», «Entre na conta» e «Continuar»; e ao
-tocar em «Continuar», o aviso «Ainda não é possível entrar». A tela de início não aparece no app instalado: só
+com «La tienda», «Tus órdenes, en tu bolsillo» e «Entrar»; ao tocar em «Entrar», «Entra a tu cuenta» e «Continuar»; e ao
+tocar em «Continuar», o aviso «Todavía no se puede entrar». A tela de início não aparece no app instalado: só
 chegam a ela os testes.
 
 **O que acabou de ser feito.** O estado não ficou em nenhuma tela: foi levado à função que as chama. Isso é
@@ -391,7 +391,7 @@ grep -rlE "EntradaSinProveedor|EntradaFalsa" app/src | sort
 
 Em `solucion/` a saída são quatro arquivos (medido em 18/11/2026): `Entrada.kt` e `MainActivity.kt` em
 `src/main`, e `EntradaFalsa.kt` e `RecorridoTest.kt` em `src/test`. Nenhuma tela aparece. Escreva embaixo que
-arquivos seriam tocados para estrear outra forma de entrar, e quais não.
+arquivos seriam tocados para adotar outra forma de entrar, e quais não.
 
 **O que cada marca comprova, e o que não.**
 
@@ -408,7 +408,7 @@ Nenhuma comprova que não exista **outra** forma de entrar sem provedor: uma seg
 `Tienda(entrada = EntradaSinProveedor())`, e que em `src/main` não há outra classe que cumpra `Entrada`. Também não
 comprovam a aparência das telas, o que faz o botão «voltar» nem nada do Google.
 
-**No app instalado** chega-se até a tela de entrada, e «Continuar» deve responder «Ainda não é possível
+**No app instalado** chega-se até a tela de entrada, e «Continuar» deve responder «Todavía no se puede
 entrar»: o app usa `EntradaSinProveedor`. Ao início só chegam os testes.
 
 **Se alguma linha ainda não ficou clara,** antes de seguir tente explicá-la com palavras próprias. Se ainda não sair,
@@ -481,7 +481,7 @@ está concluído quando as quatro caixas podem ser marcadas:
 
 **Um limite.** Segundo a documentação do Android, `remember` não conserva o valor em uma mudança de configuração,
 como girar o telefone; para isso existe `rememberSaveable`. Esta lição não o usa nem o testa.
-No emulador do teste (18/11/2026), ao girar o telefone estando em «Entre na conta», o app voltou à tela de
+No emulador do teste (18/11/2026), ao girar o telefone estando em «Entra a tu cuenta», o app voltou à tela de
 boas-vindas: o estado se perdeu, como diz a documentação. E «voltar», de qualquer uma das duas telas, fechou o
 app e levou ao início do telefone: o percurso desta lição não trata «voltar».
 
@@ -496,7 +496,7 @@ O 2.1, o passo 2 e o 2.3 se fazem **sem IA**.
 | # | Faz-se | Está pronto quando |
 |---|---|---|
 | 2.1 | Prever o que faz o estado do passo 1 e rodá-lo | Estão em mãos a previsão e o que se viu |
-| 2.2 | Construir boas-vindas → entrada → início | O `verifica` dá 7 de 7 **e** no app instalado se viu «Ainda não é possível entrar» |
+| 2.2 | Construir boas-vindas → entrada → início | O `verifica` dá 7 de 7 **e** no app instalado se viu «Todavía no se puede entrar» |
 | 2.3 | Quebrar o estado e explicar por que a tela deixa de ser atualizada | A evidência são as quatro caixas do passo 4, escritas à mão. O `verifica` só confirma que o projeto foi consertado (7 de 7) e que o vermelho foi colado |
 | 2.4 | Separar a decisão de entrar em `Entrada` e mostrar que trocá-la não mexe nas telas | Os testes com as duas implementações e o da inicialização estão em verde, a saída do `grep` foi colada **e** foi lido que `src/main` não traz outra entrada |
 
@@ -547,7 +547,7 @@ não poderia lê-lo, e ao deixar de ser desenhada a tela de boas-vindas o levari
 **Passo 3.** Mudam `Tienda.kt` e `MainActivity.kt`; `Bienvenida.kt` e `PantallaEntrada.kt` não: elas já só recebiam
 dados e avisavam de toques. Entre o toque e «Olá, Ana»: `alContinuar` chama `entrada.entrar()`, que devolve
 `"Ana"`; isso se guarda em `nombre` e `pantalla` passa a `INICIO`; o Compose volta a executar `Tienda` e o `when` escolhe
-`Inicio`. Para estrear outra forma de entrar, com o que há nesta lição, escreve-se uma implementação nova e
+`Inicio`. Para adotar outra forma de entrar, com o que há nesta lição, escreve-se uma implementação nova e
 muda-se a linha do `MainActivity.kt` que a escolhe; as telas e `Tienda.kt` não se tocam. Como fica com o
 Google de verdade se vê na L04.
 

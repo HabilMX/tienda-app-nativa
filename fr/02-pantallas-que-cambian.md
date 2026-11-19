@@ -10,7 +10,7 @@
 - **Implémentation :** une classe qui, elle, réalise ce que l'interface demande. Il peut y en avoir plusieurs.
 - **Doublure de test :** une implémentation faite uniquement pour les tests, qui répond ce dont le test a besoin.
 
-**Ce que vous en retirez :** une application à trois écrans —accueil, entrée et accueil connecté— qui passe de l'un à
+**Ce que vous en retirez :** une application à trois écrans —bienvenue, connexion et accueil— qui passe de l'un à
 l'autre, et savoir dire pourquoi l'écran a changé chaque fois : quelle valeur a changé, qui l'a changée et qui l'a lue.
 
 **Idée nouvelle de cette leçon :** l'état. Quand une valeur d'état que l'écran a lue change, Compose **programme une
@@ -20,9 +20,9 @@ de laisser entrer dans un contrat, avec une implémentation réservée aux tests
 
 **Une note sur les textes de l'application.** Le projet du cours livre ses textes d'écran en espagnol, et les fichiers
 de `lecciones/` ne sont pas traduits : les vérifications automatiques du cours (les `verifica`) cherchent ces textes
-exacts. Donc, dans les blocs de code, les sorties de terminal et les croquis d'écran, les textes restent tels que le
+exacts. Donc, dans les blocs de code, les sorties de terminal et les maquettes d'écran, les textes restent tels que le
 projet les contient, et dans la prose la leçon les cite en français avec l'original entre parenthèses la première
-fois : les écrans « Entrez dans votre compte » (« Entra a tu cuenta »), « Bonjour, Ana » (« Hola, Ana ») et « Vous verrez
+fois : les écrans « Connectez-vous à votre compte » (« Entra a tu cuenta »), « Bonjour, Ana » (« Hola, Ana ») et « Vous verrez
 ici vos commandes » (« Aquí verás tus órdenes »), le bouton « Continuer » (« Continuar ») et l'avis « Il n'est pas
 encore possible d'entrer » (« Todavía no se puede entrar »). Ceux de la leçon 01 sont les mêmes : « La boutique » (« La
 tienda »), « Entrer » (« Entrar ») et « Bonjour ! » (« ¡Hola! »).
@@ -34,9 +34,9 @@ tienda »), « Entrer » (« Entrar ») et « Bonjour ! » (« ¡Hola! »).
 Vous avez les trois écrans qui fonctionnent. Avant de fermer, vous relisez le fichier pour le laisser propre et un mot
 vous gêne : `remember`. La ligne se lit pareil sans lui. Vous l'effacez.
 
-Ça compile. Vous ouvrez l'application : l'accueil est identique. Vous touchez « Entrer ».
+Ça compile. Vous ouvrez l'application : l'écran de bienvenue est identique. Vous touchez « Entrer ».
 
-Il ne se passe rien. Pas de message d'erreur. L'accueil est toujours là. Vous touchez encore. Rien.
+Il ne se passe rien. Pas de message d'erreur. L'écran de bienvenue est toujours là. Vous touchez encore. Rien.
 
 Ce changement existe et il est mesuré : c'est le « Cassez-en un exprès » de l'étape 4. Avec ce seul mot effacé, les tests
 simulés de la leçon passent de 7 sur 7 au vert à 1 sur 7, avec 6 au rouge et aucun en erreur (18 novembre 2026). Rien n'a
@@ -67,7 +67,7 @@ respuestas` s'il n'existe pas).
 
 | Ce qu'il apporte | Où | Pourquoi |
 |---|---|---|
-| L'accueil de la 01 | `Bienvenida.kt` | Vous partez de ce que vous avez déjà écrit |
+| L'écran de bienvenue de la 01 | `Bienvenida.kt` | Vous partez de ce que vous avez déjà écrit |
 | Les tests | `app/src/test/…/RecorridoTest.kt` et `ArranqueTest.kt` | Ce sont ceux que lance le `verifica`. Ne les modifiez pas |
 | Mémoire, `gradlew`, Android 36 pour les tests et Java 25 | Comme dans la 01 | Cela a été expliqué dans la [01](01-mi-primera-pantalla.md) |
 
@@ -84,12 +84,12 @@ vous donne écrits à l'étape 2.
 │      bolsillo        │    │ Todavía no se puede  │    │ órdenes              │
 │     [ Entrar ]       │    │ entrar (si no pasó)  │    │                      │
 └──────────────────────┘    └──────────────────────┘    └──────────────────────┘
-   accueil (bienvenida)         entrée (entrada)        accueil connecté (inicio)
+   bienvenue (bienvenida)       connexion (entrada)       accueil (inicio)
 ```
 
 *(Dans la maquette, « si no pasó » signifie « si l'accès n'a pas été accordé ».)*
 
-De l'entrée à l'accueil connecté, vous passez en touchant « Continuer », **seulement si quelqu'un décide que vous pouvez
+De la connexion à l'accueil, vous passez en touchant « Continuer », **seulement si quelqu'un décide que vous pouvez
 passer**. Qui décide, c'est l'étape 3.
 
 ---
@@ -154,9 +154,9 @@ git diff -- app/src/main/java/mx/habil/ejemplo/tienda/Bienvenida.kt
 Toujours sans Claude Code. Vous allez écrire deux écrans et la fonction qui choisit lequel est dessiné.
 
 **Prédisez d'abord.** Si « sur quel écran suis-je » est une valeur d'état, dans quelle fonction doit-elle vivre : dans
-`Bienvenida`, dans l'écran d'entrée ou dans une troisième qui appelle les deux ? Écrivez laquelle et pourquoi.
+`Bienvenida`, dans l'écran de connexion ou dans une troisième qui appelle les deux ? Écrivez laquelle et pourquoi.
 
-**1. L'accueil cesse de conserver l'état et prévient.** Dans `Bienvenida.kt`, supprimez la ligne de `saludando`, le bloc
+**1. L'écran de bienvenue cesse de conserver l'état et prévient.** Dans `Bienvenida.kt`, supprimez la ligne de `saludando`, le bloc
 `if (saludando) { … }` et les quatre `import` d'`androidx.compose.runtime` autres que `Composable`. Changez deux lignes :
 
 ```kotlin
@@ -168,7 +168,7 @@ fun Bienvenida(alEntrar: () -> Unit) {
 `alEntrar: () -> Unit` est un paramètre dont la valeur est une fonction : elle ne reçoit rien (`()`) et ne renvoie pas
 de donnée (`Unit`). L'écran l'exécute quand le bouton est touché, et il ne sait pas ce qui se passe ensuite.
 
-**2. L'écran d'entrée.** Créez `PantallaEntrada.kt` dans le même dossier. Il commence par `package
+**2. L'écran de connexion.** Créez `PantallaEntrada.kt` dans le même dossier. Il commence par `package
 mx.habil.ejemplo.tienda` et les mêmes `import` que `Bienvenida.kt` :
 
 ```kotlin
@@ -220,17 +220,17 @@ fun Tienda() {
 
 - **`enum class Pantalla { … }`** est une liste fermée : une `Pantalla` ne peut être que l'une de ces trois valeurs.
 - **`when (pantalla) { … }`** exécute la branche de cette valeur. S'il vous en manque une des trois, ça ne compile pas.
-- **`alEntrar = { pantalla = Pantalla.ENTRADA }`** est la fonction que vous passez à l'accueil. Lui prévient ; ici,
+- **`alEntrar = { pantalla = Pantalla.ENTRADA }`** est la fonction que vous passez à l'écran de bienvenue. Lui prévient ; ici,
   c'est l'état qui est modifié.
 
 **4. Faire démarrer l'application sur `Tienda`.** Dans `MainActivity.kt`, la ligne de `setContent` devient
 `setContent { Tienda() }`.
 
-**Vérifiez-le dans l'application.** `./gradlew installDebug`, ouvrez-la et touchez « Entrer » : l'écran « Entrez dans
-votre compte » doit s'afficher et l'accueil ne doit plus se voir. « Continuer » ne fait encore rien.
-Avec la solution terminée, sur l'émulateur du test (Pixel 9, Android 37, 18 nov. 2026), voici ce qui s'est affiché : l'accueil avec
+**Vérifiez-le dans l'application.** `./gradlew installDebug`, ouvrez-la et touchez « Entrer » : l'écran « Connectez-vous à
+votre compte » doit s'afficher et l'écran de bienvenue ne doit plus se voir. « Continuer » ne fait encore rien.
+Avec la solution terminée, sur l'émulateur du test (Pixel 9, Android 37, 18 nov. 2026), voici ce qui s'est affiché : l'écran de bienvenue avec
 « La tienda », « Tus órdenes, en tu bolsillo » et « Entrar » ; en touchant « Entrar », « Entra a tu cuenta » et
-« Continuar » ; et en touchant « Continuar », l'avis « Todavía no se puede entrar ». L'écran d'accueil connecté
+« Continuar » ; et en touchant « Continuar », l'avis « Todavía no se puede entrar ». L'écran d'accueil
 n'apparaît pas dans l'application installée : seuls les tests y arrivent.
 
 **Ce que vous venez de faire.** L'état n'est resté dans aucun écran : vous l'avez remonté dans la fonction qui les
@@ -271,14 +271,14 @@ avez déjà commencé l'étape 3, ce n'est pas ce rouge : c'est une erreur à co
 `recuerda` écrit à la place de `remember`, Gradle a dit `e: Tienda.kt:14:21 Unresolved reference 'recuerda'.` (mesuré le
 18 nov. 2026). Et comme les tests ne tournent pas encore, cette étape se vérifie dans l'application installée.
 
-**Ce qui le prouve :** dans l'application installée, « Entrer » vous mène à l'écran d'entrée (première moitié de
+**Ce qui le prouve :** dans l'application installée, « Entrer » vous mène à l'écran de connexion (première moitié de
 l'objectif 2.2).
 
 ---
 
 ## Étape 3 · Avec Claude Code : qui décide si vous entrez
 
-Il manque l'accueil connecté, et il manque de décider qui peut y arriver. Aujourd'hui il n'y a pas de fournisseur (Google
+Il manque l'écran d'accueil, et il manque de décider qui peut y arriver. Aujourd'hui il n'y a pas de fournisseur (Google
 arrive dans la leçon 04), et pourtant les tests doivent parcourir les trois écrans.
 
 C'est pourquoi cette décision ne s'écrit à l'intérieur d'aucun écran. Elle se déclare à part, comme **interface** : « à
@@ -303,7 +303,7 @@ qu'il a généré → vous lancez le `verifica` → vous l'expliquez avec vos pr
    `fun entrar(): String?` et une classe `EntradaSinProveedor` qui renvoie `null`. Crée `Inicio.kt` avec un
    composable `Inicio(nombre: String)` qui affiche "Hola, " suivi du nom et, en dessous, "Aquí verás tus
    órdenes". Fais en sorte que `Tienda` reçoive `entrada: Entrada` : en touchant "Continuar", elle appelle
-   `entrada.entrar()` ; si cela renvoie un nom, elle passe à l'accueil connecté avec ce nom ; si cela renvoie `null`,
+   `entrada.entrar()` ; si cela renvoie un nom, elle passe à l'écran d'accueil avec ce nom ; si cela renvoie `null`,
    elle reste et met `rechazada` à `true`. Dans `MainActivity`, utilise `EntradaSinProveedor()`. Dans `app/src/test`, à
    côté de `RecorridoTest.kt`, crée `EntradaFalsa.kt` : elle reçoit un nom, le renvoie toujours et compte dans `veces`
    combien de fois il lui a été demandé d'entrer. Ne modifie ni `RecorridoTest.kt` ni les deux écrans qui existent déjà. »
@@ -394,7 +394,7 @@ grep -rlE "EntradaSinProveedor|EntradaFalsa" app/src | sort
 
 Dans `solucion/`, la sortie compte quatre fichiers (mesuré le 18 nov. 2026) : `Entrada.kt` et `MainActivity.kt` dans
 `src/main`, et `EntradaFalsa.kt` et `RecorridoTest.kt` dans `src/test`. Aucun écran n'apparaît. Écrivez en dessous quels
-fichiers vous toucheriez pour inaugurer une autre manière d'entrer, et lesquels non.
+fichiers vous toucheriez pour mettre en place une autre manière d'entrer, et lesquels non.
 
 **Ce que prouve chaque coche, et ce qu'elle ne prouve pas.**
 
@@ -413,9 +413,9 @@ autre nom dans `src/main`, utilisée depuis un autre endroit, passe au vert. Cel
 aucune autre classe qui respecte `Entrada`. Elles ne prouvent pas non plus l'apparence des écrans, ce que fait le bouton
 « retour », ni rien de Google.
 
-**Dans l'application installée,** vous arrivez jusqu'à l'écran d'entrée, et « Continuer » doit répondre « Todavía no se
+**Dans l'application installée,** vous arrivez jusqu'à l'écran de connexion, et « Continuer » doit répondre « Todavía no se
 puede entrar » (« Il n'est pas encore possible d'entrer ») : l'application utilise `EntradaSinProveedor`. À l'accueil
-connecté, seuls les tests arrivent.
+seuls les tests arrivent.
 
 **Si une ligne n'est toujours pas claire,** avant de continuer, essayez de l'expliquer avec vos propres mots. Si cela ne
 vient toujours pas, revenez à ce fragment ou demandez une précision.
@@ -450,8 +450,8 @@ Resultado: 1 de 7 pruebas en verde (6 en rojo, 0 con error, 0 saltadas), leído 
 ```
 
 *(L'espagnol est la sortie du `verifica`, telle qu'affichée. En français : « Simulé : l'application démarre sur
-l'accueil, avec « La tienda » et le bouton « Entrar », et rien des deux autres » ; « En touchant le bouton « Entrar »,
-l'écran d'entrée avec « Entra a tu cuenta » et un bouton « Continuar » n'apparaît pas … » ; « … est resté au rouge, mais
+l'écran de bienvenue, avec « La tienda » et le bouton « Entrar », et rien des deux autres » ; « En touchant le bouton « Entrar »,
+l'écran de connexion avec « Entra a tu cuenta » et un bouton « Continuar » n'apparaît pas … » ; « … est resté au rouge, mais
 dépend de la coche précédente … » ; « (et quatre autres identiques) » ; « Résultat : 1 test sur 7 au vert (6 au rouge,
 0 en erreur, 0 sauté), lu depuis … ».)*
 
@@ -467,7 +467,7 @@ cette documentation (le `verifica` mesure le résultat, pas chaque étape), est 
 1. Vous touchez « Entrer ». L'événement change la valeur en `ENTRADA`.
 2. Compose s'en aperçoit, parce que la valeur naît toujours de `mutableStateOf`, et ré-exécute `Tienda`.
 3. `Tienda` s'exécute depuis le début et la première ligne crée une **nouvelle** valeur, à `BIENVENIDA`.
-4. Le `when` lit cette nouvelle valeur. L'accueil est de nouveau dessiné.
+4. Le `when` lit cette nouvelle valeur. L'écran de bienvenue est de nouveau dessiné.
 
 La valeur a bien changé. Ce qui s'est perdu, c'est l'endroit où elle était conservée.
 
@@ -490,7 +490,7 @@ explication. Le 2.3 est terminé quand vous pouvez cocher les quatre cases :
 **Une limite.** Selon la documentation d'Android, `remember` ne conserve pas la valeur lors d'un changement de
 configuration, comme faire pivoter le téléphone ; pour cela existe `rememberSaveable`. Cette leçon ne l'utilise ni ne
 le teste. Sur l'émulateur du test (18 nov. 2026), en faisant pivoter le téléphone alors que l'écran « Entra a tu
-cuenta » était affiché, l'application est revenue à l'accueil : l'état s'est perdu, comme le dit la documentation. Et « retour »,
+cuenta » était affiché, l'application est revenue à l'écran de bienvenue : l'état s'est perdu, comme le dit la documentation. Et « retour »,
 depuis l'un ou l'autre des deux écrans, a fermé l'application et ramené à l'accueil du téléphone : le parcours de cette
 leçon ne gère pas « retour ».
 
@@ -505,7 +505,7 @@ Le 2.1, l'étape 2 et le 2.3 se font **sans IA**.
 | # | Vous faites | C'est fait quand |
 |---|---|---|
 | 2.1 | Vous prédisez ce que fait l'état de l'étape 1 et vous le lancez | Vous avez votre prédiction et ce que vous avez vu |
-| 2.2 | Vous construisez accueil → entrée → accueil connecté | Le `verifica` donne 7 sur 7 **et** dans l'application installée vous avez vu « Todavía no se puede entrar » |
+| 2.2 | Vous construisez bienvenue → connexion → accueil | Le `verifica` donne 7 sur 7 **et** dans l'application installée vous avez vu « Todavía no se puede entrar » |
 | 2.3 | Vous cassez l'état et expliquez pourquoi l'écran cesse de se mettre à jour | Votre preuve, ce sont les quatre cases de l'étape 4, écrites par vous. Le `verifica` confirme seulement que le projet est réparé (7 sur 7) et que vous avez collé le rouge |
 | 2.4 | Vous séparez la décision d'entrer dans `Entrada` et montrez que la changer ne touche pas aux écrans | Les tests avec les deux implémentations et celui du démarrage sont au vert, vous avez collé votre sortie de `grep` **et** vous avez lu que `src/main` ne contient pas d'autre entrée |
 
@@ -551,16 +551,16 @@ Sur Linux Mint 22.3 (x86_64), le `verifica` de cette leçon est sorti au vert su
 troisième il revient (mesuré le 18 nov. 2026 avec un test simulé).
 
 **Étape 2.** Dans une troisième fonction qui appelle les deux, `Tienda`. Si la valeur vivait dans `Bienvenida`, l'écran
-d'entrée ne pourrait pas la lire, et quand l'accueil cesserait d'être dessiné, elle se perdrait avec lui.
+de connexion ne pourrait pas la lire, et quand l'écran de bienvenue cesserait d'être dessiné, elle se perdrait avec lui.
 
 **Étape 3.** `Tienda.kt` et `MainActivity.kt` changent ; `Bienvenida.kt` et `PantallaEntrada.kt` non : ils ne
 faisaient déjà que recevoir des données et signaler des touchers. Entre le toucher et « Bonjour, Ana » : `alContinuar`
 appelle `entrada.entrar()`, qui renvoie `"Ana"` ; elle est conservée dans `nombre` et `pantalla` passe à `INICIO` ;
-Compose ré-exécute `Tienda` et le `when` choisit `Inicio`. Pour inaugurer une autre manière d'entrer, avec ce qu'il y a
+Compose ré-exécute `Tienda` et le `when` choisit `Inicio`. Pour mettre en place une autre manière d'entrer, avec ce qu'il y a
 dans cette leçon, vous écrivez une nouvelle implémentation et changez la ligne de `MainActivity.kt` qui la choisit ; les
 écrans et `Tienda.kt` ne sont pas touchés. Ce que cela donne avec un vrai Google se voit dans la L04.
 
-**Étape 4.** Oui, ça compile, et les tests simulés trouvent l'accueil à l'ouverture ; en touchant « Entrer », l'écran
+**Étape 4.** Oui, ça compile, et les tests simulés trouvent l'écran de bienvenue à l'ouverture ; en touchant « Entrer », l'écran
 ne change pas. La seconde manière ressemble à la première dans le décompte (1 sur 7) et non dans la cause : sans
 `remember`, Compose redessine avec une valeur tout juste créée ; avec une variable ordinaire, il n'est jamais informé.
 
@@ -568,7 +568,7 @@ ne change pas. La seconde manière ressemble à la première dans le décompte (
 
 1. L'événement a changé une valeur d'état ; Compose a ré-exécuté la fonction qui l'a lue ; le `when` a choisi un autre
    écran.
-2. Il conserve la valeur d'une recomposition à la suivante. Sans lui, l'application reste sur l'accueil.
+2. Il conserve la valeur d'une recomposition à la suivante. Sans lui, l'application reste sur l'écran de bienvenue.
 3. Cela prouve quel écran reste après chaque toucher, avec une entrée qui laisse passer et une qui ne le fait pas, et
    que l'application ouverte depuis `MainActivity` ne laisse passer personne. Cela ne prouve ni leur apparence, ni ce
    que fait le bouton « retour », ni qu'il n'existe pas une autre manière d'entrer par un autre chemin, ni que Google
@@ -597,6 +597,6 @@ Ouvertes le 18 nov. 2026.
 - Kotlin. *Conditions and loops* (`when`). https://kotlinlang.org/docs/control-flow.html
 - Kotlin. *Higher-order functions and lambdas* (types de fonction comme `() -> Unit`) et *Functions* (`Unit`). https://kotlinlang.org/docs/lambdas.html · https://kotlinlang.org/docs/functions.html
 - Kotlin. *Strings* (modèles avec `$`). https://kotlinlang.org/docs/strings.html
-- Mesure propre : Mac avec Apple silicon, 18 nov. 2026 (le `verifica` sur `inicio/` et `solucion/` ; les deux manières de casser l'état ; la prédiction de l'étape 1 ; l'état intermédiaire de l'étape 2, avec et sans erreur ; messages du compilateur).
+- Nos propres mesures : Mac avec Apple silicon, 18 nov. 2026 (le `verifica` sur `inicio/` et `solucion/` ; les deux manières de casser l'état ; la prédiction de l'étape 1 ; l'état intermédiaire de l'étape 2, avec et sans erreur ; messages du compilateur).
 
 Revue externe (18 nov. 2026) : AVEC CHANGEMENTS, 3 de priorité haute, 4 moyenne et 2 basse ; appliquée.

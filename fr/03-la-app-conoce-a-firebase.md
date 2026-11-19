@@ -15,11 +15,11 @@ configuration qui contient tout ce dont la leçon 04 a besoin, et savoir le vér
 
 **Idée nouvelle de cette leçon :** une application se connecte à un service externe avec deux repères, son nom de
 paquet et l'empreinte de son certificat. Le service ne connaît pas votre code : il connaît ces deux repères. Le reste
-—le plugin Gradle et la bibliothèque— vient donné et expliqué, et n'est pas évalué ici.
+—le plugin Gradle et la bibliothèque— est fourni et expliqué, et n'est pas évalué ici.
 
 **Une note sur les textes de l'application.** Le projet du cours livre ses textes d'écran en espagnol, et les fichiers
 de `lecciones/` ne sont pas traduits : les vérifications automatiques du cours (les `verifica`) cherchent ces textes
-exacts. Donc, dans les blocs de code, les sorties de terminal et les croquis d'écran, les textes restent tels que le
+exacts. Donc, dans les blocs de code, les sorties de terminal et les maquettes d'écran, les textes restent tels que le
 projet les contient, et dans la prose la leçon les cite en français avec l'original entre parenthèses la première
 fois : l'écran « La boutique » (« La tienda ») avec son bouton « Entrer » (« Entrar »), et le bouton « Se connecter avec
 Google » (« Entrar con Google »).
@@ -70,7 +70,7 @@ cd lecciones/03-la-app-conoce-a-firebase/inicio
 
 C'est là que vous travaillez. À côté se trouve `solucion/` : vous pouvez la lire et la comparer sans rien configurer.
 **`./verifica solucion` sort au rouge dans un clone propre**, et c'est ce qui est attendu : votre fichier n'est pas
-publié, et avec le plugin appliqué le projet ne compile pas sans lui (mesuré le 18 nov. 2026 : 0 test exécuté). Si vous
+versé dans le dépôt, et avec le plugin appliqué le projet ne compile pas sans lui (mesuré le 18 nov. 2026 : 0 test exécuté). Si vous
 voulez la passer en revue, copiez votre fichier dans `solucion/app/` —il y est aussi ignoré— et retirez-le à la fin. Vos
 prédictions et explications vont dans `respuestas/03.md`, à la racine du dépôt (`mkdir -p respuestas` s'il n'existe
 pas).
@@ -132,7 +132,7 @@ Lisez trois lignes :
 
 - **`Variant: debug`** est l'application de test, celle que vous installez avec `installDebug`. Sa ligne **`SHA1`** est
   l'empreinte que vous allez enregistrer. Copiez-la dans `respuestas/03.md`.
-- **`Store`** dit de quel fichier elle provient : le magasin de débogage de **cet** ordinateur.
+- **`Store`** dit de quel fichier elle provient : le magasin de clés de débogage (debug keystore) de **cet** ordinateur.
 - **`Variant: release`** dit `Config: none` : ce projet n'a pas encore de quoi signer une version à publier. C'est le
   sujet de l'exercice 3.3.
 
@@ -141,14 +141,14 @@ empreinte ? Écrivez oui ou non, et pourquoi, avant de continuer.
 
 **L'empreinte peut se montrer ; la clé, non.** La documentation d'Android les sépare ainsi : le certificat et son
 empreinte sont faits pour être partagés avec les services qui les demandent ; la clé de signature et ses mots de passe
-se gardent secrets. Le magasin de débogage ne sert qu'à développer : la même documentation dit qu'il est peu sûr
+se gardent secrets. Le keystore de débogage ne sert qu'à développer : la même documentation dit qu'il est peu sûr
 volontairement, et que c'est pourquoi les boutiques n'acceptent pas une application signée avec lui.
 
 **Ce qui le prouve :** votre empreinte de débogage copiée et votre prédiction écrite (base des objectifs 3.1 et 3.3).
 
 ---
 
-## Étape 2 · Sans IA : ce qui n'est pas publié
+## Étape 2 · Sans IA : ce qui ne va pas dans le dépôt
 
 Toujours sans Claude Code, et **avant** d'avoir le fichier : ainsi il n'existe pas une seule minute où git pourrait
 l'emporter.
@@ -179,13 +179,13 @@ lecciones/03-la-app-conoce-a-firebase/inicio/.gitignore:2:google-services.json	a
 Le dépôt de la série avait déjà la même règle à sa racine ; git vous rapporte la plus proche du fichier, qui est la
 vôtre. C'est la vôtre qui protège le projet le jour où il vivra dans son propre dépôt.
 
-**Pourquoi il n'est pas publié, dit avec prudence.** Ce n'est pas parce que c'est un secret. La documentation de
+**Pourquoi il ne va pas dans le dépôt, dit avec prudence.** Ce n'est pas parce que c'est un secret. La documentation de
 Firebase dit que ce fichier contient des identifiants uniques mais non secrets, et que ses clés d'API ne font
 qu'identifier votre projet : ce qui protège les données, ce sont les règles de sécurité, les permissions et App Check.
-Dans cette série, il reste en dehors pour une autre raison : **chacun a son propre projet**. Si vous publiiez le vôtre,
+Dans cette série, il reste en dehors pour une autre raison : **chacun a son propre projet**. Si vous versiez le vôtre dans le dépôt,
 l'application de votre collègue parlerait avec votre Firebase, et avec une empreinte qui n'est pas la sienne.
 
-**Ce qui n'est jamais publié**, dans aucun dépôt :
+**Ce qui ne va jamais dans le dépôt**, quel qu'il soit :
 
 - Les clés de signature (fichiers `.jks` ou `.keystore`) et leurs mots de passe.
 - Les mots de passe, quels qu'ils soient.
@@ -258,7 +258,7 @@ Resultado: 15 de 18 pruebas en verde (3 en rojo, 0 con error, 0 saltadas), leíd
 *(C'est la sortie du `verifica`, exactement comme le script l'affiche, en espagnol. En français, les cinq coches vertes
 disent : votre `app/google-services.json` nomme le paquet `mx.habil.ejemplo.tienda` ; une application de votre fichier
 est du paquet `mx.habil.ejemplo.tienda` ; votre fichier contient un client OAuth Android (type 1) ; ce client contient
-l'empreinte SHA-1 du magasin de débogage de cet ordinateur ; votre fichier contient un client OAuth web (type 3), celui
+l'empreinte SHA-1 du keystore de débogage de cet ordinateur ; votre fichier contient un client OAuth web (type 3), celui
 qu'utilisera le bouton Google dans la leçon 04. Les trois rouges disent : l'application compilée ne porte pas le
 `project_id` et le `google_app_id` de votre fichier, il faut appliquer le plugin ; aucune bibliothèque Firebase ne
 figure parmi les dépendances de l'application, ou elle n'a pas démarré avec le projet ; il manque Authentication,
@@ -268,7 +268,7 @@ au vert.)*
 Si, à la place, vous voyez « descárgalo otra vez después de la huella » (« téléchargez-le à nouveau après l'empreinte »),
 le fichier a été téléchargé trop tôt : refaites le point 5. Inutile de rien supprimer dans la console.
 
-**Ce que compare la coche de l'empreinte.** Le test ouvre le magasin de débogage de votre ordinateur, calcule son SHA-1
+**Ce que compare la coche de l'empreinte.** Le test ouvre le keystore de débogage de votre ordinateur, calcule son SHA-1
 et le cherche dans votre fichier. Il ne demande rien à Firebase.
 
 **Ce qui le prouve :** les quatre coches « Simulado » de votre fichier disent ce que contient le fichier (objectif 3.5).
@@ -428,7 +428,7 @@ Le nom de la tâche le dit : `processDebugGoogleServices` est le plugin, à la c
 aucune. Ni le réseau ni Firebase n'est intervenu : l'erreur est née de la comparaison de deux textes sur votre
 ordinateur.
 
-**4. Le correctif qui tente, et pourquoi non.** Modifier à la main le `package_name` dans le fichier supprime l'erreur de
+**4. Le correctif tentant, et pourquoi il ne convient pas.** Modifier à la main le `package_name` dans le fichier supprime l'erreur de
 compilation. Ne le faites pas : le fichier est une copie de ce qui se trouve dans la console, et la console conserve
 toujours l'autre application enregistrée. Ce qui convient, c'est que les deux repères coïncident vraiment : soit
 l'application utilise le paquet enregistré, soit vous enregistrez une autre application avec le nouveau paquet et vous
@@ -463,7 +463,7 @@ Les étapes 1 et 2, le 3.3 et le 3.4 se font **sans IA**.
 | # | Vous faites | C'est fait quand |
 |---|---|---|
 | 3.1 | Vous suivez l'ordre : projet → application → empreinte → Google → téléchargement | Le `verifica` donne 18 sur 18 avec votre fichier : cela valide le fichier et la compilation. Que le projet est le vôtre, avec l'empreinte enregistrée et Google activé, c'est la connexion réelle de la leçon 04 qui le valide |
-| 3.2 | Vous expliquez pourquoi `google-services.json` n'est pas publié dans cette série et nommez ce qui n'est jamais publié | Votre explication est dans `respuestas/03.md`. Le `verifica` vérifie seulement le `.gitignore`, le `.example` et ce que git suit |
+| 3.2 | Vous expliquez pourquoi `google-services.json` ne va pas dans le dépôt de cette série et nommez ce qui n'y va jamais | Votre explication est dans `respuestas/03.md`. Le `verifica` vérifie seulement le `.gitignore`, le `.example` et ce que git suit |
 | 3.3 | Vous distinguez l'empreinte de débogage de celle d'une version publiée | Vous avez répondu aux trois cas ci-dessous |
 | 3.4 | Vous cassez le paquet et diagnostiquez l'erreur | Votre preuve, ce sont les trois cases de l'étape 5, écrites par vous. Le `verifica` confirme seulement que le projet est réparé et que vous avez collé l'erreur |
 | 3.5 | Vous vérifiez, sans ouvrir la console, que votre fichier contient le client avec votre empreinte et le client web | Les coches « Simulado » de votre fichier sont au vert. L'empreinte qu'elles comparent est celle de débogage de cet ordinateur |
@@ -473,8 +473,8 @@ de votre ordinateur. Selon la documentation d'Android et de Google, une applicat
 
 | Qui signe l'application | D'où vient son empreinte |
 |---|---|
-| Votre ordinateur, à la compilation pour tester | Du magasin de débogage : `./gradlew signingReport`, variante `debug` |
-| Vous, avec votre propre clé, pour publier | Du magasin de cette clé. Ce n'est pas celle de débogage |
+| Votre ordinateur, à la compilation pour tester | Du keystore de débogage : `./gradlew signingReport`, variante `debug` |
+| Vous, avec votre propre clé, pour publier | Du keystore de cette clé. Ce n'est pas celle de débogage |
 | Google Play, avec Play App Signing | De la Play Console, sur la page de signature de l'application. La clé est conservée par Google et n'est pas celle que vous utilisez pour envoyer l'application |
 
 Répondez dans `respuestas/03.md` : quelle empreinte faut-il enregistrer dans Firebase dans chaque cas ?
@@ -503,7 +503,7 @@ Les messages en anglais sont ceux que le plugin `google-services` 4.6.0 a donné
 | ❌ « no trae un cliente de OAuth web (tipo 3) » (ne contient pas de client OAuth web (type 3)) | Vous l'avez téléchargé avant d'activer Google | Activez Google et téléchargez à nouveau |
 | ❌ « Git sí rastrea un google-services.json » (git suit bien un google-services.json) | Il a été ajouté avant que le `.gitignore` n'existe | `git rm --cached <fichier>` le retire de git sans supprimer votre copie |
 | `keytool -list -v` se termine par `MissingFormatArgumentException` | Cela s'est produit sur le Mac de la série avec Java 25 et le système en espagnol (18 nov. 2026) | Utilisez `./gradlew signingReport`, ce que demande la leçon |
-| `~/.android/debug.keystore` n'existe pas et vous n'avez pas l'empreinte | Vous n'avez encore rien compilé sur cet ordinateur : le magasin est créé par la première compilation de débogage, pas par `signingReport` (mesuré sur Linux Mint 22.3, 18 nov. 2026) | Lancez `./gradlew assembleDebug` puis `./gradlew signingReport` |
+| `~/.android/debug.keystore` n'existe pas et vous n'avez pas l'empreinte | Vous n'avez encore rien compilé sur cet ordinateur : le keystore est créé par la première compilation de débogage, pas par `signingReport` (mesuré sur Linux Mint 22.3, 18 nov. 2026) | Lancez `./gradlew assembleDebug` puis `./gradlew signingReport` |
 
 Sur Linux Mint 22.3 (x86_64), le `verifica` de cette leçon a donné le même résultat que sur le Mac (18 nov. 2026) : sur
 `inicio/`, 11 sur 18 au vert ; sur `solucion/` sans votre fichier, « 0 pruebas corridas » (0 test exécuté) avec l'avis ;
@@ -520,7 +520,7 @@ environ 200 Mo à `~/.gradle`.
    ordinateur ?
 2. Pourquoi le fichier se télécharge-t-il à la fin et non quand l'assistant le propose ?
 3. Votre `verifica` donne 18 sur 18. Dites une chose que cela prouve et une qu'il ne prouve pas.
-4. Pourquoi `google-services.json` n'est-il pas publié dans cette série ? Et quelle chose n'est jamais publiée, nulle
+4. Pourquoi `google-services.json` n'est-il pas versé dans le dépôt de cette série ? Et quelle chose n'y est jamais versée, nulle
    part ?
 
 **La suite :** dans la L04, vous placez le bouton et vous vous connectez avec Google. C'est là que se vérifie, pour de
@@ -530,7 +530,7 @@ vrai, tout ce qui est aujourd'hui resté écrit dans votre fichier.
 
 ## Comparez vos réponses
 
-**Étape 1.** Non, elle n'obtient pas la même. Le magasin de débogage est créé par les outils dans le dossier personnel de
+**Étape 1.** Non, elle n'obtient pas la même. Le keystore de débogage est créé par les outils dans le dossier personnel de
 chacun, donc chaque ordinateur a son certificat et son empreinte. Le projet est le même ; la signature, non.
 
 **Étape 3.** Lors de l'essai du 13 nov. 2026, aucun des deux : le fichier téléchargé avant l'empreinte et l'activation de
@@ -557,20 +557,20 @@ coïncider là où cela compte.
 2. Celle du certificat avec lequel Google Play signe l'application, qui se consulte dans la Play Console. Celle de
    débogage et celle de la clé avec laquelle vous envoyez l'application ne servent pas pour ce que téléchargent les
    utilisateurs.
-3. Celle de débogage du nouvel ordinateur : c'est un autre magasin et une autre empreinte.
+3. Celle de débogage du nouvel ordinateur : c'est un autre keystore et une autre empreinte.
 
 **Pour conclure :**
 
 1. Le nom de paquet, dans l'`applicationId` de `app/build.gradle.kts`, et l'empreinte du certificat avec lequel
-   l'application est signée ; celle de débogage provient du magasin de votre dossier personnel et c'est `signingReport`
+   l'application est signée ; celle de débogage provient du keystore de votre dossier personnel et c'est `signingReport`
    qui l'affiche.
 2. Parce que le fichier est une copie de ce que la console sait à ce moment-là, et que Firebase demande de télécharger
    le fichier mis à jour après l'empreinte et l'activation de Google. Lors de l'essai, le précédent ne contenait pas les
    clients OAuth.
 3. Cela prouve que le texte de votre fichier contient le paquet, le client Android avec votre empreinte de débogage et
    le client web, que l'application compilée porte ces données et qu'Authentication voyage dans l'application. Cela ne
-   prouve pas que le fichier vienne de votre projet, que le projet existe ni que vous pouvez vous connecter avec Google.
-4. Parce que chacun a son propre projet, pas parce qu'il est secret. Ne sont jamais publiés les clés de signature, les
+   prouve pas que le fichier vienne de votre projet, que le projet existe ni que vous puissiez vous connecter avec Google.
+4. Parce que chacun a son propre projet, pas parce qu'il est secret. Ne sont jamais versés dans le dépôt les clés de signature, les
    mots de passe ni la clé secrète de Microsoft.
 
 ---
@@ -592,6 +592,6 @@ Ouvertes le 18 nov. 2026.
 - Android Developers. *Migrate your build to version catalogs* (`libs.versions.toml`, `alias`). https://developer.android.com/build/migrate-to-catalogs
 - Dépôt Maven de Google : ses index listent `google-services` 4.6.0 et `firebase-bom` 35.2.0. https://dl.google.com/dl/android/maven2/com/google/gms/google-services/maven-metadata.xml · https://dl.google.com/dl/android/maven2/com/google/firebase/firebase-bom/maven-metadata.xml
 - Essai de la série, 13 nov. 2026, Mac avec Apple silicon : l'ordre des étapes de la console et ce qui a été vu ce jour-là (l'assistant n'a pas demandé l'empreinte ; activer Google a demandé un nom public et une adresse d'assistance ; le fichier téléchargé trop tôt ne contenait pas de clients OAuth ; offre sans frais). Les noms de menus et de boutons de cette leçon ne viennent pas de l'essai : ce sont ceux de la documentation citée ci-dessus.
-- Mesure propre : Mac avec Apple silicon, 18 nov. 2026 (`signingReport` ; le `verifica` sur `inicio/` et `solucion/` ; les fichiers inventés : complet, sans clients, d'un autre paquet et avec une autre empreinte ; les ressources que génère le plugin ; les messages d'erreur ; le `keytool` ; l'application installée dans un émulateur neuf, sans compte, qui a été supprimé à la fin). Les mesures ont été faites avec des fichiers inventés, pas avec un vrai projet Firebase.
+- Nos propres mesures : Mac avec Apple silicon, 18 nov. 2026 (`signingReport` ; le `verifica` sur `inicio/` et `solucion/` ; les fichiers inventés : complet, sans clients, d'un autre paquet et avec une autre empreinte ; les ressources que génère le plugin ; les messages d'erreur ; le `keytool` ; l'application installée dans un émulateur neuf, sans compte, qui a été supprimé à la fin). Les mesures ont été faites avec des fichiers inventés, pas avec un vrai projet Firebase.
 
 Revue externe (18 nov. 2026) : AVEC CHANGEMENTS, 2 de priorité haute, 6 moyenne et 3 basse ; appliquée.

@@ -1,6 +1,6 @@
 # Lesson 01 — My first screen runs
 
-**Before you read, seven words.** One line each; the rest of the series arrive in the lesson where they are used.
+**Before you read, seven words.** One line each; the series' other terms come in the lesson where they are used.
 
 - **Kotlin:** the language you write the app in. Its files end in `.kt`.
 - **Compose** (Jetpack Compose): Android's library for building screens by writing Kotlin functions.
@@ -233,7 +233,7 @@ Resultado: 3 de 4 pruebas en verde (1 en rojo, 0 con error, 0 saltadas), leído 
 
 *(That is the `verifica`'s output, exactly as the script prints it, in Spanish. In English it says: the screen shows
 the name; the screen shows the tagline; there is an "Enter" element with a tap action and a button role; and, red,
-"tapping the "Enter" button does not show "Hello!" (or it was already there): you ask for that change in step 4";
+"tapping the 'Enter' button does not show 'Hello!' (or it was already there): you ask for that change in step 4";
 and the result, 3 of 4 tests green.)*
 
 That red is the expected one: the button does nothing yet. The mark for `respuestas/01.md`, which you have not filled
@@ -256,8 +256,8 @@ generated → you run the `verifica` → you explain it in your own words.**
 
 1. **Predict.** Write in `respuestas/01.md`: for "Hello!" to appear only after tapping the button, what does the
    screen have to remember? Which of the lines you already wrote is going to change?
-2. **Ask** Claude Code, standing in `inicio/`: "In `Bienvenida.kt`, make it so that tapping "Entrar" shows the text
-   "¡Hola!" below the button. Before tapping it must not show. Do not change anything else or touch the tests."
+2. **Ask** Claude Code, standing in `inicio/`: "In `Bienvenida.kt`, make it so that tapping 'Entrar' shows the text
+   '¡Hola!' below the button. Before tapping it must not show. Do not change anything else or touch the tests."
 3. **Read** the whole change before accepting it. It does not have to be identical to this, but it must have these
    three pieces:
 
@@ -464,6 +464,6 @@ Opened on Nov 18, 2026.
 - Kotlin. *Basic syntax*. https://kotlinlang.org/docs/basic-syntax.html
 - Kotlin. *Null safety*. https://kotlinlang.org/docs/null-safety.html
 - Kotlin. *Higher-order functions and lambdas*. https://kotlinlang.org/docs/lambdas.html
-- Own measurement: trial on a Mac with Apple silicon, Nov 13, 2026 (Gradle memory, `gradle wrapper`, Java and Android for the simulated tests) and Nov 18, 2026 (the `verifica` on `inicio/`, `solucion/` and the 1.3 listing; compiler messages).
+- Our own measurement: trial on a Mac with Apple silicon, Nov 13, 2026 (Gradle memory, `gradle wrapper`, Java and Android for the simulated tests) and Nov 18, 2026 (the `verifica` on `inicio/`, `solucion/` and the 1.3 listing; compiler messages).
 
 External review (Nov 18, 2026): WITH CHANGES, 3 high priority, 5 medium and 2 low; applied.

@@ -15,11 +15,11 @@
 écran Compose ligne par ligne et dire ce que chacune change à l'écran.
 
 **Idée nouvelle de cette leçon (la seule qui est évaluée) :** en Compose, un écran est une fonction qui décrit ce qui
-s'affiche. Il n'y a pas de fichier de conception à part : vous lisez la fonction et vous savez ce qui va apparaître.
+s'affiche. Il n'y a pas de fichier de mise en page à part : vous lisez la fonction et vous savez ce qui va apparaître.
 
 **Une note sur les textes de l'application.** Le projet du cours livre ses textes d'écran en espagnol, et les fichiers
 de `lecciones/` ne sont pas traduits : les vérifications automatiques du cours (les `verifica`) cherchent ces textes
-exacts. Donc, dans les blocs de code, les sorties de terminal et les croquis d'écran, les textes restent tels que le
+exacts. Donc, dans les blocs de code, les sorties de terminal et les maquettes d'écran, les textes restent tels que le
 projet les contient, et dans la prose la leçon les cite en français avec l'original entre parenthèses la première
 fois : le nom « La boutique » (dans le projet, « La tienda »), le slogan « Vos commandes, dans votre poche » (« Tus
 órdenes, en tu bolsillo »), le bouton « Entrer » (« Entrar ») et le salut « Bonjour ! » (« ¡Hola! »).
@@ -176,7 +176,7 @@ Trois détails qui, eux, changent par rapport à d'autres langages :
 
 Cette étape est la vôtre, sans Claude Code : ce sont une dizaine de lignes.
 
-**Prédisez d'abord.** Combien d'appels à des fonctions composables allez-vous avoir besoin de faire dans la `Column`, et
+**Prédisez d'abord.** De combien d'appels à des fonctions composables aurez-vous besoin dans la `Column`, et
 lequel d'entre eux va en contenir un autre ?
 
 Dans `Bienvenida.kt` :
@@ -345,8 +345,8 @@ vous pouvez cocher les quatre cases :
 - [ ] Les cinq types sont là : état, texte, modificateur, événement et fonction.
 - [ ] Chacun donne un effet visible à l'écran.
 - [ ] Vous avez expliqué pourquoi le salut s'affichait au-dessus et pourquoi les tests ne l'ont pas détecté.
-- [ ] Après l'avoir déplacé, le 4 sur 4 reste au vert **et** dans l'application installée, vous avez vu « Bonjour ! »
-      sous « Entrer ». Notez cette observation à côté de la correction.
+- [ ] Après l'avoir déplacé, le 4 sur 4 reste au vert **et** dans l'application installée, vous avez vu « ¡Hola! »
+      sous « Entrar ». Notez cette observation à côté de la correction.
 
 **Ce qui le prouve :** exercice 1.3 (objectif 1.3).
 
@@ -388,7 +388,7 @@ Les messages en anglais sont ceux que le compilateur de la série (Kotlin 2.4.21
 | `Property delegate must have a 'getValue(…)' method` | Vous avez utilisé `by` sans ses deux `import` | Ajoutez `getValue` et `setValue` (étape 4) |
 | « Las pruebas no llegaron a correr » (les tests n'ont pas pu s'exécuter) | Le code ne compile pas | Lisez la ligne qui commence par `e:` : elle contient fichier, ligne et colonne |
 | ❌ sur le bouton, avec « Entrer » visible | C'est un `Text`, seul ou avec `clickable` : il ne se déclare pas comme un bouton | Cela doit être un `Button` avec le `Text` à l'intérieur |
-| ❌ sur le salut, alors que « Bonjour ! » s'affiche | Le salut est toujours là, pas seulement après avoir touché | Il va à l'intérieur du `if (saludando)` |
+| ❌ sur le salut, alors que « ¡Hola! » s'affiche | Le salut est toujours là, pas seulement après avoir touché | Il va à l'intérieur du `if (saludando)` |
 | `BienvenidaTest.kt` a changé | Quelqu'un (vous ou Claude Code) a touché aux tests | Récupérez-le avec la commande que donne le message et répétez la demande en précisant de ne pas y toucher |
 
 Sur Linux Mint 22.3 (x86_64), le `verifica` de cette leçon est sorti au vert sur la solution : 4 sur 4, en 64 secondes en
@@ -436,7 +436,7 @@ position il se trouve.
 1. Non. Un `val` ne peut pas être réaffecté ; le compilateur dit `'val' cannot be reassigned`.
 2. `Boolean`. Kotlin l'a déduit à partir de la valeur `false`.
 3. Elle renvoie `8`, de type `Int` : le corps est une expression et le type de retour est déduit.
-4. Que ce paramètre peut arriver à `null`, et Kotlin ne vous laisse pas l'utiliser sans tenir compte de ce cas.
+4. Que ce paramètre peut valoir `null`, et Kotlin ne vous laisse pas l'utiliser sans tenir compte de ce cas.
 5. `lema.length` ne compile pas ; `lema?.length` donne `null` ; `lema?.length ?: 0` donne `0`.
 
 **Pour conclure :**
@@ -467,6 +467,6 @@ Ouvertes le 18 nov. 2026.
 - Kotlin. *Basic syntax*. https://kotlinlang.org/docs/basic-syntax.html
 - Kotlin. *Null safety*. https://kotlinlang.org/docs/null-safety.html
 - Kotlin. *Higher-order functions and lambdas*. https://kotlinlang.org/docs/lambdas.html
-- Mesure propre : essai sur un Mac avec Apple silicon, 13 nov. 2026 (mémoire de Gradle, `gradle wrapper`, Java et Android des tests simulés) et 18 nov. 2026 (le `verifica` sur `inicio/`, `solucion/` et le listing du 1.3 ; messages du compilateur).
+- Nos propres mesures : essai sur un Mac avec Apple silicon, 13 nov. 2026 (mémoire de Gradle, `gradle wrapper`, Java et Android des tests simulés) et 18 nov. 2026 (le `verifica` sur `inicio/`, `solucion/` et le listing du 1.3 ; messages du compilateur).
 
 Revue externe (18 nov. 2026) : AVEC CHANGEMENTS, 3 de priorité haute, 5 moyenne et 2 basse ; appliquée.

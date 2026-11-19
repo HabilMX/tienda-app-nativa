@@ -4,7 +4,7 @@
 
 - **Android Studio:** o programa em que se escreve, compila e roda o app.
 - **SDK** (kit de desenvolvimento): as ferramentas e bibliotecas para compilar e rodar apps Android. O Android Studio
-  as baixa, mas elas vivem em uma pasta própria.
+  o baixa, mas ele fica em uma pasta própria.
 - **Emulador:** um telefone Android que roda como programa dentro do computador.
 - **AVD** (dispositivo virtual): a ficha de *um* telefone simulado — modelo, versão do Android, memória. O emulador
   inicia um AVD.
@@ -30,12 +30,12 @@ na prosa, a lição os cita em português e, na primeira vez, dá o original ent
 
 ## A cena
 
-São onze da noite e o app da loja tem que estar rodando amanhã às nove. Abre-se o Android Studio pela primeira vez.
-Ele pede para baixar «componentes». Responde-se que sim. Vinte minutos depois aparece na tela um telefone desenhado,
-com a hora e a bateria cheia. Digita-se o e-mail para entrar com o Google… e nada acontece. Nem uma letra.
+São onze da noite e o app da loja tem que estar rodando amanhã às nove. Quem estuda abre o Android Studio pela primeira vez.
+Ele pede para baixar «componentes». A pessoa responde que sim. Vinte minutos depois aparece na tela um telefone desenhado,
+com a hora e a bateria cheia. Ela digita o e-mail para entrar com o Google… e nada acontece. Nem uma letra.
 
-Testa-se o teclado do computador em outra janela: funciona. Volta-se ao telefone: nada. No fim, o e-mail é escrito
-letra por letra com o mouse, no teclado da tela. Então o Google pede para escanear um código QR com o celular. Escaneia-se.
+Testa o teclado do computador em outra janela: funciona. Volta ao telefone: nada. No fim, escreve o e-mail
+letra por letra com o mouse, no teclado da tela. Então o Google pede para escanear um código QR com o celular. Ela escaneia.
 Gira, gira e diz que não foi possível.
 
 Nada disso é erro de quem estuda. As duas coisas aconteceram com quem testou esta lição antes, em 13 de novembro de
@@ -180,7 +180,7 @@ O `verifica` da 00 comprova o que se pode automatizar; a tela About do Studio é
 **Preveja primeiro.** Das três peças, qual vai demorar mais para ficar pronta, e que saída o provaria?
 
 **Baixe uma imagem do Android com Google.** Para entrar com o Google na lição 04 é preciso uma imagem que traga o
-Google Play services. A série fixa `google_apis_playstore`, que além disso traz a Play Store; uma imagem marcada
+Google Play services. A série adota `google_apis_playstore`, que além disso traz a Play Store; uma imagem marcada
 **Google APIs** também traz o Play services. O que não serve é uma imagem `default` (Android sem serviços do Google).
 
 ```bash
@@ -296,7 +296,7 @@ cd tienda-app-nativa/lecciones/00-ambiente-listo/inicio
 ./gradlew installDebug      # compila e a INSTALA no emulador ou no telefone; não a abre
 ```
 
-Agora **abra-a** pela gaveta de apps do emulador ou do telefone. Tudo vai bem se aparecer a tela «A loja roda no
+Agora **abra-o** pela gaveta de apps do emulador ou do telefone. Tudo vai bem se aparecer a tela «A loja roda no
 ambiente» (no projeto, «La tienda corre en tu ambiente»).
 
 A primeira compilação baixa bibliotecas e leva vários minutos. O projeto de início já traz uma configuração que se

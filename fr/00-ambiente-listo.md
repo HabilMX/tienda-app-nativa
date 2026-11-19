@@ -23,7 +23,7 @@ Studio, le SDK et l'émulateur — et chacune se vérifie avec une preuve concr�
 
 **Une note sur les textes de l'application.** Le projet du cours livre ses textes d'écran en espagnol, et les fichiers
 de `lecciones/` ne sont pas traduits : les vérifications automatiques du cours (les `verifica`) cherchent ces textes
-exacts. Donc, dans les blocs de code, les sorties de terminal et les croquis d'écran, les textes restent tels que le
+exacts. Donc, dans les blocs de code, les sorties de terminal et les maquettes d'écran, les textes restent tels que le
 projet les contient, et dans la prose la leçon les cite en français et, la première fois, donne l'original entre
 parenthèses : « La boutique tourne dans votre environnement » (dans le projet, « La tienda corre en tu ambiente »).
 
@@ -125,7 +125,7 @@ uname -m                                  # arm64 sur Apple silicon ; x86_64 sur
 L'installateur d'Android Studio doit être celui de votre processeur. Sur Mac, l'accélération est fournie par
 Hypervisor.Framework, qui vient avec macOS : il n'y a rien à activer.
 
-**Ce qui le prouve :** le `verifica` de la précontrôle sort en vert ou vous dit ce qui manque (objectif 0.1).
+**Ce qui le prouve :** le `verifica` du précontrôle sort en vert ou vous dit ce qui manque (objectif 0.1).
 Le `verifica` se trouve dans le dépôt de la série. Depuis sa racine : `./lecciones/00-ambiente-listo/verifica`. Il se
 contente de lire, il n'installe ni ne change rien. La première fois, il marque en rouge ce que vous n'avez pas encore
 fait (l'application ouverte, l'exercice 0.5) : c'est normal. Relancez-le à la fin de la leçon.
@@ -188,7 +188,7 @@ Le `verifica` de la 00 contrôle ce qui peut être automatisé ; l'écran About 
 sortie vous le prouverait ?
 
 **Téléchargez une image Android avec Google.** Pour vous connecter avec Google dans la leçon 04, il vous faut une image
-qui contienne les Google Play services. La série fixe `google_apis_playstore`, qui apporte aussi le Play Store ; une
+qui contienne les Google Play services. La série retient `google_apis_playstore`, qui apporte aussi le Play Store ; une
 image marquée **Google APIs** apporte aussi les Play services. Ce qui ne convient pas, c'est une image `default`
 (Android sans services Google).
 
@@ -343,7 +343,7 @@ Les exercices 0.3 et 0.4 se font **sans IA** : ce sont des commandes et des écr
 
 | # | Vous faites | C'est fait quand |
 |---|---|---|
-| 0.1 | Vous lancez la précontrôle de l'étape 1 | Le `verifica` sort en vert, ou vous avez écrit ce qui manque et comment vous l'avez réglé |
+| 0.1 | Vous lancez le précontrôle de l'étape 1 | Le `verifica` sort en vert, ou vous avez écrit ce qui manque et comment vous l'avez réglé |
 | 0.2 | Vous installez Studio et le SDK de l'étape 2 | Vous avez les quatre preuves de l'étape 2 et elles coïncident avec le tableau des versions |
 | 0.3 | Vous démarrez l'émulateur avec accélération, ou vous branchez votre téléphone | Vous avez la sortie de `emulator -accel-check` avec « accel » (ou votre téléphone dans `adb devices` comme `device`) |
 | 0.4 | Vous activez le clavier et ajoutez votre compte | Vous écrivez avec votre clavier dans l'émulateur et votre compte apparaît dans Settings › Google |
@@ -351,7 +351,7 @@ Les exercices 0.3 et 0.4 se font **sans IA** : ce sont des commandes et des écr
 
 **Durée :** la première fois, en comptant les téléchargements, prévoyez un après-midi. Sur Linux Mint 22.3, les
 téléchargements du SDK, l'émulateur (il a démarré en 109 secondes) et la première compilation (3 min 51 s) ont pris 10
-minutes d'horloge avec un bon réseau ; ajoutez l'assistant d'Android Studio et vos pauses.
+minutes montre en main avec un bon réseau ; ajoutez l'assistant d'Android Studio et vos pauses.
 
 ---
 
@@ -416,5 +416,5 @@ Ouvertes le 13 nov. 2026.
 - Android Developers. *Build your app from the command line* (`installDebug` compile et installe). https://developer.android.com/build/building-cmdline
 - Android Developers. *Android Gradle plugin release notes* (AGP 9.4 exige Gradle 9.6.0) et *Java versions in Android builds* (toolchain). https://developer.android.com/build/releases/about-agp · https://developer.android.com/build/jdks
 - Android Developers. *Authenticate across form factors* (l'émulateur ne convient pas au flux de clé d'accès entre appareils). https://developer.android.com/identity/form-factors
-- Mesure propre : essai sur un Mac avec Apple silicon et sur Linux Mint x86_64, 13 nov. 2026 ; environnement complet
+- Nos propres mesures : essai sur un Mac avec Apple silicon et sur Linux Mint x86_64, 13 nov. 2026 ; environnement complet
   sur Linux Mint 22.3 x86_64 (KVM, SDK, émulateur, première compilation et installation), 18 nov. 2026.

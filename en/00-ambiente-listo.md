@@ -1,6 +1,6 @@
 # Lesson 00 — Environment ready
 
-**Before you read, seven words.** One line each; the rest of the series arrive in the lesson where they are used.
+**Before you read, seven words.** One line each; the series' other terms come in the lesson where they are used.
 
 - **Android Studio:** the program where you write, build and run the app.
 - **SDK** (software development kit): the tools and libraries for building and running Android apps. Android Studio
@@ -38,7 +38,7 @@ You try the computer's keyboard in another window: it works. You go back to the 
 your email letter by letter with the mouse, on the on-screen keyboard. Then Google asks you to scan a QR code with
 your cell phone. You scan it. It spins and spins and says it could not be done.
 
-None of that is your mistake. Both things happened to the person who tested this lesson before you, on November 13,
+None of that is your fault. Both things happened to the person who tested this lesson before you, on November 13,
 2026, on a new Mac. Both have a concrete cause and a one-line fix. This lesson tells you about them **before** they
 happen to you, together with the commands that tell you, at each step, whether you are on track.
 
@@ -181,7 +181,7 @@ Lesson 00's `verifica` checks what can be automated; the Studio About screen you
 prove it to you?
 
 **Download an Android image with Google.** To sign in with Google in lesson 04 you need an image that includes Google
-Play services. The series fixes `google_apis_playstore`, which also includes the Play Store; an image marked
+Play services. The series standardizes on `google_apis_playstore`, which also includes the Play Store; an image marked
 **Google APIs** also includes Play services. What does not work is a `default` image (Android without Google
 services).
 
@@ -403,5 +403,5 @@ Opened on Nov 13, 2026.
 - Android Developers. *Build your app from the command line* (`installDebug` builds and installs). https://developer.android.com/build/building-cmdline
 - Android Developers. *Android Gradle plugin release notes* (AGP 9.4 requires Gradle 9.6.0) and *Java versions in Android builds* (toolchain). https://developer.android.com/build/releases/about-agp · https://developer.android.com/build/jdks
 - Android Developers. *Authenticate across form factors* (the emulator does not work for the cross-device passkey flow). https://developer.android.com/identity/form-factors
-- Own measurement: trial on a Mac with Apple silicon and on Linux Mint x86_64, Nov 13, 2026; complete environment on
+- Our own measurement: trial on a Mac with Apple silicon and on Linux Mint x86_64, Nov 13, 2026; complete environment on
   Linux Mint 22.3 x86_64 (KVM, SDK, emulator, first build and installation), Nov 18, 2026.

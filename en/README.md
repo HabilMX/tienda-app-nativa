@@ -15,7 +15,7 @@ RAM for the emulator (with less, you use your Android phone). Windows is not cov
 ## The project
 
 The same invented store from [«Ni una orden perdida»](https://github.com/HabilMX/ni-una-orden-perdida) now has an
-app. In this first stretch you get as far as sign-in: the customer signs in with Google or with Microsoft and the app
+app. In this first stage you get as far as sign-in: the customer signs in with Google or with Microsoft and the app
 recognizes them. In the following ones, the app consumes the store's API and moves to iOS.
 
 *A note on languages:* the course project ships its on-screen texts in Spanish, and the files in `lecciones/` are not

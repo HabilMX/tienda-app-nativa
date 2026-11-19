@@ -1,6 +1,6 @@
 # Lesson 02 — Screens that change
 
-**Before you read, seven words.** One line each; the rest of the series arrive in the lesson where they are used.
+**Before you read, seven words.** One line each; the series' other terms come in the lesson where they are used.
 
 - **State:** a piece of data the screen remembers and that can change. You met it in 01; here it is the topic.
 - **Recomposition:** when Compose re-runs your functions to update the screen because a piece of data changed.
@@ -583,6 +583,6 @@ Opened on Nov 18, 2026.
 - Kotlin. *Conditions and loops* (`when`). https://kotlinlang.org/docs/control-flow.html
 - Kotlin. *Higher-order functions and lambdas* (function types like `() -> Unit`) and *Functions* (`Unit`). https://kotlinlang.org/docs/lambdas.html · https://kotlinlang.org/docs/functions.html
 - Kotlin. *Strings* (templates with `$`). https://kotlinlang.org/docs/strings.html
-- Own measurement: Mac with Apple silicon, Nov 18, 2026 (the `verifica` on `inicio/` and `solucion/`; the two ways of breaking the state; the step 1 prediction; the intermediate state of step 2, with and without an erratum; compiler messages).
+- Our own measurement: Mac with Apple silicon, Nov 18, 2026 (the `verifica` on `inicio/` and `solucion/`; the two ways of breaking the state; the step 1 prediction; the intermediate state of step 2, with and without an erratum; compiler messages).
 
 External review (Nov 18, 2026): WITH CHANGES, 3 high priority, 4 medium and 2 low; applied.

@@ -4,9 +4,9 @@
 
 - **Firebase:** a Google service that solves things for your app that you are not going to program, like keeping
   track of who signed in. In this series you use a single part, Authentication.
-- **Debug certificate:** the document Android uses to sign the app you build on your computer. It is created by
-  itself, and each computer has its own.
-- **Fingerprint (SHA-1):** a short digest of that certificate. It serves to recognize it without showing anything
+- **Debug certificate:** the document Android uses to sign the app you build on your computer. It is created
+  automatically, and each computer has its own.
+- **Fingerprint (SHA-1):** a short digest of that certificate. It is used to recognize it without showing anything
   private.
 - **`google-services.json`:** the configuration file you download from Firebase, with the data of your project and
   your app.
@@ -16,7 +16,7 @@ everything lesson 04 needs, and knowing how to check it without opening the cons
 
 **This lesson's new idea:** an app connects to an external service with two identifiers, its package name and the
 fingerprint of its certificate. The service does not know your code: it knows those two identifiers. The rest —the
-Gradle plugin and the library— comes given and explained, and is not assessed here.
+Gradle plugin and the library— comes ready-made and explained, and is not assessed here.
 
 **A note on the app's texts.** The course project ships its on-screen texts in Spanish, and the files in `lecciones/`
 are not translated: the course's automatic checks (the `verifica`) look for those exact texts. So in code blocks,
@@ -103,7 +103,7 @@ identifier distinguishes your app on the phone and in the app store, and what se
 actually that value.
 
 **The second identifier: the fingerprint.** Android does not install an unsigned app. The one you build for testing
-is signed by itself, with a debug certificate that the tools create in your home folder. Ask Gradle for the report:
+is signed automatically, with a debug certificate that the tools create in your home folder. Ask Gradle for the report:
 
 ```bash
 ./gradlew signingReport
@@ -219,7 +219,7 @@ Nov 13, 2026 trial. The names of menus and buttons are written as Firebase's doc
    name you have to register another app. In the trial, the wizard did not ask for the fingerprint and offered to
    download the file. **Do not download it yet.**
 3. **Add the fingerprint.** In "Project settings", on the "Your apps" card, choose your app, tap "Add fingerprint",
-   paste the `SHA1` from step 1 and save ("Save").
+   paste the `SHA1` from step 1 and tap "Save".
 4. **Enable Google.** The documentation places it at "Security > Authentication", "Sign-in method" tab: enable the
    Google provider and save. In the trial it asked for a public-facing name for the project and a support email: use
    your account's.
@@ -574,6 +574,6 @@ Opened on Nov 18, 2026.
 - Android Developers. *Migrate your build to version catalogs* (`libs.versions.toml`, `alias`). https://developer.android.com/build/migrate-to-catalogs
 - Google's Maven repository: its indexes list `google-services` 4.6.0 and `firebase-bom` 35.2.0. https://dl.google.com/dl/android/maven2/com/google/gms/google-services/maven-metadata.xml · https://dl.google.com/dl/android/maven2/com/google/firebase/firebase-bom/maven-metadata.xml
 - Series trial, Nov 13, 2026, Mac with Apple silicon: the order of the console steps and what was seen that day (the wizard did not ask for the fingerprint; enabling Google asked for a public-facing name and support email; the file downloaded too early carried no OAuth clients; no-cost plan). The menu and button names in this lesson do not come from the trial: they are those of the documentation cited above.
-- Own measurement: Mac with Apple silicon, Nov 18, 2026 (`signingReport`; the `verifica` on `inicio/` and `solucion/`; the invented files: complete, without clients, for another package and with another fingerprint; the resources the plugin generates; the error messages; `keytool`; the app installed on a new emulator, without an account, which was deleted when finished). The measurements were made with invented files, not with a real Firebase project.
+- Our own measurement: Mac with Apple silicon, Nov 18, 2026 (`signingReport`; the `verifica` on `inicio/` and `solucion/`; the invented files: complete, without clients, for another package and with another fingerprint; the resources the plugin generates; the error messages; `keytool`; the app installed on a new emulator, without an account, which was deleted when finished). The measurements were made with invented files, not with a real Firebase project.
 
 External review (Nov 18, 2026): WITH CHANGES, 2 high priority, 6 medium and 3 low; applied.

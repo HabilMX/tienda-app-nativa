@@ -13,8 +13,8 @@
 **O que fica com quem termina:** o app da loja conectado ao projeto do Firebase **de quem estuda**, com um arquivo de
 configuração que traz tudo o que a lição 04 precisa, e saber comprová-lo sem abrir o console.
 
-**Ideia nova desta lição:** um app se conecta a um serviço externo com duas senhas de identificação, o nome de pacote e a
-impressão digital do certificado. O serviço não conhece o código: conhece essas duas senhas. O resto —o plugin do Gradle e
+**Ideia nova desta lição:** um app se conecta a um serviço externo com dois identificadores, o nome de pacote e a
+impressão digital do certificado. O serviço não conhece o código: conhece esses dois identificadores. O resto —o plugin do Gradle e
 a biblioteca— já vem pronto e explicado, e não se avalia aqui.
 
 **Uma nota sobre os textos do app.** O projeto do curso traz os textos de tela em espanhol, e os arquivos de
@@ -44,7 +44,7 @@ novembro de 2026): `./gradlew assembleDebug` termina bem, e o `verifica` desta l
 marcas em vermelho que dizem «baixe-o de novo».
 
 O arquivo é uma cópia do que o console sabia sobre o app **no momento em que foi baixado**. Por isso a
-ordem importa. Primeiro conhecem-se as duas senhas do app, depois segue-se a ordem que funciona, e no final quebra-se
+ordem importa. Primeiro conhecem-se os dois identificadores do app, depois segue-se a ordem que funciona, e no final quebra-se
 tudo de propósito para ler o erro.
 
 ---
@@ -85,11 +85,11 @@ fica apresentado ao Firebase, e a comprovação é feita lendo o arquivo.
 
 ---
 
-## Passo 1 · Sem IA: as duas senhas do app
+## Passo 1 · Sem IA: os dois identificadores do app
 
 Este passo é de quem estuda, sem Claude Code. O Firebase vai pedir dois dados. Os dois já existem no computador.
 
-**A primeira senha: o nome de pacote.** Preveja onde está escrito e depois procure:
+**O primeiro identificador: o nome de pacote.** Preveja onde está escrito e depois procure:
 
 ```bash
 grep -n "applicationId" app/build.gradle.kts
@@ -99,7 +99,7 @@ Deve responder uma linha com `applicationId = "mx.habil.ejemplo.tienda"`. Segund
 identificador distingue o app no telefone e na loja de apps, e o que várias ferramentas chamam de
 «nome de pacote» é na verdade esse valor.
 
-**A segunda senha: a impressão digital.** O Android não instala um app sem assinatura. O que se compila para testar é assinado sozinho,
+**O segundo identificador: a impressão digital.** O Android não instala um app sem assinatura. O que se compila para testar é assinado sozinho,
 com um certificado de depuração que as ferramentas criam na pasta pessoal. Peça o relatório ao Gradle:
 
 ```bash
@@ -176,7 +176,7 @@ Essa é a que protege o projeto no dia em que ele viver em um repositório próp
 arquivo traz identificadores únicos mas não secretos, e que as chaves de API dele só identificam o projeto: o
 que protege os dados são as regras de segurança, as permissões e o App Check. Nesta série ele fica de fora por
 outra razão: **cada pessoa tem o próprio projeto**. Se o de uma pessoa fosse enviado, o app de uma colega falaria com o
-Firebase dela, e com uma impressão digital que não é a dela.
+Firebase de quem o enviou, e com uma impressão digital que não é a da colega.
 
 **O que nunca se envia**, em nenhum repositório:
 
@@ -371,7 +371,7 @@ está habilitado só se comprova da única forma possível: entrando, na lição
 
 **No app instalado.** `./gradlew installDebug` e abra-o: deve aparecer a tela de boas-vindas, igual à 02. No
 emulador do teste (Pixel 9, Android 37, 18/11/2026), com a solução e um arquivo inventado, o app abriu em
-«A loja» com o botão «Entrar», e o registro do sistema (`adb logcat`) mostrou a linha
+«La tienda» com o botão «Entrar», e o registro do sistema (`adb logcat`) mostrou a linha
 `FirebaseInitProvider: FirebaseApp initialization successful`. Ali os botões não foram tocados: o percurso é
 medido pelos testes simulados.
 
@@ -388,7 +388,7 @@ parte do objetivo 3.1 se comprova no nível real, ao entrar com a conta na liç�
 ## Passo 5 · Sem IA: quebre uma de propósito
 
 Este é o exercício 3.4 e se faz **sem Claude Code**. Vai-se provocar o erro de «a configuração é de outro
-pacote» sem tocar no arquivo nem no console: mudando a senha do lado do app.
+pacote» sem tocar no arquivo nem no console: mudando o identificador do lado do app.
 
 **1. Preveja.** Em `app/build.gradle.kts` vai-se trocar `applicationId = "mx.habil.ejemplo.tienda"` por
 `applicationId = "mx.habil.ejemplo.otra"`. Escreva: compila? Quem reclama, o Kotlin, o Gradle ou o Firebase?
@@ -416,9 +416,9 @@ O nome da tarefa diz: `processDebugGoogleServices` é o plugin, ao compilar. Ele
 `client` do arquivo um app cujo `package_name` fosse o `applicationId` deste, e não há nenhum. Não interveio
 a rede nem o Firebase: o erro saiu de comparar dois textos no computador.
 
-**4. O conserto que tenta, e por que não.** Editar à mão o `package_name` dentro do arquivo tira o erro de
+**4. O conserto tentador, e por que não.** Editar à mão o `package_name` dentro do arquivo tira o erro de
 compilação. Não o faça: o arquivo é uma cópia do que há no console, e o console continua tendo
-registrado o outro app. O que cabe é que as duas senhas coincidam de verdade: ou o app usa o pacote
+registrado o outro app. O que cabe é que os dois identificadores coincidam de verdade: ou o app usa o pacote
 registrado, ou se registra outro app com o pacote novo e se baixa **o arquivo dele**.
 
 **5. Conserte.** Devolva a linha a `applicationId = "mx.habil.ejemplo.tienda"`. Este comando deve mostrar somente
@@ -501,7 +501,7 @@ impressão digital desse computador, 18 de 18. As dependências do Firebase soma
 
 **Responda sem reler:**
 
-1. Quais são as duas senhas com que o Firebase reconhece o app, e onde está cada uma no computador?
+1. Quais são os dois identificadores com que o Firebase reconhece o app, e onde está cada uma no computador?
 2. Por que o arquivo é baixado no final e não quando o assistente o oferece?
 3. O `verifica` dá 18 de 18. Diga uma coisa que isso comprova e uma que não.
 4. Por que o `google-services.json` não se envia nesta série? E o que nunca se envia em nenhuma?
@@ -518,7 +518,7 @@ cada pessoa, então cada computador tem o próprio certificado e a própria impr
 
 **Passo 3.** No ensaio de 13/11/2026, nenhum dos dois: o arquivo baixado antes da impressão digital e de
 habilitar o Google não trazia o tipo 1 (Android, com `certificate_hash`) nem o tipo 3 (web). É uma observação desse
-dia. O que a documentação do Firebase garante é o contrário: o arquivo **atualizado**, baixado
+dia. O que a documentação do Firebase afirma é o contrário: o arquivo **atualizado**, baixado
 depois desses dois passos, traz a informação de OAuth de que o botão precisa. Por isso se baixa no final.
 
 **Passo 4.** Mudam três arquivos: `gradle/libs.versions.toml`, o `build.gradle.kts` da raiz e
@@ -529,7 +529,7 @@ executado no telefone: o que trabalha em execução são as bibliotecas declarad
 
 **Passo 5.** Não compila. Quem reclama é o Gradle, na tarefa do plugin `google-services`; nem o Kotlin nem o Firebase. Ele comparou
 o `applicationId` do app com os `package_name` do arquivo. Editar o arquivo tira o erro e deixa o
-console com outro app registrado: as senhas continuariam sem coincidir onde importa.
+console com outro app registrado: os identificadores continuariam sem coincidir onde importa.
 
 **Exercício 3.3.**
 

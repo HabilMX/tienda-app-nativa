@@ -20,7 +20,7 @@ une application. Dans ce premier tronçon, vous arrivez jusqu'à la connexion : 
 Microsoft et l'application le reconnaît. Dans les suivants, l'application consomme l'API de la boutique et passe à iOS.
 
 *Une note sur les langues :* le projet du cours livre ses textes d'écran en espagnol, et les fichiers de `lecciones/` ne
-sont pas traduits. Dans les blocs de code, les sorties de terminal et les croquis d'écran, les textes restent tels que
+sont pas traduits. Dans les blocs de code, les sorties de terminal et les maquettes d'écran, les textes restent tels que
 le projet les contient ; dans la prose de chaque leçon, ils sont donnés en français la première fois qu'ils apparaissent.
 
 ## Comment nous travaillons avec l'IA
@@ -32,7 +32,7 @@ fait sans IA.
 
 Chaque leçon apporte un projet `inicio/` et un `verifica` qui vous dit, en rouge ou en vert, si vous avez réussi. Vos
 réponses écrites vont dans `respuestas/`. Chacun utilise son propre projet Firebase : `google-services.json` n'est
-jamais publié.
+jamais versé dans le dépôt.
 
 ## Les leçons
 
