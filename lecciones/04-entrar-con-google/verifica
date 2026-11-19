@@ -109,6 +109,16 @@ ACT="$PROY/$DIRM/MainActivity.kt"
 if ! hay 'class EntradaConGoogle' "$ECG" || ! hay 'class MainActivity' "$ACT"; then
   no "No pude leer $DIRM/EntradaConGoogle.kt o MainActivity.kt (o ya no declaran su clase): sin ellos no reviso el texto"
 else
+  # Tu código solo conoce la interfaz de la puerta (SelectorDeCuentas y VerificadorDeToken). Si nombra una puerta concreta, la de
+  # producción o un doble, puede portarse distinto con cada una, y las pruebas, que solo le pasan dobles, no
+  # verían lo que hace con la de verdad. Se busca la palabra completa, fuera de los comentarios.
+  PUERTAS='VerificadorConFirebase|SelectorConCredentialManager|VerificadorFalso|SelectorFalso|EntradaFalsa'
+  n_puertas=$(grep -v '^[[:space:]]*//' "$ECG" 2>/dev/null | grep -cE -- "(^|[^A-Za-z])($PUERTAS)([^A-Za-z]|$)")
+  if [ "${n_puertas:-0}" -gt 0 ]; then
+    no "EntradaConGoogle.kt nombra una puerta concreta (de producción o de prueba): solo debe conocer SelectorDeCuentas y VerificadorDeToken. Si pregunta cuál le tocó, las pruebas no ven lo que hace con la de verdad (paso 3)"
+  else
+    si "Texto: EntradaConGoogle.kt no nombra ninguna puerta concreta, ni la de producción ni los dobles: solo su interfaz"
+  fi
   hay 'GetSignInWithGoogleOption' "$ECG" \
     && si "Texto: EntradaConGoogle.kt nombra GetSignInWithGoogleOption, la opción del botón" \
     || no "EntradaConGoogle.kt no nombra GetSignInWithGoogleOption: es la opción que abre la ventana de cuentas (paso 3)"
