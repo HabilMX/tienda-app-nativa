@@ -498,8 +498,12 @@ ajustamos con lo que tarde la primera cohorte.
 | Google pide escanear un código QR | Tu cuenta usa llave de acceso | «Try another way» |
 | En el teléfono, «No se pudo entrar…» | [pendiente: medir qué causa da este mensaje con un proyecto real: huella sin registrar, Google sin habilitar o sin red] | Revisa la lección 03, paso 3, y que el emulador tenga red |
 | `GetCredentialProviderConfigurationException` | Según la guía de Android, falta la librería `credentials-play-services-auth`. No se midió aquí | Revisa que `app/build.gradle.kts` siga trayendo las tres líneas del andamiaje |
+| Cambiaste de computadora y no tienes la huella de depuración de ésta | Sin `google-services.json` el proyecto no compila, y el almacén de depuración lo crea la primera compilación: un círculo (medido en Linux Mint 22.3, 18-nov-2026) | Copia a `inicio/app/` tu archivo de la 03 aunque traiga la huella de la otra computadora, corre `./gradlew assembleDebug` (compila igual), saca la huella con `./gradlew signingReport`, regístrala en Firebase y vuelve a bajar tu archivo |
 
-En Linux, esta lección está [pendiente: medir en Linux Mint 22.3].
+En Linux Mint 22.3 (x86_64), el `verifica` de esta lección salió igual que en la Mac (18-nov-2026), en el nivel
+simulado y con un archivo de prueba que traía la huella de esa computadora: sobre `inicio/`, 6 de 20 en verde; sobre
+`solucion/`, 20 de 20. Sin archivo, «0 pruebas corridas», como en la Mac. El nivel instrumentado no se midió en Linux.
+Las dependencias de esta lección le sumaron unos 300 MB a `~/.gradle`.
 
 ---
 
