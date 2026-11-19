@@ -1,0 +1,270 @@
+#!/usr/bin/env bash
+# Revisa la lección 07, en el nivel SIMULADO: corre las pruebas en tu computadora
+# (./gradlew testDebugUnitTest), sin emulador, sin cuenta y sin red hacia Google, Microsoft ni Firebase, y lee
+# el conteo de los informes de resultados (XML). Esta lección no tiene nivel instrumentado.
+# SÍ revisa, corriendo SesionDeLaTiendaTest (le dan a tu SesionDeLaTienda una puerta de mentira, la de
+#   DoblesDeSesion.kt, y miran qué le preguntó, qué le pidió y qué contestó): que diga quién sigue adentro o
+#   null; que preguntar no cierre nada; que cerrar haga que Firebase olvide al usuario y avise a los
+#   proveedores del teléfono; que si ese aviso falla la sesión quede cerrada igual; y que la cancelación de
+#   Kotlin no se trague.
+# SÍ revisa, corriendo RecorridoConSesionTest (dibujan Tienda en memoria con tus clases y el proyecto de
+#   mentira de la lección 06): reabrir sin sesión llega a la bienvenida; reabrir con sesión llega al inicio
+#   sin pedir la cuenta; cerrar sesión y reabrir pide entrar otra vez y se llega al mismo usuario; y sin
+#   Sesión el inicio es el de la lección 06.
+# SÍ revisa, corriendo ArranqueConSesionTest (abren MainActivity): que la sesión que arma la app sea la tuya;
+#   y que con la puerta de VERDAD, en tu computadora, nadie siga adentro y olvidar en Firebase no truene (el aviso de
+#   verdad a Credential Manager no se llama: en tu computadora no contesta).
+# SÍ revisa lo heredado: corre las 66 pruebas de la lección 06 (que incluyen las de la 04 y la 05) y compara,
+#   byte por byte, todo archivo que esta lección no cambia contra el de la solución de la 06. Los que SÍ
+#   cambian (Tienda.kt, Inicio.kt y MainActivity.kt) vienen dados y se comparan entre inicio/ y solucion/,
+#   igual que los nuevos que vienen dados. Esas comparaciones son una RESTRICCIÓN DE ESTA ACTIVIDAD, no el
+#   objetivo: un cambio ahí puede ser código válido y aun así sale en rojo.
+# PRESENCIA TEXTUAL (busca palabras; no ejecuta; los comentarios no cuentan): que SesionDeLaTienda.kt llame
+#   recuerdo.olvidarEnFirebase( y recuerdo.olvidarEnElTelefono( ; que Armado.kt nombre SesionDeLaTienda( ;
+#   que ningún .kt de la app nombre SesionSinConectar ni una pieza de pruebas; y que respuestas/07.md traiga
+#   tus dos predicciones del 7.1, tus cinco respuestas del 7.3 y una fuente.
+# NO revisa: Firebase de verdad, ni tu teléfono. «Reabrir» en las pruebas es dibujar Tienda desde cero con la
+#   misma memoria de mentira, no matar el proceso. No ve un usuario real de Firebase, ni que el aviso a
+#   Credential Manager cambie lo que te ofrece la ventana de cuentas. No califica tus respuestas.
+# Solo lee tu código y tus archivos: no los cambia. Gradle escribe sus resultados en build/, que no se sube.
+# Uso:  ./verifica             revisa tu trabajo en inicio/
+#       ./verifica solucion    revisa la solución de referencia. En un clon limpio sale en ROJO:
+#                              google-services.json no se sube, y sin él el proyecto no compila.
+set -uo pipefail
+cd "$(dirname "$0")"
+PROY="${1:-inicio}"
+ok=0
+si() { echo "✅ $1"; }
+no() { echo "❌ $1"; ok=1; }
+nota() { echo "ℹ️  $1"; }
+case "$PROY" in
+  inicio|solucion) ;;
+  *) echo "Uso: ./verifica [inicio|solucion]"; exit 2 ;;
+esac
+[ $# -le 1 ] || { echo "Uso: ./verifica [inicio|solucion]   (esta lección no tiene nivel instrumentado)"; exit 2; }
+PAQ="mx.habil.ejemplo.tienda"
+DIRM="app/src/main/java/mx/habil/ejemplo/tienda"
+DIRP="app/src/test/java/mx/habil/ejemplo/tienda"
+MAIN="$PROY/app/src/main"
+JSON="$PROY/app/google-services.json"
+L06="../06-dos-botones-una-cuenta/solucion"
+RESP=../../respuestas/07.md
+DIRX="$PROY/app/build/test-results/testDebugUnitTest"
+x() { echo "$DIRX/TEST-$PAQ.$1.xml"; }
+HER=("$(x EntradaConGoogleTest)" "$(x RecorridoTest)" "$(x ArranqueTest)" "$(x EntradaConMicrosoftTest)"
+     "$(x RecorridoConMicrosoftTest)" "$(x ArranqueConMicrosoftTest)" "$(x EnlaceConMicrosoftTest)"
+     "$(x RecorridoConEnlaceTest)" "$(x ArranqueConEnlaceTest)")
+XMLS="$(x SesionDeLaTiendaTest)"
+XMLRS="$(x RecorridoConSesionTest)"
+XMLAS="$(x ArranqueConSesionTest)"
+TODOS=("${HER[@]}" "$XMLS" "$XMLRS" "$XMLAS")
+
+echo "Revisando $PROY/ — nivel simulado (sin emulador, sin cuenta, sin hablar con Google, Microsoft ni Firebase)"
+
+# --- Andamiaje -------------------------------------------------------------------------------
+grep -q '^org.gradle.jvmargs=.*-Xmx4g' "$PROY/gradle.properties" 2>/dev/null \
+  && si "Andamiaje: gradle.properties le da 4 GB de memoria a Gradle (-Xmx4g)" \
+  || no "gradle.properties ya no trae -Xmx4g: regresa la línea  org.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8"
+
+# Lo que esta lección trae dado, comparado entre inicio/ y solucion/ (vale para los dos).
+if [ -d inicio ] && [ -d solucion ]; then
+  cambiados=""
+  for t in "$DIRP/SesionDeLaTiendaTest.kt" "$DIRP/RecorridoConSesionTest.kt" "$DIRP/ArranqueConSesionTest.kt" \
+           "$DIRP/DoblesDeSesion.kt" "$DIRM/Sesion.kt" "$DIRM/PuertaDeLaSesion.kt" \
+           "$DIRM/Tienda.kt" "$DIRM/Inicio.kt" "$DIRM/MainActivity.kt"; do
+    cmp -s "inicio/$t" "solucion/$t" || cambiados="$cambiados $t"
+  done
+  if [ -z "$cambiados" ]; then
+    si "Andamiaje: las pruebas de la sesión, su doble, Sesion.kt, PuertaDeLaSesion.kt, Tienda.kt, Inicio.kt y MainActivity.kt son los de la lección, sin cambios (9 archivos comparados). Con MainActivity.kt idéntico, onCreate le pasa a Tienda lo que arma Armado.kt"
+  else
+    no "Restricción de esta actividad (no del objetivo): estos archivos vienen dados y ya no son iguales en inicio/ y en solucion/:$cambiados"
+    nota "Mira qué cambió con  git diff -- <archivo>  y deshazlo a mano."
+  fi
+fi
+
+# Lo heredado: todo archivo de app/src que la solución de la 06 tiene y esta lección no cambia.
+if [ -f "$L06/$DIRM/EnlaceConMicrosoft.kt" ]; then
+  cambiados=""; comparados=0
+  while IFS= read -r t; do
+    case "$t" in
+      "$DIRM/Tienda.kt"|"$DIRM/Inicio.kt"|"$DIRM/MainActivity.kt"|"$DIRM/Armado.kt") continue ;;
+    esac
+    comparados=$((comparados + 1))
+    cmp -s "$PROY/$t" "$L06/$t" || cambiados="$cambiados $t"
+  done < <(cd "$L06" && find app/src -type f | sort)
+  if [ "$comparados" -lt 30 ]; then
+    no "Solo encontré $comparados archivos en la solución de la lección 06: no puedo decir que lo heredado siga igual"
+  elif [ -z "$cambiados" ]; then
+    si "Andamiaje: lo heredado es idéntico a la solución de la lección 06 ($comparados archivos comparados: sus pruebas, sus dobles, sus puertas, tus entradas, tu enlace y las pantallas que no cambian)"
+  else
+    no "Restricción de esta actividad (no del objetivo): lo heredado ya no es idéntico a la solución de la lección 06:$cambiados"
+  fi
+else
+  no "No encontré la solución de la lección 06 ($L06): sin ella no puedo comparar que lo heredado siga igual"
+fi
+
+# --- Las piezas, buscadas como texto (no se ejecutan) ----------------------------------------
+# Se CUENTA en lugar de usar «grep -q» al final de la tubería: con pipefail, grep -q corta al primer acierto
+# y la tubería puede contestar «no hay» habiendo encontrado.
+hay() { local n; n=$(grep -rh --include='*.kt' -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -cF -- "$1"); [ "${n:-0}" -gt 0 ]; }
+hayre() { local n; n=$(grep -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -cE -- "$1"); [ "${n:-0}" -gt 0 ]; }
+SES="$PROY/$DIRM/SesionDeLaTienda.kt"
+ARM="$PROY/$DIRM/Armado.kt"
+# El «no hay» solo vale si la búsqueda sí lee: se comprueba con una palabra que seguro está.
+if ! hay 'class SesionDeLaTienda' "$SES" || ! hay 'fun armarSesion' "$ARM"; then
+  no "No pude leer $DIRM/SesionDeLaTienda.kt o Armado.kt (o ya no declaran su clase y su función): sin ellos no reviso el texto"
+else
+  if hay 'recuerdo.olvidarEnFirebase(' "$SES" && hay 'recuerdo.olvidarEnElTelefono(' "$SES"; then
+    si "Texto: SesionDeLaTienda.kt llama recuerdo.olvidarEnFirebase( y recuerdo.olvidarEnElTelefono( (presencia textual: que cierre bien lo miden las pruebas, abajo)"
+  else
+    no "SesionDeLaTienda.kt no llama recuerdo.olvidarEnFirebase( y recuerdo.olvidarEnElTelefono( : cerrar sesión son las dos cosas (paso 3)"
+  fi
+  hayre '(^|[^A-Za-z])SesionDeLaTienda\(' "$ARM" \
+    && si "Texto: Armado.kt nombra SesionDeLaTienda( (estructura mínima; que esa pieza funcione lo mide una prueba, abajo)" \
+    || no "Armado.kt no nombra SesionDeLaTienda( : la app todavía no arma tu sesión (paso 3)"
+  sobran=""
+  for p in SesionSinConectar RecuerdoFalso RecuerdoDelProyecto ProyectoFalso EnlazadorFalso NavegadorFalso EntradaFalsa SelectorFalso VerificadorFalso AppDePruebas; do
+    hay "$p" "$MAIN" && sobran="$sobran $p"
+  done
+  [ -z "$sobran" ] \
+    && si "Texto: ningún .kt de la app nombra SesionSinConectar ni una pieza de pruebas" \
+    || no "La app todavía nombra:$sobran. SesionSinConectar se borra de Armado.kt en el paso 3; las piezas de pruebas viven solo en src/test"
+fi
+
+# --- Tu archivo de la lección 03 -------------------------------------------------------------
+if [ ! -f "$JSON" ]; then
+  no "No existe $JSON: copia ahí el google-services.json que descargaste en la lección 03 (sigue ignorado por git)"
+  [ "$PROY" = "solucion" ] && nota "Sobre solucion/ este rojo es el esperado en un clon limpio: el archivo no se sube. Copia el tuyo a solucion/app/ y retíralo al terminar."
+fi
+if [ -z "${ANDROID_HOME:-}" ] && [ ! -f "$PROY/local.properties" ]; then
+  no "ANDROID_HOME no está definido: sin él Gradle no encuentra el SDK (lección 00, paso 2)"
+  echo; echo "Resultado: no se corrieron las pruebas."; exit 1
+fi
+
+# --- Las pruebas simuladas -------------------------------------------------------------------
+# --rerun obliga a correr las pruebas aunque nada haya cambiado: así el resultado es de ESTA corrida.
+marca=$(mktemp)
+salida=$(mktemp)
+echo "Corriendo las pruebas… (la primera vez tarda y necesita red para bajar librerías)"
+"./$PROY/gradlew" -p "$PROY" -q testDebugUnitTest --rerun >"$salida" 2>&1
+rc=$?
+
+frescos=1
+for f in "${TODOS[@]}"; do
+  { [ -f "$f" ] && [ "$f" -nt "$marca" ]; } || frescos=0
+done
+if [ "$frescos" -ne 1 ]; then
+  no "Las pruebas no llegaron a correr. Esto dijo Gradle:"
+  grep -E '^e: |error:|What went wrong|SDK location|Java heap|No matching client found|google-services.json is missing|Could not (find|resolve)' "$salida" \
+    | sed -e 's|file://.*/||' -e 's| in /.*google-services.json| en tu app/google-services.json|' | head -8 | sed 's/^/     /'
+  if grep -q 'google-services.json is missing' "$salida"; then
+    nota "Con el plugin aplicado, el proyecto no compila sin app/google-services.json: es el de TU proyecto de Firebase (lección 03)"
+  fi
+  nota "Para ver todo:  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+  rm -f "$marca" "$salida"
+  echo; echo "Resultado: 0 pruebas corridas."; exit 1
+fi
+rm -f "$marca" "$salida"
+
+# El conteo se lee de los informes de resultados (XML), no del código de salida de Gradle.
+# Son doce informes, uno por clase de pruebas, y se suman.
+attr() { sed -n 's/.*<testsuite [^>]*[[:space:]]'"$1"'="\([0-9]*\)".*/\1/p' "$2" | head -1; }
+suma() { a="$1"; shift; t=0; for f in "$@"; do v=$(attr "$a" "$f"); t=$((t + ${v:-0})); done; echo "$t"; }
+total=$(suma tests "${TODOS[@]}"); fallas=$(suma failures "${TODOS[@]}")
+errores=$(suma errors "${TODOS[@]}"); saltadas=$(suma skipped "${TODOS[@]}")
+verdes=$((total - fallas - errores - saltadas))
+
+# estado <nombre de la prueba> <informe> → paso | fallo | falta
+estado() {
+  awk -v n="$1" '
+    /<testcase / { enc = (index($0, "name=\"" n "\"") > 0); if (enc) { visto = 1; if ($0 ~ /\/>[[:space:]]*$/) { print "paso"; fin = 1; exit } } next }
+    enc && /<(failure|error|skipped)/ { print "fallo"; fin = 1; exit }
+    enc && /<\/testcase>/ { print "paso"; fin = 1; exit }
+    END { if (!fin) print (visto ? "fallo" : "falta") }' "$2"
+}
+# todas <informe> <prueba>… → cuántas de esas pruebas pasaron
+todas() { f="$1"; shift; n=0; for p in "$@"; do [ "$(estado "$p" "$f")" = "paso" ] && n=$((n + 1)); done; echo "$n"; }
+
+# --- Lo heredado sigue en verde ---------------------------------------------------------------
+th=$(suma tests "${HER[@]}")
+mh=$(( $(suma failures "${HER[@]}") + $(suma errors "${HER[@]}") + $(suma skipped "${HER[@]}") ))
+if [ "$th" -eq 66 ] && [ "$mh" -eq 0 ]; then
+  si "Simulado: las 66 pruebas heredadas de la lección 06 siguen en verde (incluyen las de la 04 y la 05): entrar, los dos botones y el enlace no cambiaron"
+else
+  no "De las 66 pruebas heredadas de la lección 06 hay $((th - mh)) en verde de $th corridas: esta lección no debía cambiar lo que ya funcionaba. Corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+fi
+
+# --- 7.1 · Al abrir, ¿quién sigue adentro? ----------------------------------------------------
+pre=$(todas "$XMLS" conAlguienAdentroDiceQuienEs sinNadieAdentroContestaNull preguntarNoOlvidaANadie)
+[ "$pre" -eq 3 ] \
+  && si "Simulado: tu sesión contesta quién sigue adentro, o null si nadie, y preguntar no cierra nada (3 de 3)" \
+  || no "Quién sigue adentro: $pre de 3 pruebas en verde. quienSigueAdentro() debe contestar lo que diga recuerdo.usuarioActual() (paso 3)"
+abr=$(todas "$XMLRS" alAbrirSinSesionLlegaALaBienvenida alAbrirConUnaSesionGuardadaLlegaDirectoAlInicioSinPedirNada trasEntrarYReabrirLaAppSigueAdentro)
+[ "$abr" -eq 3 ] \
+  && si "Simulado: reabrir sin sesión llega a la bienvenida; con sesión, directo al inicio sin abrir la ventana de cuentas (3 de 3). «Reabrir» es dibujar Tienda desde cero, no matar el proceso" \
+  || no "Reabrir la app: $abr de 3 pruebas en verde. Con alguien adentro se abre en el inicio; sin nadie, en la bienvenida (paso 3)"
+
+# --- 7.2 · Cerrar sesión ---------------------------------------------------------------------
+cer=$(todas "$XMLS" cerrarHaceQueFirebaseOlvideAlUsuario cerrarTambienAvisaALosProveedoresDelTelefono)
+[ "$cer" -eq 2 ] \
+  && si "Simulado: cerrar hace que Firebase olvide al usuario y les avisa a los proveedores del teléfono, una vez cada uno (2 de 2)" \
+  || no "Cerrar sesión: $cer de 2 pruebas en verde. cerrar() debe llamar recuerdo.olvidarEnFirebase() y recuerdo.olvidarEnElTelefono() (paso 3)"
+fal=$(todas "$XMLS" siElAvisoAlTelefonoFallaLaSesionIgualQuedaCerrada laCancelacionNoSeTraga)
+[ "$fal" -eq 2 ] \
+  && si "Simulado: si el aviso al teléfono falla, la sesión queda cerrada sin tronar la app; y la cancelación de Kotlin se deja pasar (2 de 2)" \
+  || no "Cuando el aviso falla: $fal de 2 pruebas en verde. Primero Firebase olvida; el aviso va en un try que deja pasar CancellationException (paso 3)"
+rec=$(todas "$XMLRS" alCerrarSesionYReabrirSePideEntrarOtraVez cerrarSesionAvisaUnaVezALosProveedoresDelTelefono)
+[ "$rec" -eq 2 ] \
+  && si "Simulado: tocar «Cerrar sesión» regresa a la bienvenida; al reabrir se pide entrar otra vez, y al entrar se llega al mismo usuario (2 de 2)" \
+  || no "Cerrar sesión y reabrir: $rec de 2 pruebas en verde. Después de «Cerrar sesión», reabrir debe pedir entrar (paso 3)"
+arr=$(todas "$XMLAS" laAppArmaSuSesionPreguntandoleAlTelefono conLaPuertaDeVerdadYSinNadieAdentroNadieSigueAdentro)
+[ "$arr" -eq 2 ] \
+  && si "Simulado: la sesión que arma MainActivity.crearSesion es la tuya, y con la puerta de verdad, sin nadie adentro, nadie sigue adentro (2 de 2)" \
+  || no "La sesión que arma la app: $arr de 2 pruebas en verde. Armado.kt debe armar SesionDeLaTienda (paso 3)"
+[ "$(estado sinSesionElInicioEsElDeLaLeccion06 "$XMLRS")" = "paso" ] \
+  && si "Simulado: sin Sesión, el inicio es el de la lección 06, sin «Cerrar sesión»" \
+  || no "Sin Sesión, el inicio ya no es el de la lección 06: Tienda.kt e Inicio.kt vienen dados"
+
+[ "$total" -eq 81 ] || no "Esperaba 81 pruebas (66 heredadas de la lección 06; 7 de SesionDeLaTiendaTest, 6 de RecorridoConSesionTest y 2 de ArranqueConSesionTest) y los informes traen $total"
+[ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+
+# --- Lo escrito · presencia mínima --------------------------------------------------------------
+if [ "$PROY" = "inicio" ]; then
+  n71=0; n73=0; fuente=0
+  if [ -f "$RESP" ]; then
+    n71=0
+    for c in con sin; do
+      [ "$(grep -ciE "^predicción 7\\.1 $c sesión: .+" "$RESP")" -gt 0 ] && n71=$((n71 + 1))
+    done
+    # Cada número cuenta una vez: cinco líneas con el mismo número no son cinco respuestas.
+    n73=$(grep -oE '^7\.3-[1-5]: (verdadera|falsa)' "$RESP" | cut -d: -f1 | sort -u | wc -l | tr -d ' ')
+    fuente=$(grep -cE '^fuente 7\.3: https://(firebase\.google\.com|developer\.android\.com)/' "$RESP")
+  fi
+  [ "${n71:-0}" -ge 2 ] \
+    && si "Escrito: respuestas/07.md trae tus dos predicciones del 7.1 (solo busco las líneas: no las califico)" \
+    || no "respuestas/07.md no trae las dos líneas  predicción 7.1 con sesión: …  y  predicción 7.1 sin sesión: …  (paso 1, sin IA)"
+  if [ "${n73:-0}" -ge 5 ] && [ "${fuente:-0}" -ge 1 ]; then
+    si "Escrito: respuestas/07.md trae tus cinco respuestas del 7.3 y una fuente oficial (no las califico: compáralas con «Compara tus respuestas»)"
+  else
+    no "respuestas/07.md trae $n73 de 5 respuestas del 7.3 y ${fuente:-0} fuentes: van como  7.3-1: verdadera  … y  fuente 7.3: https://…  (paso 5)"
+  fi
+else
+  nota "Lo escrito en respuestas/07.md solo se busca sobre inicio/"
+fi
+
+echo
+echo "Resultado: $verdes de $total pruebas en verde ($fallas en rojo, $errores con error, $saltadas saltadas), leído de"
+for f in "${TODOS[@]}"; do echo "  $f"; done
+# El número de arriba sale solo de los informes de pruebas. Las marcas de arriba (archivos, texto, lo escrito)
+# no lo cambian: por eso se dice aparte si quedó alguna en rojo.
+echo
+if [ "$ok" -eq 0 ]; then
+  echo "✅ Nivel simulado: completo. Las $total pruebas y todas las marcas de arriba están en verde."
+else
+  echo "❌ Nivel simulado: incompleto. Hay marcas en rojo arriba, aunque el conteo diga $verdes de $total."
+fi
+nota "Nivel simulado: demuestra qué decide tu sesión al abrir, qué pide al cerrar y a qué pantalla llega la app."
+nota "No demuestra que Firebase recuerde a tu usuario en tu teléfono, ni lo que la ventana de cuentas te ofrece"
+nota "  después de cerrar: eso lo ves en el teléfono (paso 4)."
+nota "Las marcas «Texto:» son estructura mínima, no evidencia de integración."
+exit $ok

@@ -47,7 +47,7 @@ listo tu ambiente.
 | 04 | [Entrar con Google](04-entrar-con-google.md) |
 | 05 | [Entrar con Microsoft](05-entrar-con-microsoft.md) |
 | 06 | [Dos botones, una cuenta](06-dos-botones-una-cuenta.md) |
-| 07 | La sesión se queda |
+| 07 | [La sesión se queda](07-la-sesion-se-queda.md) |
 | 08 | La primera vez |
 
 Las lecciones sin enlace están en preparación y se publican en orden.
