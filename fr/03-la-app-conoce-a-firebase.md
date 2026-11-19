@@ -2,7 +2,7 @@
 
 **Avant de lire, quatre mots.** Une ligne chacun ; les autres arrivent à l'étape où ils servent.
 
-- **Firebase :** un service de Google qui règle pour ton application des choses que tu n'vas pas programmer, comme
+- **Firebase :** un service de Google qui règle pour ton application des choses que tu ne vas pas programmer, comme
   retenir qui s'est connecté. Dans cette série, tu n'utilises qu'une seule partie, Authentication.
 - **Certificat de débogage :** le document avec lequel Android signe l'application que tu compiles sur ton
   ordinateur. Il se crée tout seul, et chaque ordinateur a le sien.
