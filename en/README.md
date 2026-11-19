@@ -46,12 +46,10 @@ gets your environment ready.
 | 00 | [Environment ready](00-ambiente-listo.md) |
 | 01 | [My first screen runs](01-mi-primera-pantalla.md) |
 | 02 | [Screens that change](02-pantallas-que-cambian.md) |
-| 02-B | Store component catalog (practice) |
+| 02-B | [Store component catalog](02b-catalogo-de-componentes.md) (practice) |
 | 03 | [The app meets Firebase](03-la-app-conoce-a-firebase.md) |
 | 04 | [Signing in with Google](04-entrar-con-google.md) |
 | 05 | [Signing in with Microsoft](05-entrar-con-microsoft.md) |
 | 06 | [Two buttons, one account](06-dos-botones-una-cuenta.md) |
-| 07 | The session stays |
-| 08 | The first time |
-
-The lessons without a link are in preparation and are published in order.
+| 07 | [The session stays](07-la-sesion-se-queda.md) |
+| 08 | [The first time](08-la-primera-vez.md) |

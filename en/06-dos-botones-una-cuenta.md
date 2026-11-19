@@ -334,6 +334,7 @@ adjust it with how long the first cohort takes.
 | ❌ «Retomar el enlace» (Resume the link) | `retomar()` does not use what `enlazador.pendiente()` returns, or always answers the same | Step 3 |
 | You signed in with Microsoft with an email that had already signed in with Google, and the collision message did not show | Your project allows multiple accounts per email address: Firebase created another user | Step 1. Do not link two users created separately as if it were the lesson's case |
 | «Primero entra con el botón que ya usabas…» (First sign in with the button you already used…) | Linking was requested with nobody inside | Sign in first; the link is on a user who already signed in |
+| ❌ «EnlaceConMicrosoft.kt nombra una puerta concreta» (EnlaceConMicrosoft.kt names a specific gate) | Your code names the real gate (`EnlazadorConFirebase`) or a test double. The tests only hand it doubles: if your code asks which one it got, the green does not say what it does with the real one | Make your code talk only to `EnlazadorDeProveedor`. The real gate is chosen by `MainActivity.kt`, which comes given (step 3) |
 
 On Linux Mint 22.3 (x86_64), this lesson's `verifica` came out the same as on the Mac (Nov 18, 2026), at the
 simulated level and with a test file that carried that computer's fingerprint: on `inicio/`, 46 of 66 green; on

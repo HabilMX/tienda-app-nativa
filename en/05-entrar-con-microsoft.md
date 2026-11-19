@@ -665,6 +665,7 @@ minutes to show up as active.
 | «New registration» («Nuevo registro», in the Spanish-language console) opens a panel without a form | Your account has no directory (measured on Nov 13, 2026 with a newly created account) | "Before you start": you need a directory first |
 | «Ese correo ya entró a la tienda con otro botón…» (That email already signed in to the store with another button…) | That email already has a user in your project, created with another provider; in this series, Google | Sign in with Google. Making both buttons arrive at the same user is lesson 06 |
 | The passkey screen stays on "Verifying…" | Measured on Nov 13, 2026 on the emulator | *Cancel* and sign in with the password |
+| ❌ «EntradaConMicrosoft.kt nombra una puerta concreta» (EntradaConMicrosoft.kt names a specific gate) | Your code names the real gate (`NavegadorConFirebase`) or a test double. The tests only hand it doubles: if your code asks which one it got, the green does not say what it does with the real one | Make your code talk only to `NavegadorDeProveedor`. The real gate is chosen by `MainActivity.kt`, which comes given (step 4) |
 
 On Linux Mint 22.3 (x86_64), this lesson's `verifica` came out the same as on the Mac (Nov 18, 2026), at the
 simulated level and with a test file that carried that computer's fingerprint: on `inicio/`, 23 of 44 green; on
