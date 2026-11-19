@@ -119,7 +119,7 @@ classes novas e o dublê delas, `DoblesDeSesion.kt`. Abra-os; edite só os dois 
 | `PuertaDeLaSesion.kt` (novo) | A porta `RecuerdoDeLaSesion` com três funções: `usuarioActual()`, `olvidarEnFirebase()` e `olvidarEnElTelefono()`; a implementação de verdade, `RecuerdoConFirebase`; e à parte, o `LimpiadorDeCredenciales` que fala com o Credential Manager |
 | `SesionDeLaTienda.kt` (novo) | A forma da classe de quem estuda, vazia. É escrita no passo 3 |
 | `Tienda.kt` | Ao abrir, pergunta **uma vez** à sessão quem continua dentro. Se alguém, abre no início com o nome; se ninguém, nas boas-vindas |
-| `Inicio.kt` | O botão «Cerrar sesión». Só é desenhado se há sessão: sem ela, o início é o da 06 |
+| `Inicio.kt` | O botão «Encerrar sessão» («Cerrar sesión»). Só é desenhado se há sessão: sem ela, o início é o da 06 |
 | `MainActivity.kt`, `Armado.kt` | Montam também a sessão. Por ora o `Armado.kt` devolve `SesionSinConectar()`, que não lembra ninguém: assim se comporta o app da 06 |
 
 O resto é idêntico à solução da 06, e o `verifica` o compara arquivo por arquivo. É uma restrição
@@ -207,7 +207,7 @@ pede ao Credential Manager que limpe. Além disso, o `verifica` confere como tex
 programe contra `RecuerdoDeLaSesion`: se nomear uma porta concreta ou um dublê, o nível simulado fica
 incompleto.
 
-As sabotagens foram medidos sobre a solução em 19/11/2026:
+As sabotagens foram medidas sobre a solução em 19/11/2026:
 
 | Sabotagem | Resultado |
 |---|---|
