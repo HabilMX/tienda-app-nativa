@@ -103,8 +103,8 @@ votre code.
 
 **Ce qui le prouve :** votre prédiction, face à ce que vous verrez à l'étape 3 (les tests) et à l'étape 4 (votre
 téléphone). Le `verifica` confirme seulement que vous avez laissé les lignes : il ne voit ni quand vous les avez
-écrites, ni si vous avez utilisé une IA, ni si vous avez deviné juste. C'est pourquoi il conserve votre prédiction avec
-sa date, avant l'étape 2, et vous déclarez dessous, en une ligne, que vous l'avez faite sans IA. Le vert ne note pas le
+écrites, ni si vous avez utilisé une IA, ni si vous avez deviné juste. C'est pourquoi conservez votre prédiction avec
+sa date, avant l'étape 2, et déclarez dessous, en une ligne, que vous l'avez faite sans IA. Le vert ne note pas le
 contenu.
 
 ---
@@ -112,7 +112,7 @@ contenu.
 ## Étape 2 · Ce que le projet apporte déjà
 
 **Firebase disait déjà comment demander.** Son guide pour se connecter avec Google sur Android dit : « au démarrage de
-ton Activity, vérifie si l'utilisateur est déjà connecté », et il le fait en lisant `currentUser`. La référence de
+votre Activity, vérifiez si l'utilisateur est déjà connecté », et il le fait en lisant `currentUser`. La référence de
 `FirebaseAuth` le résume : `getCurrentUser()` renvoie l'utilisateur qui s'est connecté, ou `null` s'il n'y en a aucun.
 
 Dans l'application, trois fichiers sont nouveaux et quatre ont changé par rapport à la solution de la 06 ; dans les
@@ -184,7 +184,7 @@ override suspend fun cerrar() {
     } catch (e: CancellationException) {
         throw e
     } catch (e: ClearCredentialException) {
-        // El aviso no se pudo dar. La sesión de Firebase ya está cerrada.
+        // L'avis n'a pas pu être donné. La session de Firebase est déjà fermée.
     }
 }
 ```
@@ -267,7 +267,7 @@ l'application offre elle-même.
 
 ---
 
-## Étape 5 · Quatre choses qui ne sont pas la même
+## Étape 5 · Quatre choses qui ne sont pas les mêmes
 
 C'est l'exercice 7.3. En rouvrant avec une session et en la fermant, quatre choses différentes interviennent, et chacune
 a sa source :
@@ -328,7 +328,7 @@ l'ajusterons avec le temps que prendra la première cohorte.
 | ❌ « Cuando el aviso falla » (quand l'avis échoue) | Votre `catch` attrape `Exception` et avale l'annulation, ou il n'y a pas de `try` | Étape 3 : `CancellationException` d'abord, et on la relance |
 | ❌ « De las 66 pruebas heredadas… » (des 66 tests hérités…) et plusieurs de la session au rouge | Votre session dit qu'il y a toujours quelqu'un à l'intérieur, et l'application ne s'ouvre plus sur la bienvenue | `quienSigueAdentro()` répond ce que dit la porte, rien de plus |
 | Sur le téléphone, l'application s'ouvre sur la bienvenue alors que vous êtes connecté | Vous avez installé celle de `inicio/` avant l'étape 3, ou vous avez effacé les données de l'application | Terminez l'étape 3 et réinstallez |
-| En vous reconnectant avec Microsoft, il ne demande pas de mot de passe | Cela peut être la session de Microsoft dans le navigateur, qui n'est pas celle de votre application | Étape 4. Sur un poste partagé, vérifiez-la et fermez-la dans le navigateur |
+| En vous reconnectant avec Microsoft, on ne vous demande pas de mot de passe | Cela peut être la session de Microsoft dans le navigateur, qui n'est pas celle de votre application | Étape 4. Sur un poste partagé, vérifiez-la et fermez-la dans le navigateur |
 | L'application s'ouvre sur la bienvenue, et la session apparaît après | Firebase peut ne pas avoir fini de se préparer quand l'application a fait sa lecture unique | N'effacez pas les données et ne donnez pas l'essai pour bon : notez le cas. Cette leçon fait une lecture unique ; une version robuste écoute l'`AuthStateListener` (étape 2) |
 | ❌ « SesionDeLaTienda solo programa contra RecuerdoDeLaSesion… » (`SesionDeLaTienda` ne programme que contre `RecuerdoDeLaSesion`…) | Votre classe nomme une porte concrète ou une doublure | Étape 3 : votre classe ne connaît que l'interface |
 
@@ -387,7 +387,7 @@ téléphone ne change que les options offertes la prochaine fois ; s'il échoue,
    sur quel écran arrive l'application, avec une mémoire factice. Il ne démontre pas que Firebase se souvienne de votre
    utilisateur sur votre téléphone, ni ce qu'offre la fenêtre des comptes après la fermeture.
 4. Parce que Firebase utilise le jeton d'actualisation pour obtenir un nouveau jeton d'identité. Fermer la session dans
-   l'application ne révoque pas ce jeton sur le serveur : elle nettoie l'état du téléphone.
+   l'application ne révoque pas ce jeton sur le serveur : cela nettoie l'état du téléphone.
 
 ---
 

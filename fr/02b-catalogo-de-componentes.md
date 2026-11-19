@@ -147,7 +147,7 @@ fun BotonPrincipal(texto: String, alTocar: () -> Unit, habilitado: Boolean = tru
 - **Le bouton ne dit pas sa couleur.** `Button` prend la couleur primaire du thème, qui dans la palette claire est
   `VerdeTienda`.
 
-**Prédisez.** Écrivez dans `respuestas/02b.md`, avant de continuer : que change-t-il à l'écran avec
+**Prédisez.** Écrivez dans `respuestas/02b.md`, avant de continuer : qu'est-ce qui change à l'écran avec
 `habilitado = false` ? Et avec un texte qui ne tient pas sur une ligne ?
 
 Vous ne pouvez pas encore le voir : aucun écran ne l'utilise. Vous le verrez dans le panneau de l'étape 3.
@@ -389,7 +389,7 @@ tournent.
 @RunWith(ParameterizedRobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class CapturasTest(private val archivo: String, private val preview: @Composable () -> Unit) {
-    // … previews(): un caso por variante, sacado de los proveedores …
+    // … previews() : un cas par variante, tiré des fournisseurs …
 
     @get:Rule
     val regla = createComposeRule()
@@ -436,7 +436,7 @@ vous utilisez Linux, enregistrez les vôtres sur votre machine avec `recordRobor
 C'est la clôture du 2B.4 et elle se fait **sans Claude Code**. Vous allez provoquer la scène du début.
 
 **1. Prédisez.** Dans `Tema.kt`, `VerdeTienda` va passer de `0xFF0B6E4F` à `0xFFC62828`, un rouge. Écrivez dans
-`respuestas/02b.md` lesquelles des onze captures vous croyez qui vont passer au rouge, et pourquoi. Indice : cherchez
+`respuestas/02b.md` lesquelles des onze captures vont, selon vous, passer au rouge, et pourquoi. Indice : cherchez
 dans vos fichiers qui utilise `VerdeTienda` directement et qui utilise la couleur primaire du thème, et dans quelle
 palette.
 
@@ -489,7 +489,7 @@ Le 2B.4 est terminé quand vous pouvez cocher les quatre :
 
 - [ ] Votre prédiction du point 1 est écrite, avec ce qui est sorti en dessous.
 - [ ] Vous avez collé le chemin d'une image `_compare.png` et décrit son panneau du milieu.
-- [ ] Vous avez expliqué pourquoi ces captures ont passé au rouge et pas les autres.
+- [ ] Vous avez expliqué pourquoi ces captures sont passées au rouge et pas les autres.
 - [ ] Le `verifica` donne 18 sur 18, avec les marques du sabotage au vert.
 
 **Ce qui le prouve :** une exécution au vert, une exécution au rouge avec la différence d'image, une exécution au vert
@@ -547,7 +547,7 @@ lignes, centré (mesuré dans les captures `boton_deshabilitado` et `boton_texto
 
 **Étape 2.** `Inicio.kt` et `MainActivity.kt` changent ; `Tienda.kt` et `Tema.kt`, non. La carte ne reçoit pas de
 couleurs parce qu'elle les demande au thème qui l'entoure avec `MaterialTheme.colorScheme` : à l'intérieur de
-`TemaTienda`, ce sont ceux de `Tema.kt`.
+`TemaTienda`, ce sont celles de `Tema.kt`.
 
 **Étape 3.** Onze aperçus : quatre du bouton, trois de la carte et quatre de l'étiquette. La carte des tasses se termine
 par « … » : son nom ne tient pas sur deux lignes à 320 dp de large.
@@ -567,7 +567,7 @@ primaire est `VerdeClaro` ; ainsi que « Recibida » et « Enviada », qui ont l
 
 **Pour conclure :**
 
-1. Vous voyez d'un coup les cas qui, dans l'application, coûtent du mal à trouver —désactivé, sombre, texte long— et
+1. Vous voyez d'un coup les cas qui, dans l'application, sont difficiles à trouver —désactivé, sombre, texte long— et
    vous corrigez le composant avant qu'il arrive dans plusieurs écrans.
 2. Pour qu'il voyage seulement dans l'application de débogage et non dans celle que l'on publie.
 3. Il démontre que chaque variante se dessine comme sa référence et qu'un changement visible de couleur les fait passer

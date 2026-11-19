@@ -56,7 +56,7 @@ cd lecciones/08-la-primera-vez/inicio
 Il part de la solution de la 07, avec l'échafaudage de cette leçon par-dessus. `./verifica solucion` sort au rouge dans
 un clone propre, parce que sans votre fichier le projet ne compile pas. Vos réponses vont dans `respuestas/08.md`.
 
-**Deux « bienvenues » qui ne sont pas la même.** L'écran `Bienvenida`, depuis la leçon 02, est la page de garde : celle
+**Deux « bienvenues » qui ne sont pas les mêmes.** L'écran `Bienvenida`, depuis la leçon 02, est la page de garde : celle
 que voit toute personne qui ne s'est pas connectée, avec le bouton « Entrar » (Entrer). La bienvenue de cette leçon est
 autre chose : une ligne dans l'**accueil**, sous « Hola, Ana », que seul voit l'utilisateur nouveau. Le texte dit :
 « Es tu primera vez aquí: te damos la bienvenida. » (C'est votre première fois ici : nous vous souhaitons la bienvenue.)
@@ -126,7 +126,7 @@ propriété : `resultado.additionalUserInfo?.isNewUser`.
 - La référence marque `getAdditionalUserInfo()` comme `@Nullable` : il peut arriver `null`. Kotlin l'apporte comme un
   type qui admet `null`, et l'opérateur `?.` existe pour cela : si ce qui est à gauche est `null`, le résultat est
   `null` au lieu de planter.
-- La même référence dit qu'elle renvoie des informations « si le fournisseur est Facebook, GitHub, Google ou Twitter ».
+- La même référence dit qu'il renvoie des informations « si le fournisseur est Facebook, GitHub, Google ou Twitter ».
   Microsoft n'est pas dans cette liste. Mais la page d'`AdditionalUserInfo`, dans `getProfile()`, nomme bien Microsoft,
   et lors de l'essai du 13 nov., la connexion avec Microsoft a dit « (primera vez) » la première fois et pas la seconde.
   La documentation n'est pas cohérente ici, et c'est pourquoi le code ne suppose rien : s'il n'y a pas d'information, il
@@ -178,11 +178,11 @@ vous l'expliquez.**
 fun esPrimeraVez(resultado: AuthResult): Boolean =
     resultado.additionalUserInfo?.isNewUser == true
 
-// EntradaConGoogle.kt, en el paso 4 de entrar()
+// EntradaConGoogle.kt, à l'étape 4 de entrar()
 val quien = verificador.verificarConPrimeraVez(token)
 Resultado.Entro(quien.nombre, quien.primeraVez)
 
-// EntradaConMicrosoft.kt, en entrar()
+// EntradaConMicrosoft.kt, dans entrar()
 val quien = navegador.pendienteConPrimeraVez() ?: navegador.abrirConPrimeraVez(proveedor)
 Resultado.Entro(quien.nombre, quien.primeraVez)
 ```
@@ -419,7 +419,7 @@ capturé (étape 4).
 **Étape 3.** Elle n'entre pas, bien que Firebase l'ait laissée entrer. `!!` convertit le `null` en exception ; votre
 connexion l'attrape avec son `catch (e: Exception)`, comme n'importe quelle autre panne, et la personne voit « No se
 pudo entrar. Revisa tu conexión y vuelve a intentar. » (Impossible d'entrer. Vérifiez votre connexion et réessayez.). La
-connexion était bonne. Et comme Firebase avait déjà conservé la session, en rouvrant l'application (leçon 07) il la
+connexion était bonne. Et comme Firebase avait déjà conservé la session, en rouvrant l'application (leçon 07), celle-ci la
 saluerait comme si de rien n'était : nous l'avons raisonné à partir du code, nous ne l'avons pas mesuré sur un
 téléphone. Avec `?.` et `== true`, un `null` devient « ce n'est pas la première fois », et la personne entre sans
 bienvenue.
@@ -429,7 +429,7 @@ bienvenue.
 - **Firebase a fait :** il a vérifié le jeton d'identité de Google sur ses serveurs ; il a parlé avec Microsoft en
   utilisant l'ID client et la clé que vous avez enregistrés dans sa console, sans que la clé touche votre application ;
   il a créé l'utilisateur la première fois que vous vous êtes connecté, avec un identifiant unique ; dans ce projet, avec
-  la règle d'un compte par adresse e-mail qu'il a configurée, il a rejeté la seconde connexion avec cette adresse et,
+  la règle d'un compte par adresse e-mail configurée dans ce projet, il a rejeté la seconde connexion avec cette adresse et,
   après que la personne l'a confirmé et que l'application a demandé la liaison, il a uni le second fournisseur au même
   utilisateur ; il a conservé la session sur le téléphone et renouvelle chaque heure le jeton d'identité avec celui
   d'actualisation ; et il vous a dit si l'utilisateur était nouveau.
