@@ -145,4 +145,16 @@ class ConfiguracionTest {
         val proyecto = opciones.javaClass.getMethod("getProjectId").invoke(opciones)
         assertEquals("Firebase arrancó con otro proyecto", RevisorDeConfiguracion.proyecto(tuTexto()), proyecto)
     }
+
+    // El BoM solo elige versiones; la librería de Authentication es una
+    // dependencia aparte (firebase-auth). Aquí se pregunta si su clase
+    // principal viaja en la app. No se usa: entrar es la lección 04.
+    @Test
+    fun laAppTraeLaLibreriaDeAuthentication() {
+        try {
+            Class.forName("com.google.firebase.auth.FirebaseAuth")
+        } catch (e: ClassNotFoundException) {
+            fail("La app no trae firebase-auth entre sus dependencias")
+        }
+    }
 }

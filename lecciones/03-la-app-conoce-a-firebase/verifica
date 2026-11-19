@@ -6,22 +6,28 @@
 #   de Android (tipo 1); que ese cliente traiga la huella SHA-1 del almacén de depuración de ESTA computadora
 #   (el debug.keystore de tu carpeta .android); y que traiga un cliente web (tipo 3).
 # SÍ revisa, con esas mismas pruebas: que la app compilada lleve el project_id y el google_app_id de tu archivo
-#   (los genera el plugin google-services), y que la librería de Firebase, cuando la prueba le pide arrancar,
-#   quede con ese proyecto.
+#   (los genera el plugin google-services); que la librería de Firebase, cuando la prueba le pide arrancar,
+#   quede con ese proyecto; y que la clase principal de Authentication (firebase-auth) viaje en la app.
+#   No la usa: no crea ninguna sesión ni habla con Firebase.
 # SÍ revisa, con cuatro pruebas sobre archivos inventados (src/test/resources/configuraciones): que el revisor
 #   distingue un archivo completo de uno sin clientes de OAuth, de uno de otro paquete y de uno con otra huella.
 # SÍ revisa que las 7 pruebas de la lección 02 (recorrido y arranque) sigan en verde.
 # SÍ revisa, buscando texto en tus archivos (no los ejecuta): que app/build.gradle.kts nombre el plugin
-#   google-services, el BoM de Firebase y el applicationId de la serie; que el .gitignore del proyecto traiga la línea google-services.json;
+#   google-services, el BoM de Firebase, firebase-auth y el applicationId de la serie; que el .gitignore del proyecto traiga la línea google-services.json;
 #   que exista app/google-services.json.example; y que respuestas/03.md traiga pegado el error del «Rompe uno
 #   a propósito». Y le pregunta a git si rastrea algún google-services.json en el repo.
 # NO revisa: que tu proyecto exista en Firebase, que la huella esté registrada ahí ni que Google esté
 #   habilitado: solo lee el archivo que descargaste, y un archivo bien formado de un proyecto borrado pasa
 #   igual. Tampoco que la app instalada hable con Firebase, ni que puedas entrar con Google (lección 04).
 #   No compara otra huella que la de depuración de esta computadora. Y no califica tus explicaciones (3.2, 3.3).
+# Tu archivo se busca SOLO en app/google-services.json. El plugin también acepta uno por variante (por
+#   ejemplo app/src/debug/google-services.json), pero la serie fija una sola ubicación y este guion no mira
+#   las otras: con el archivo en otra carpeta sale en rojo aunque el proyecto compile.
 # Solo lee tu código y tu archivo: no los cambia. Gradle escribe sus resultados en build/, que no se sube.
 # Uso:  ./verifica             revisa tu trabajo en inicio/
-#       ./verifica solucion    revisa la solución de referencia (también necesita tu archivo en solucion/app/)
+#       ./verifica solucion    revisa la solución de referencia. En un clon limpio sale en ROJO: el archivo
+#                              no se sube, y con el plugin aplicado no compila sin él. Para revisarla, copia tu
+#                              archivo a solucion/app/ (sigue ignorado) y retíralo al terminar.
 set -uo pipefail
 cd "$(dirname "$0")"
 PROY="${1:-inicio}"
@@ -77,6 +83,9 @@ hay 'applicationId[[:space:]]*=[[:space:]]*"'"$PAQ"'"' "$GR" \
 hay 'firebase-bom|libs\.firebase\.bom' "$GR" \
   && si "Texto: app/build.gradle.kts nombra el BoM de Firebase" \
   || no "app/build.gradle.kts no nombra el BoM de Firebase (paso 4)"
+hay 'firebase-auth|libs\.firebase\.auth' "$GR" \
+  && si "Texto: app/build.gradle.kts nombra firebase-auth, la librería de Authentication" \
+  || no "app/build.gradle.kts no nombra firebase-auth: el BoM solo elige versiones; Authentication es esa línea aparte (paso 4)"
 
 # --- 3.2 · Lo que no se sube ----------------------------------------------------------------
 if grep -qxE '[[:space:]]*/?(app/)?google-services\.json[[:space:]]*' "$PROY/.gitignore" 2>/dev/null; then
@@ -110,6 +119,9 @@ if [ -f "$JSON" ]; then
   fi
 else
   no "No existe $JSON: descárgalo de la consola de Firebase al terminar el paso 3 y ponlo en esa carpeta"
+  otro=$(find "$PROY/app/src" -name google-services.json 2>/dev/null | head -1)
+  [ -z "$otro" ] || nota "Hay uno en $otro: el plugin lo acepta, pero esta lección lo busca solo en app/. Muévelo ahí."
+  [ "$PROY" = "solucion" ] && nota "Sobre solucion/ este rojo es el esperado en un clon limpio: el archivo no se sube. Copia el tuyo a solucion/app/ y retíralo al terminar."
 fi
 if [ -z "${ANDROID_HOME:-}" ] && [ ! -f "$PROY/local.properties" ]; then
   no "ANDROID_HOME no está definido: sin él Gradle no encuentra el SDK (lección 00, paso 2)"
@@ -216,8 +228,13 @@ else
     "La app compilada no lleva el project_id y el google_app_id de tu archivo: falta aplicar el plugin google-services en app/build.gradle.kts (paso 4)"
   revisa firebaseArrancaConTuProyecto \
     "Simulado: la librería de Firebase, cuando la prueba le pide arrancar, queda con el proyecto de tu archivo" \
-    "La librería de Firebase no está entre las dependencias de la app, o no arrancó con el proyecto de tu archivo: revisa el BoM y firebase-auth en app/build.gradle.kts (paso 4)"
+    "Ninguna librería de Firebase está entre las dependencias de la app, o no arrancó con el proyecto de tu archivo: revisa el BoM y firebase-auth en app/build.gradle.kts (paso 4)"
 fi
+
+# --- 3.1 · Authentication viaja en la app (no depende de tu archivo) -------------------------
+revisa laAppTraeLaLibreriaDeAuthentication \
+  "Simulado: la clase principal de Authentication (firebase-auth) viaja en la app; no se usó" \
+  "Falta Authentication: la app no trae firebase-auth entre sus dependencias. El BoM no la agrega: falta  implementation(libs.firebase.auth)  en app/build.gradle.kts (paso 4)"
 
 # --- Lo de la lección 02 sigue funcionando ---------------------------------------------------
 t02=$(( $(attr tests "$XMLR") + $(attr tests "$XMLA") ))
@@ -228,14 +245,14 @@ else
   no "De las 7 pruebas de la lección 02 corrieron $t02 y $m02 no quedaron en verde: conectar Firebase no debía cambiar las pantallas. Corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
 fi
 
-[ "$total" -eq 17 ] || no "Esperaba 17 pruebas (10 de la configuración, 6 del recorrido y 1 del arranque) y los informes traen $total"
+[ "$total" -eq 18 ] || no "Esperaba 18 pruebas (11 de la configuración, 6 del recorrido y 1 del arranque) y los informes traen $total"
 [ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
 
 # --- 3.4 · Presencia mínima de la evidencia escrita (no califica su contenido) -------------
 if [ "$PROY" = "inicio" ]; then
   R=../../respuestas/03.md
   if [ -f "$R" ] && grep -qF "$ERR_PAQUETE" "$R"; then
-    si "Escrito: respuestas/03.md trae pegado el error del «Rompe uno a propósito» (no califico tu diagnóstico)"
+    si "Escrito: respuestas/03.md trae pegado el error del «Rompe uno a propósito» (solo busco esa línea: no sé si lo rompiste ni califico tu diagnóstico)"
   else
     no "respuestas/03.md no trae pegado el error del «Rompe uno a propósito» (paso 5): la línea que contiene «$ERR_PAQUETE»"
   fi
@@ -250,8 +267,9 @@ echo "  $XMLR"
 echo "  $XMLA"
 nota "Nivel simulado: demuestra qué trae el TEXTO de tu google-services.json (paquete, cliente de Android con la"
 nota "  huella de depuración de esta computadora, cliente web) y que la app compilada lleva esos datos."
-nota "No demuestra que tu proyecto exista en Firebase, que la huella esté registrada ni que Google esté habilitado:"
-nota "  el archivo es una copia de lo que la consola tenía cuando lo bajaste. Eso se comprueba al entrar, en la lección 04."
+nota "No demuestra que el archivo venga de TU proyecto, que el proyecto exista, que la huella esté registrada ni que"
+nota "  Google esté habilitado: un archivo con esa forma, armado a mano, pasa igual. Tampoco que hayas seguido el orden."
+nota "  Eso se comprueba al entrar con Google, en la lección 04."
 nota "Las marcas «Texto:» solo buscan palabras en tus archivos: no demuestran que el código haga lo que dicen."
 nota "No califica tus explicaciones (3.2 y 3.3): compáralas con «Compara tus respuestas»."
 exit $ok
