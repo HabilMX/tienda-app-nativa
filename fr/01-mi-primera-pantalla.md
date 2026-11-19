@@ -277,7 +277,7 @@ qu'il a généré → vous lancez le `verifica` → vous l'expliquez avec vos pr
 5. **Expliquez**, en deux lignes de `respuestas/01.md`, ce qui se passe entre le moment où vous touchez le bouton et
    celui où le salut apparaît.
 
-Aujourd'hui, vous ne concevez pas l'état de zéro : vous suivez seulement le changement généré par Claude Code. Quel
+Aujourd'hui, vous ne concevez pas l'état de zéro : vous suivez seulement le changement que propose Claude Code. Quel
 état il convient de conserver et comment le conserver est l'idée centrale de la L02. Pour le suivre, vous devez savoir
 ce que fait chaque élément :
 

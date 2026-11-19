@@ -272,7 +272,7 @@ Aqui entra a ferramenta, e entra sempre do mesmo jeito: **prever → pedir → l
 5. **Explique**, em duas linhas de `respuestas/01.md`, o que acontece entre o toque no botão e o aparecimento do
    cumprimento.
 
-Hoje não se projeta estado do zero: apenas se rastreia a mudança que o Claude Code gerou. Que estado convém guardar e
+Hoje não se projeta estado do zero: apenas se rastreia a mudança que o Claude Code propõe. Que estado convém guardar e
 como conservá-lo é a ideia central da L02. Para rastreá-la é preciso saber o que cada peça faz:
 
 - **`mutableStateOf(false)`** cria um valor que o Compose vigia. Quando ele muda, o Compose programa a atualização

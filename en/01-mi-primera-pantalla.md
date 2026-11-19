@@ -276,7 +276,7 @@ generated → you run the `verifica` → you explain it in your own words.**
 5. **Explain**, in two lines of `respuestas/01.md`, what happens between tapping the button and the greeting
    appearing.
 
-Today you do not design state from scratch: you only trace the change Claude Code generated. Which state is worth
+Today you do not design state from scratch: you only trace the change Claude Code proposes. Which state is worth
 keeping and how to preserve it is the central idea of L02. To trace it you need to know what each piece does:
 
 - **`mutableStateOf(false)`** creates a value Compose watches. When it changes, Compose schedules the update of the
