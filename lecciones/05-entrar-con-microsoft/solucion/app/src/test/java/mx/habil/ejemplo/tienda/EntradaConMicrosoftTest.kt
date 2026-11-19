@@ -96,6 +96,16 @@ class EntradaConMicrosoftTest {
     }
 
     @Test
+    fun otraColisionQueNoEsDeProveedorContestaFallo() {
+        val resultado = runBlocking {
+            EntradaConMicrosoft(NavegadorFalso(fallaAlAbrir = otraColisionInventada())).entrar()
+        }
+        assertEquals(
+            "Una colisión con otro código no es «ese correo ya entró con otro botón»", Resultado.Fallo, resultado
+        )
+    }
+
+    @Test
     fun otraFallaDelNavegadorContestaFalloYNoCancelada() {
         val resultado = runBlocking {
             EntradaConMicrosoft(NavegadorFalso(fallaAlAbrir = otraFallaWebInventada())).entrar()

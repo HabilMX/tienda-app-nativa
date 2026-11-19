@@ -72,9 +72,19 @@ fun Tienda(entrada: Entrada, entradaConMicrosoft: EntradaQueSeRetoma? = null, en
     // Una sola vez, al abrirse la app: ¿quedó una entrada con Microsoft a
     // medias? LaunchedEffect corre su bloque cuando esta función aparece en
     // pantalla, no en cada redibujo.
-    LaunchedEffect(entradaConMicrosoft) {
-        val pendiente = entradaConMicrosoft?.retomar()
-        if (pendiente != null) recibe(pendiente)
+    LaunchedEffect(entradaConMicrosoft, enlace) {
+        // Primero: ¿lo que quedó a medias fue un ENLACE? Entonces no es una
+        // entrada: se regresa a la pantalla de confirmación con su desenlace.
+        val enlaceRetomado = enlace?.retomar()
+        if (enlaceRetomado != null) {
+            nombre = enlaceRetomado.nombre
+            enlazado = enlaceRetomado.resultado == ResultadoDeEnlace.Enlazado
+            mensajeDelEnlace = mensajeDeEnlace(enlaceRetomado.resultado)
+            pantalla = Pantalla.CONFIRMAR_ENLACE
+        } else {
+            val pendiente = entradaConMicrosoft?.retomar()
+            if (pendiente != null) recibe(pendiente)
+        }
     }
 
     when (pantalla) {

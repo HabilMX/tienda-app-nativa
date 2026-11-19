@@ -42,11 +42,16 @@ class ProyectoFalso {
         override suspend fun pendiente(): String? = null
 
         override suspend fun abrir(proveedor: OAuthProvider): String = entra(proveedor.providerId ?: "", correo, nombre)
+    }
 
+    // La puerta del enlace para esa misma cuenta de Microsoft.
+    fun enlazadorDe(correo: String) = object : EnlazadorDeProveedor {
         override suspend fun enlazar(proveedor: OAuthProvider) {
             enlacesPedidos++
             val actual = sesion ?: throw NadieHaEntrado()
             actual.accesos += "${proveedor.providerId}|$correo"
         }
+
+        override suspend fun pendiente(): EnlacePendiente? = null
     }
 }

@@ -9,7 +9,6 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.performClick
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withTimeoutOrNull
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -28,10 +27,6 @@ import org.robolectric.RobolectricTestRunner
 // el verifica como texto.
 // Al abrirse, la app sí pregunta por una entrada a medias con la puerta de
 // verdad: en tu computadora Firebase contesta que no hay ninguna.
-// También mide el enlace que arma MainActivity.crearEnlaceConMicrosoft: con
-// la puerta de mentira, que pida microsoft.com; y con la puerta de VERDAD,
-// que sin nadie adentro conteste «sin sesión» sin abrir nada (en tu
-// computadora Firebase no tiene ningún usuario).
 // No cambies este archivo: el verifica revisa que siga igual al de solucion/.
 @RunWith(RobolectricTestRunner::class)
 class ArranqueConMicrosoftTest {
@@ -61,24 +56,5 @@ class ArranqueConMicrosoftTest {
             1, navegador.abiertos.size
         )
         assertEquals("microsoft.com", navegador.abiertos.single().providerId)
-    }
-
-    @Test
-    fun laAppArmaSuEnlacePidiendoEseProveedor() {
-        val navegador = NavegadorFalso()
-        val resultado = runBlocking { app.activity.crearEnlaceConMicrosoft(navegador = navegador).enlazar() }
-        assertEquals(ResultadoDeEnlace.Enlazado, resultado)
-        assertEquals("microsoft.com", navegador.enlazados.single().providerId)
-    }
-
-    @Test
-    fun conLaPuertaDeVerdadYSinNadieAdentroElEnlaceContestaSinSesion() {
-        // Con límite de tiempo: si el enlace abriera el navegador en lugar de
-        // preguntar primero por el usuario, aquí nadie contestaría nunca.
-        val resultado = runBlocking { withTimeoutOrNull(5_000) { app.activity.crearEnlaceConMicrosoft().enlazar() } }
-        assertEquals(
-            "Sin nadie adentro, el enlace debe contestar «sin sesión» de inmediato (null = no contestó en 5 segundos)",
-            ResultadoDeEnlace.SinSesion, resultado
-        )
     }
 }

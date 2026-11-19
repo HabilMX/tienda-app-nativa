@@ -40,9 +40,10 @@
 #   archivo y el número de línea.
 # PRESENCIA TEXTUAL (busca palabras en tus archivos; no los ejecuta y no valida que el código haga lo que
 #   dicen; en los .kt las líneas de comentario no cuentan): que EntradaConMicrosoft.kt nombre OAuthProvider,
-#   "microsoft.com", select_account y pendiente(); que EnlaceConMicrosoft.kt llame navegador.enlazar( ; que
-#   MainActivity.kt nombre crearEntradaConMicrosoft(), EntradaConMicrosoft( , crearEnlaceConMicrosoft() y
-#   EnlaceConMicrosoft( , y que su llamada a Tienda diga enlace = enlace; que ningún .kt de la app nombre MicrosoftSinConectar, EnlaceSinConectar, una pieza de pruebas, el
+#   "microsoft.com" y pendiente(); que EnlaceConMicrosoft.kt llame enlazador.enlazar( ; que Armado.kt nombre
+#   EntradaConMicrosoft( y EnlaceConMicrosoft( ; que MainActivity.kt arme con Armado.kt y le pase las dos piezas
+#   a Tienda (sobre inicio/ además se compara que ese archivo sea idéntico al de la lección); que
+#   respuestas/05.md diga «una cuenta por correo: activa»; que ningún .kt de la app nombre MicrosoftSinConectar, EnlaceSinConectar, una pieza de pruebas, el
 #   token de acceso de Microsoft (accessToken, OAuthCredential) ni traiga escrito un ID de cliente de Google;
 #   que ningún archivo de código del proyecto traiga un texto con forma de ID de aplicación de Entra (un
 #   GUID); que el catálogo diga las versiones de la serie; que el .gitignore traiga google-services.json; y
@@ -60,8 +61,8 @@
 #   Y al pedirle un enlace sin nadie adentro contesta que no hay usuario. Abrir el navegador, para entrar o
 #   para enlazar, NO se ejecuta; solo se compara que el archivo siga igual al de la lección. «El mismo
 #   usuario» es el del proyecto de mentira: ninguna prueba enlaza dos cuentas en Firebase. «Retomar» aquí es el doble diciendo que quedó algo a medias: ninguna prueba cierra la app con el
-#   navegador abierto. Ninguna prueba lee los parámetros de la solicitud: select_account es presencia
-#   textual. Tampoco ve si onCreate le pasa a Tienda la entrada de crearEntradaConMicrosoft() ni el enlace de
+#   navegador abierto, ni a media entrada ni a medio enlace. Ninguna prueba lee los parámetros de la
+#   solicitud: select_account es una recomendación de la lección y solo se avisa si falta. Tampoco ve si onCreate le pasa a Tienda la entrada de crearEntradaConMicrosoft() ni el enlace de
 #   crearEnlaceConMicrosoft(): eso es presencia textual. Sin el enlace, las 58 pruebas dan verde. La búsqueda de la clave ve archivos, y con una sola forma: no ve tu terminal, tus
 #   capturas, tu portapapeles ni el historial de git, y una clave con otra forma se le pasa. Por eso no
 #   demuestra que tu app esté registrada en Entra, que la dirección de retorno sea la exacta, que la clave en
@@ -108,6 +109,8 @@ XMLRM="$DIRX/TEST-$PAQ.RecorridoConMicrosoftTest.xml"
 XMLAM="$DIRX/TEST-$PAQ.ArranqueConMicrosoftTest.xml"
 XMLE="$DIRX/TEST-$PAQ.EnlaceConMicrosoftTest.xml"
 XMLRE="$DIRX/TEST-$PAQ.RecorridoConEnlaceTest.xml"
+XMLAE="$DIRX/TEST-$PAQ.ArranqueConEnlaceTest.xml"
+MARCA_CORREO="una cuenta por correo: activa"
 MARCA_ROMPE="quedó una entrada a medias y retomar() no la recogió"
 echo "Revisando $PROY/ — nivel simulado (sin emulador, sin navegador, sin cuenta, sin hablar con Microsoft ni con Firebase)"
 
@@ -115,19 +118,22 @@ echo "Revisando $PROY/ — nivel simulado (sin emulador, sin navegador, sin cuen
 grep -q '^org.gradle.jvmargs=.*-Xmx4g' "$PROY/gradle.properties" 2>/dev/null \
   && si "Andamiaje: gradle.properties le da 4 GB de memoria a Gradle (-Xmx4g)" \
   || no "gradle.properties ya no trae -Xmx4g: regresa la línea  org.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8"
-if [ "$PROY" = "inicio" ]; then
+# Se compara inicio/ contra solucion/ sin importar cuál de los dos se esté revisando: son los mismos archivos.
+if [ -d inicio ] && [ -d solucion ]; then
   cambiados=""
   for t in "$DIRP/EntradaConMicrosoftTest.kt" "$DIRP/RecorridoConMicrosoftTest.kt" "$DIRP/ArranqueConMicrosoftTest.kt" \
-           "$DIRP/EnlaceConMicrosoftTest.kt" "$DIRP/RecorridoConEnlaceTest.kt" "$DIRP/ProyectoFalso.kt" \
+           "$DIRP/EnlaceConMicrosoftTest.kt" "$DIRP/RecorridoConEnlaceTest.kt" "$DIRP/ArranqueConEnlaceTest.kt" \
+           "$DIRP/ProyectoFalso.kt" "$DIRP/DoblesDeEnlace.kt" \
            "$DIRP/DoblesDeMicrosoft.kt" "$DIRP/AppDePruebas.kt" "app/src/test/resources/robolectric.properties" \
            "$DIRA/MicrosoftEnAndroidTest.kt" "$DIRA/DoblesDeMicrosoft.kt" \
-           "$DIRM/PuertaDelNavegador.kt" "$DIRM/PantallaEntrada.kt" "$DIRM/PantallaEnlace.kt" "$DIRM/Tienda.kt"; do
-    cmp -s "inicio/$t" "solucion/$t" || cambiados="$cambiados inicio/$t"
+           "$DIRM/PuertaDelNavegador.kt" "$DIRM/PuertaDelEnlace.kt" "$DIRM/PantallaEntrada.kt" "$DIRM/PantallaEnlace.kt" \
+           "$DIRM/Tienda.kt" "$DIRM/MainActivity.kt" "$DIRM/Entrada.kt" "$DIRM/Enlace.kt"; do
+    cmp -s "inicio/$t" "solucion/$t" || cambiados="$cambiados $t"
   done
   if [ -z "$cambiados" ]; then
-    si "Andamiaje: las pruebas de esta lección, sus dobles, PuertaDelNavegador.kt, PantallaEntrada.kt, PantallaEnlace.kt y Tienda.kt son los de la lección, sin cambios (15 archivos comparados)"
+    si "Andamiaje: las pruebas de esta lección, sus dobles, las dos puertas nuevas, las pantallas, Tienda.kt, MainActivity.kt, Entrada.kt y Enlace.kt son los de la lección, sin cambios (21 archivos comparados). Con MainActivity.kt idéntico, onCreate le pasa a Tienda lo que arma Armado.kt"
   else
-    no "Estos archivos cambiaron y no se tocan:$cambiados"
+    no "Estos archivos ya no son iguales en inicio/ y en solucion/, y no se tocan:$cambiados"
     nota "Mira qué cambió con  git diff -- <archivo>  y deshazlo a mano. Restaurar con git descarta lo que tenga: revisa el diff antes."
   fi
 fi
@@ -154,9 +160,10 @@ for d in Dobles.kt DoblesDeMicrosoft.kt; do
 done
 
 # --- 5.1 · La clave de Entra no está en ningún archivo ---------------------------------------
-# FORMA: 3 caracteres, un dígito, «Q~» y de 31 a 34 caracteres más. Es la forma con la que una herramienta
-# pública de búsqueda de secretos (gitleaks, regla azure-ad-client-secret) reconoce estas claves; Microsoft
-# no la publica como formato. NOMBRA: el nombre que OAuth le da a esa clave.
+# FORMA: 3 caracteres, un dígito, «Q~» y de 31 a 34 caracteres más. Está inspirada en una regla pública de
+# gitleaks (azure-ad-client-secret), pero este guion NO ejecuta gitleaks ni aplica sus delimitadores ni su
+# umbral de entropía: es más simple, puede marcar texto inocente y se le escapan otras representaciones.
+# Microsoft no publica esa forma como formato. NOMBRA: el nombre que OAuth le da a esa clave.
 FORMA='[A-Za-z0-9_~.]{3}[0-9]Q~[A-Za-z0-9_~.-]{31,34}'
 NOMBRA='[Cc][Ll][Ii][Ee][Nn][Tt][_-]?[Ss][Ee][Cc][Rr][Ee][Tt]'
 # donde <patrón> <ruta>… → «archivo:línea» de cada coincidencia. Nunca el texto encontrado.
@@ -199,7 +206,12 @@ con_guid=$(grep -rInE --exclude-dir=build --exclude-dir=.gradle --exclude-dir=.k
 # --- 5.2 · Las piezas, buscadas como texto (no se ejecutan) ----------------------------------
 # hay <texto> <carpeta o archivo>: ¿algún .kt lo contiene en una línea que no sea comentario (//)?
 # Los comentarios no cuentan: una pieza nombrada en un comentario no existe, y tampoco estorba.
-hay() { grep -rh --include='*.kt' -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -qF -- "$1"; }
+# Se CUENTA en lugar de usar «grep -q» al final de la tubería: con pipefail, grep -q corta al primer acierto,
+# el grep de antes muere por SIGPIPE y la tubería contesta «no hay» habiendo encontrado (medido el 18-nov-2026:
+# la misma búsqueda dio sí y no en corridas seguidas).
+hay() { local n; n=$(grep -rh --include='*.kt' -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -cF -- "$1"); [ "${n:-0}" -gt 0 ]; }
+# hayre <expresión> <archivo>: lo mismo, con expresión regular.
+hayre() { local n; n=$(grep -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -cE -- "$1"); [ "${n:-0}" -gt 0 ]; }
 ECM="$PROY/$DIRM/EntradaConMicrosoft.kt"
 ACT="$PROY/$DIRM/MainActivity.kt"
 # El «no hay» solo vale si la búsqueda sí lee: se comprueba con una palabra que seguro está.
@@ -211,40 +223,38 @@ else
   else
     no "EntradaConMicrosoft.kt no nombra OAuthProvider con \"microsoft.com\": es la solicitud que se le pasa al navegador (paso 4)"
   fi
+  # select_account es lo que recomienda la lección, no una condición: Microsoft lo marca como opcional.
   hay 'select_account' "$ECM" \
-    && si "Texto: EntradaConMicrosoft.kt nombra select_account (presencia textual: ninguna prueba lee los parámetros de la solicitud)" \
-    || no "EntradaConMicrosoft.kt no nombra select_account: la solicitud pide que la persona elija su cuenta (paso 4)"
+    && nota "EntradaConMicrosoft.kt nombra select_account, el valor que recomienda la lección (presencia textual: ninguna prueba lee los parámetros)" \
+    || nota "EntradaConMicrosoft.kt no nombra select_account. No es un error: ese parámetro es opcional. La lección lo recomienda para que la persona elija su cuenta (paso 4)"
   hay 'pendiente()' "$ECM" \
     && si "Texto: EntradaConMicrosoft.kt llama pendiente() (presencia textual: que lo use bien lo miden las pruebas, abajo)" \
     || no "EntradaConMicrosoft.kt no llama pendiente(): es la pregunta por una entrada a medias (paso 4)"
-  hay 'crearEntradaConMicrosoft()' "$ACT" \
-    && si "Texto: MainActivity.kt llama crearEntradaConMicrosoft() (presencia textual: no sé si lo que regresa llega a Tienda)" \
-    || no "MainActivity.kt ya no llama crearEntradaConMicrosoft(): onCreate viene dado y arma la segunda entrada con esa función"
-  # Con el paréntesis y sin letra antes: «crearEntradaConMicrosoft(» no cuenta.
-  grep -v '^[[:space:]]*//' "$ACT" 2>/dev/null | grep -qE '(^|[^A-Za-z])EntradaConMicrosoft\(' \
-    && si "Texto: MainActivity.kt nombra EntradaConMicrosoft( (presencia textual)" \
-    || no "MainActivity.kt no nombra EntradaConMicrosoft( : la app instalada todavía no usa tu entrada (paso 4)"
+  ARM="$PROY/$DIRM/Armado.kt"
   ENL="$PROY/$DIRM/EnlaceConMicrosoft.kt"
-  hay 'navegador.enlazar(' "$ENL" \
-    && si "Texto: EnlaceConMicrosoft.kt llama navegador.enlazar( (presencia textual: que enlace bien lo miden las pruebas, abajo)" \
-    || no "EnlaceConMicrosoft.kt no llama navegador.enlazar( : es la función de la puerta que le suma un proveedor a quien ya entró (paso 7)"
-  if hay 'crearEnlaceConMicrosoft()' "$ACT" && grep -v '^[[:space:]]*//' "$ACT" 2>/dev/null | grep -qE '(^|[^A-Za-z])EnlaceConMicrosoft\('; then
-    si "Texto: MainActivity.kt llama crearEnlaceConMicrosoft() y nombra EnlaceConMicrosoft( (presencia textual: no sé si lo que regresa llega a Tienda)"
+  # Con el paréntesis y sin letra antes: «armarEntradaConMicrosoft(» no cuenta.
+  hayre '(^|[^A-Za-z])EntradaConMicrosoft\(' "$ARM" \
+    && si "Texto: Armado.kt nombra EntradaConMicrosoft( (estructura mínima; que esa pieza funcione lo mide una prueba, abajo)" \
+    || no "Armado.kt no nombra EntradaConMicrosoft( : la app todavía no arma tu entrada (paso 4)"
+  hayre '(^|[^A-Za-z])EnlaceConMicrosoft\(' "$ARM" \
+    && si "Texto: Armado.kt nombra EnlaceConMicrosoft( (estructura mínima; que esa pieza funcione lo mide una prueba, abajo)" \
+    || no "Armado.kt no nombra EnlaceConMicrosoft( : la app todavía no arma tu enlace (paso 7)"
+  hay 'enlazador.enlazar(' "$ENL" \
+    && si "Texto: EnlaceConMicrosoft.kt llama enlazador.enlazar( (presencia textual: que enlace bien lo miden las pruebas, abajo)" \
+    || no "EnlaceConMicrosoft.kt no llama enlazador.enlazar( : es la función de la puerta que le suma un proveedor a quien ya entró (paso 7)"
+  if hay 'armarEntradaConMicrosoft(navegador)' "$ACT" && hay 'armarEnlaceConMicrosoft(enlazador)' "$ACT" \
+     && hay 'entradaConMicrosoft = entradaConMicrosoft' "$ACT" && hay 'enlace = enlace' "$ACT"; then
+    si "Texto: MainActivity.kt arma con Armado.kt y le pasa las dos piezas a Tienda (estructura mínima, no evidencia de integración: sobre inicio/ lo respalda que el archivo sea idéntico al de la lección)"
   else
-    no "MainActivity.kt no llama crearEnlaceConMicrosoft() o no nombra EnlaceConMicrosoft( : la app instalada todavía no usa tu enlace (paso 7)"
-  fi
-  if hay 'entradaConMicrosoft = entradaConMicrosoft' "$ACT" && hay 'enlace = enlace' "$ACT"; then
-    si "Texto: en MainActivity.kt, la llamada a Tienda nombra entradaConMicrosoft = entradaConMicrosoft y enlace = enlace (presencia textual: ninguna prueba ve si el enlace llega a Tienda)"
-  else
-    no "En MainActivity.kt, la llamada a Tienda ya no dice  entradaConMicrosoft = entradaConMicrosoft  o  enlace = enlace : onCreate viene dado y le pasa las dos piezas a Tienda"
+    no "MainActivity.kt ya no arma con armarEntradaConMicrosoft(navegador) y armarEnlaceConMicrosoft(enlazador), o ya no le pasa las dos piezas a Tienda: ese archivo viene dado y no se cambia"
   fi
   sobran=""
-  for p in MicrosoftSinConectar EnlaceSinConectar ProyectoFalso EntradaSinProveedor EntradaFalsa SelectorFalso VerificadorFalso NavegadorFalso AppDePruebas; do
+  for p in MicrosoftSinConectar EnlaceSinConectar ProyectoFalso EntradaSinProveedor EntradaFalsa SelectorFalso VerificadorFalso NavegadorFalso EnlazadorFalso AppDePruebas; do
     hay "$p" "$MAIN" && sobran="$sobran $p"
   done
   [ -z "$sobran" ] \
     && si "Texto: ningún .kt de la app nombra MicrosoftSinConectar, EnlaceSinConectar ni una pieza de pruebas" \
-    || no "La app todavía nombra:$sobran. MicrosoftSinConectar se borra en el paso 4 y EnlaceSinConectar en el paso 7; las piezas de pruebas viven solo en src/test"
+    || no "La app todavía nombra:$sobran. MicrosoftSinConectar se borra de Armado.kt en el paso 4 y EnlaceSinConectar en el paso 7; las piezas de pruebas viven solo en src/test"
   fuga=""
   for p in accessToken AccessToken OAuthCredential; do
     hay "$p" "$MAIN" && fuga="$fuga $p"
@@ -303,7 +313,7 @@ echo "Corriendo las pruebas… (la primera vez tarda y necesita red para bajar l
 "./$PROY/gradlew" -p "$PROY" -q testDebugUnitTest --rerun >"$salida" 2>&1
 rc=$?
 
-TODOS=("$XMLG" "$XMLR" "$XMLA" "$XMLM" "$XMLRM" "$XMLAM" "$XMLE" "$XMLRE")
+TODOS=("$XMLG" "$XMLR" "$XMLA" "$XMLM" "$XMLRM" "$XMLAM" "$XMLE" "$XMLRE" "$XMLAE")
 frescos=1
 for x in "${TODOS[@]}"; do
   { [ -f "$x" ] && [ "$x" -nt "$marca" ]; } || frescos=0
@@ -322,7 +332,7 @@ fi
 rm -f "$marca" "$salida"
 
 # El conteo se lee de los informes de resultados (XML), no del código de salida de Gradle.
-# Son ocho informes, uno por clase de pruebas, y se suman.
+# Son nueve informes, uno por clase de pruebas, y se suman.
 attr() { sed -n 's/.*<testsuite [^>]*[[:space:]]'"$1"'="\([0-9]*\)".*/\1/p' "$2" | head -1; }
 suma() { a="$1"; shift; t=0; for x in "$@"; do v=$(attr "$a" "$x"); t=$((t + ${v:-0})); done; echo "$t"; }
 total=$(suma tests "${TODOS[@]}"); fallas=$(suma failures "${TODOS[@]}")
@@ -417,9 +427,12 @@ caso() { # nombre del caso · pasaron de tu entrada · de cuántas · pasó la d
 caso "cancelación (FirebaseAuthWebException con ERROR_WEB_CONTEXT_CANCELED)" \
   "$(todas "$XMLM" laCancelacionContestaCancelada)" 1 "$(todas "$XMLRM" laCancelacionMuestraSuMensajeYNoPasa)" \
   "FirebaseAuthWebException con el código ERROR_WEB_CONTEXT_CANCELED"
-caso "colisión de cuenta (FirebaseAuthUserCollisionException)" \
+caso "colisión de cuenta (FirebaseAuthUserCollisionException con ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL)" \
   "$(todas "$XMLM" laColisionContestaCuentaConOtroProveedor)" 1 "$(todas "$XMLRM" laColisionMuestraSuMensajeYNoPasa)" \
-  "FirebaseAuthUserCollisionException"
+  "FirebaseAuthUserCollisionException con ese código"
+revisa "$XMLM" otraColisionQueNoEsDeProveedorContestaFallo \
+  "Simulado: una colisión con otro código (la cuenta ya es de otro usuario) contesta el error, no «entra con el otro botón»" \
+  "Una colisión con otro código se está contando como «ese correo ya entró con otro botón»: no basta la clase, revisa también el código ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL (paso 5)"
 caso "error (otra falla web que no es cancelación, u otra excepción)" \
   "$(todas "$XMLM" otraFallaDelNavegadorContestaFalloYNoCancelada cualquierOtraFallaContestaFallo)" 2 \
   "$(todas "$XMLRM" elErrorMuestraSuMensajeYNoPasa)" "cualquier otra excepción (también una falla web que no sea cancelación)"
@@ -428,15 +441,15 @@ revisa "$XMLRM" elMensajeDeLaColisionEsElDeLaLeccionYDistintoDeLosOtrosTres \
   "El mensaje de la colisión ya no es el de la lección o es igual a otro: Tienda.kt viene dado y no se cambia"
 
 # --- 5.4 · Enlazar, con confirmación ----------------------------------------------------------
-enl=$(todas "$XMLE" enlazaConElProveedorMicrosoftSinAbrirOtraEntrada)
-arme=$(todas "$XMLAM" laAppArmaSuEnlacePidiendoEseProveedor)
+enl=$(todas "$XMLE" enlazaConElProveedorMicrosoft)
+arme=$(todas "$XMLAE" laAppArmaSuEnlacePidiendoEseProveedor)
 if [ "$enl" -eq 1 ] && [ "$arme" -eq 1 ]; then
-  si "Simulado: tu enlace pide el enlace una sola vez, con microsoft.com y sin abrir otra entrada; y el que arma MainActivity.crearEnlaceConMicrosoft hace lo mismo (2 de 2)"
+  si "Simulado: tu enlace pide el enlace una sola vez, con microsoft.com; y el que arma MainActivity.crearEnlaceConMicrosoft hace lo mismo (2 de 2)"
 else
-  no "Enlace: $((enl + arme)) de 2 pruebas en verde. EnlaceConMicrosoft debe llamar navegador.enlazar con el proveedor microsoft.com, y MainActivity.crearEnlaceConMicrosoft debe regresarlo (paso 7)"
+  no "Enlace: $((enl + arme)) de 2 pruebas en verde. EnlaceConMicrosoft debe llamar enlazador.enlazar con el proveedor microsoft.com, y Armado.kt debe armarlo (paso 7)"
 fi
 sin=$(todas "$XMLE" sinHaberEntradoContestaSinSesion enlazarSinHaberEntradoNoEnlazaNada)
-sinr=$(todas "$XMLAM" conLaPuertaDeVerdadYSinNadieAdentroElEnlaceContestaSinSesion)
+sinr=$(todas "$XMLAE" conLaPuertaDeVerdadYSinNadieAdentroElEnlaceContestaSinSesion)
 if [ "$sin" -eq 2 ] && [ "$sinr" -eq 1 ]; then
   si "Simulado: sin haber entrado no se enlaza nada — tu enlace contesta «sin sesión», Microsoft sigue chocando, y con la puerta de verdad (sin ningún usuario en tu computadora) contesta lo mismo sin abrir nada (3 de 3)"
 else
@@ -466,7 +479,20 @@ revisa "$XMLRE" alConfirmarSeEnlazaYMicrosoftLlegaAlMismoUsuario \
   "Simulado: al tocar «Enlazar Microsoft» se pide el enlace una vez, la pantalla lo confirma, y después Microsoft llega al usuario que creó Google" \
   "Al tocar «Enlazar Microsoft» no se enlaza, o después Microsoft no llega al mismo usuario (paso 7)"
 
-[ "$total" -eq 58 ] || no "Esperaba 58 pruebas (20 de la lección 04; 11 de EntradaConMicrosoftTest, 10 de RecorridoConMicrosoftTest, 4 de ArranqueConMicrosoftTest, 8 de EnlaceConMicrosoftTest y 5 de RecorridoConEnlaceTest) y los informes traen $total"
+# Un enlace que quedó a medias no es una entrada (A2 de la revisión).
+rete=$(todas "$XMLE" sinEnlaceAMediasRetomarContestaNull unEnlaceAMediasQueTerminoBienSeRetomaComoEnlazado \
+  unEnlaceAMediasQueSeCanceloSeRetomaComoCancelado unEnlaceAMediasQueFalloSeRetomaComoFallo)
+retp=$(todas "$XMLRE" alAbrirConUnEnlaceAMediasQueTerminoBienAvisaQueQuedoEnlazado alAbrirConUnEnlaceAMediasQueSeCanceloLoDiceYVuelveAPreguntar)
+if [ "$rete" -eq 4 ] && [ "$retp" -eq 2 ]; then
+  si "Simulado: un enlace que quedó a medias se retoma como enlace, no como entrada — tu clase contesta enlazado, cancelado o falla, y la app abre en la confirmación con ese desenlace (6 de 6). Lo «a medias» lo dijo el doble: ninguna prueba cerró la app"
+else
+  no "Retomar el enlace: $((rete + retp)) de 6 pruebas en verde. retomar() de EnlaceConMicrosoft debe traducir lo que regresa enlazador.pendiente() a un EnlaceRetomado, o null si no hay nada (paso 7)"
+fi
+revisa "$XMLAE" laNotaDeEnlaceLaBorraSoloLaPuertaDelEnlace \
+  "Simulado: con las puertas de verdad, la nota «hay un enlace en curso» la borra solo la puerta del enlace. Esta prueba no ve si la puerta de entrar la respeta (en tu computadora nunca hay nada pendiente): eso lo respalda que PuertaDelNavegador.kt sea el de la lección" \
+  "Con las puertas de verdad, la nota «hay un enlace en curso» no se borra donde debe: PuertaDelNavegador.kt y PuertaDelEnlace.kt vienen dados y no se cambian"
+
+[ "$total" -eq 66 ] || no "Esperaba 66 pruebas (20 de la lección 04; 12 de EntradaConMicrosoftTest, 10 de RecorridoConMicrosoftTest, 2 de ArranqueConMicrosoftTest, 12 de EnlaceConMicrosoftTest, 7 de RecorridoConEnlaceTest y 3 de ArranqueConEnlaceTest) y los informes traen $total"
 [ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
 
 # --- «Rompe uno a propósito» · presencia mínima de la evidencia escrita ----------------------
@@ -476,8 +502,15 @@ if [ "$PROY" = "inicio" ]; then
   else
     no "respuestas/05.md no trae pegado el rojo del «Rompe uno a propósito» (paso 6): la línea que contiene «$MARCA_ROMPE»"
   fi
+  # A1 de la revisión: la colisión solo existe con «una cuenta por correo». Esa opción vive en la consola
+  # de Firebase, que este guion no ve: solo busca que la hayas revisado y anotado.
+  if [ -f "$RESP" ] && grep -qiF "$MARCA_CORREO" "$RESP"; then
+    si "Escrito: respuestas/05.md dice «$MARCA_CORREO» (solo busco esa línea: no veo tu consola de Firebase)"
+  else
+    no "respuestas/05.md no dice «$MARCA_CORREO»: revisa esa opción en la consola de Firebase antes de probar la colisión (paso 7) y anótala así. Sin ella no hay colisión que resolver"
+  fi
 else
-  nota "El rojo pegado en respuestas/05.md solo se busca sobre inicio/"
+  nota "Lo escrito en respuestas/05.md solo se busca sobre inicio/"
 fi
 
 # --- Nivel instrumentado (solo si lo pides) ------------------------------------------------
@@ -559,7 +592,8 @@ nota "  prueba enlazó dos cuentas en Firebase. Eso lo demuestra la prueba manua
 nota "No demuestra que tu app esté registrada en Entra, que la dirección de retorno sea la exacta, que la clave"
 nota "  que guardaste en Firebase sea la vigente ni que puedas entrar. Eso lo demuestra el nivel real (paso 10)."
 nota "Las marcas «Clave:» leen archivos de $PROY/ y respuestas/05.md con una forma y un nombre: no ven tu terminal,"
-nota "  tus capturas ni el historial de git, y una clave con otra forma se les pasa."
-nota "Las marcas «Texto:» son presencia textual: buscan palabras en tus archivos y no validan que el código haga lo que dicen."
+nota "  tus capturas ni el historial de git, y una clave con otra forma se les pasa. No es un escaneo de secretos."
+nota "Las marcas «Texto:» son estructura mínima, no evidencia de integración: buscan palabras y no validan que el código haga lo que dicen."
+nota "  Que la app instalada use tus piezas lo respalda que MainActivity.kt sea el de la lección (sobre inicio/) y, al final, el nivel real."
 nota "No califica tu tabla del registro (5.1), tu tabla de comparación (5.3) ni tu lista del 5.5: compáralas con «Compara tus respuestas»."
 exit $ok

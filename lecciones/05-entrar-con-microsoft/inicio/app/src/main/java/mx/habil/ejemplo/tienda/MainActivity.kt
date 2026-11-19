@@ -6,8 +6,9 @@ import androidx.activity.compose.setContent
 
 // La puerta de entrada de la app. Android crea esta clase al abrir la app
 // y setContent le dice qué función dibuja la pantalla.
-// Aquí se arman las dos Entradas que usa la app de verdad, cada una con sus
-// piezas. Es el único lugar de la app que las nombra.
+// Aquí se arman las piezas que usa la app de verdad y se le pasan a Tienda.
+// Desde la lección 05 este archivo viene dado y no se cambia: lo que se arma
+// para Microsoft se decide en Armado.kt.
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,15 +34,13 @@ class MainActivity : ComponentActivity() {
 
     // Arma la segunda Entrada, la de Microsoft. Igual que arriba: la puerta
     // llega por parámetro con su valor de verdad por omisión, y una prueba
-    // puede pasarle una de mentira para leer qué proveedor se pidió.
-    // Por ahora regresa la que no deja pasar: la cambias en el paso 4.
+    // puede pasarle una de mentira. Qué pieza se arma lo decide Armado.kt.
     fun crearEntradaConMicrosoft(
         navegador: NavegadorDeProveedor = NavegadorConFirebase(this),
-    ): EntradaQueSeRetoma = MicrosoftSinConectar()
+    ): EntradaQueSeRetoma = armarEntradaConMicrosoft(navegador)
 
-    // Arma el Enlace con Microsoft, con la misma puerta.
-    // Por ahora regresa el que no enlaza: lo cambias en el paso 7.
+    // Arma el Enlace con Microsoft, con su propia puerta.
     fun crearEnlaceConMicrosoft(
-        navegador: NavegadorDeProveedor = NavegadorConFirebase(this),
-    ): Enlace = EnlaceSinConectar()
+        enlazador: EnlazadorDeProveedor = EnlazadorConFirebase(this),
+    ): Enlace = armarEnlaceConMicrosoft(enlazador)
 }

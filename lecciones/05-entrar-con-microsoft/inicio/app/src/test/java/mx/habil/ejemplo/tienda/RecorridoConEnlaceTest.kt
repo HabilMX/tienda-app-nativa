@@ -57,7 +57,11 @@ class RecorridoConEnlaceTest {
         p.salir()
         val navegador = p.navegadorDe(correo, "Ana")
         pantalla.setContent {
-            Tienda(entrada = google, entradaConMicrosoft = EntradaConMicrosoft(navegador), enlace = EnlaceConMicrosoft(navegador))
+            Tienda(
+                entrada = google,
+                entradaConMicrosoft = EntradaConMicrosoft(navegador),
+                enlace = EnlaceConMicrosoft(p.enlazadorDe(correo)),
+            )
         }
         toca("Entrar")
         return p
@@ -122,5 +126,36 @@ class RecorridoConEnlaceTest {
         pantalla.onNodeWithText("Hola, Ana").assertIsDisplayed()
         noHayNingun("Enlazar Microsoft")
         assertEquals(0, p.enlacesPedidos)
+    }
+
+    // --- Al abrir la app: un ENLACE que quedó a medias no es una entrada ---
+
+    private fun abreConEnlaceAMedias(pendiente: EnlacePendiente) {
+        // La puerta de entrar no tiene nada a medias: lo pendiente es del enlace.
+        pantalla.setContent {
+            Tienda(
+                entrada = EntradaFalsa(Resultado.Fallo),
+                entradaConMicrosoft = EntradaConMicrosoft(NavegadorFalso(pendiente = null)),
+                enlace = EnlaceConMicrosoft(EnlazadorFalso(pendiente = pendiente)),
+            )
+        }
+        pantalla.waitForIdle()
+    }
+
+    @Test
+    fun alAbrirConUnEnlaceAMediasQueTerminoBienAvisaQueQuedoEnlazado() {
+        abreConEnlaceAMedias(EnlacePendiente("Ana", null))
+        pantalla.onNodeWithText("Listo").assertIsDisplayed()
+        noHayNingun("La tienda"); noHayNingun("Hola")
+        toca("Continuar")
+        pantalla.onNodeWithText("Hola, Ana").assertIsDisplayed()
+    }
+
+    @Test
+    fun alAbrirConUnEnlaceAMediasQueSeCanceloLoDiceYVuelveAPreguntar() {
+        abreConEnlaceAMedias(EnlacePendiente("Ana", cancelacionInventada()))
+        pantalla.onNodeWithText("Cerraste la ventana antes de terminar. No se enlazó nada.").assertIsDisplayed()
+        pantalla.onNode(boton("Enlazar Microsoft")).assertIsDisplayed()
+        noHayNingun("Listo"); noHayNingun("Hola"); noHayNingun("Entra a tu cuenta")
     }
 }

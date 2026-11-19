@@ -50,7 +50,11 @@ class EntradaConMicrosoft(
     // específicas van antes que el «todo lo demás».
     private fun resultadoDe(falla: Exception): Resultado = when {
         // Ese correo ya tiene usuario en tu proyecto, creado con otro proveedor.
-        falla is FirebaseAuthUserCollisionException -> Resultado.CuentaConOtroProveedor
+        // No basta la clase: la misma excepción trae otros códigos, y solo
+        // este quiere decir «entra con el otro botón».
+        falla is FirebaseAuthUserCollisionException &&
+            falla.errorCode == "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL" ->
+            Resultado.CuentaConOtroProveedor
         // La persona cerró el navegador sin terminar.
         falla is FirebaseAuthWebException && falla.errorCode == "ERROR_WEB_CONTEXT_CANCELED" ->
             Resultado.Cancelada

@@ -15,17 +15,14 @@ import com.google.firebase.auth.OAuthProvider
 // preguntaron por una entrada a medias, y contesta lo que le digas:
 // - nombre: quién entra si se abre el navegador.
 // - pendiente: quién quedó a medias (null si nadie).
-// - fallaAlAbrir / fallaPendiente / fallaAlEnlazar: la excepción con la que
-//   termina cada una.
+// - fallaAlAbrir / fallaPendiente: la excepción con la que termina cada una.
 class NavegadorFalso(
     private val nombre: String = "Ana",
     private val pendiente: String? = null,
     private val fallaAlAbrir: Exception? = null,
     private val fallaPendiente: Exception? = null,
-    private val fallaAlEnlazar: Exception? = null,
 ) : NavegadorDeProveedor {
     val abiertos = mutableListOf<OAuthProvider>()
-    val enlazados = mutableListOf<OAuthProvider>()
     var preguntasPorPendiente = 0
 
     override suspend fun pendiente(): String? {
@@ -38,11 +35,6 @@ class NavegadorFalso(
         abiertos += proveedor
         if (fallaAlAbrir != null) throw fallaAlAbrir
         return nombre
-    }
-
-    override suspend fun enlazar(proveedor: OAuthProvider) {
-        enlazados += proveedor
-        if (fallaAlEnlazar != null) throw fallaAlEnlazar
     }
 }
 
@@ -61,4 +53,11 @@ fun otraFallaWebInventada(): Exception =
 fun colisionInventada(): Exception =
     FirebaseAuthUserCollisionException(
         "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL", "ya existe con otro proveedor, en la prueba"
+    )
+
+// Otra colisión, con otro código: la cuenta de Microsoft ya es de otro
+// usuario. No es el caso «ese correo ya entró con otro botón».
+fun otraColisionInventada(): Exception =
+    FirebaseAuthUserCollisionException(
+        "ERROR_CREDENTIAL_ALREADY_IN_USE", "credencial ya en uso, en la prueba"
     )

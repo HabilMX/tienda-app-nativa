@@ -42,38 +42,3 @@ interface EntradaQueSeRetoma : Entrada {
     // terminó; si no quedó nada, regresa null.
     suspend fun retomar(): Resultado?
 }
-
-// Nuevo en la lección 05: lo que puede pasar cuando alguien que ya entró
-// pide enlazar un segundo proveedor a su mismo usuario.
-sealed interface ResultadoDeEnlace {
-    // Quedó enlazado: desde ahora los dos botones llegan al mismo usuario.
-    data object Enlazado : ResultadoDeEnlace
-
-    // Nadie ha entrado todavía: no hay usuario al cual enlazarle nada.
-    data object SinSesion : ResultadoDeEnlace
-
-    // La persona cerró el navegador sin terminar.
-    data object Cancelado : ResultadoDeEnlace
-
-    // Cualquier otra falla.
-    data object Fallo : ResultadoDeEnlace
-}
-
-// Enlazar un segundo proveedor al usuario que ya entró. La pantalla solo lo
-// pide después de que la persona lo confirma.
-interface Enlace {
-    suspend fun enlazar(): ResultadoDeEnlace
-}
-
-// Las dos implementaciones que usa la app al empezar esta lección: el botón
-// de Microsoft todavía no deja pasar a nadie, no hay nada que retomar y no se
-// enlaza nada. Las cambias por EntradaConMicrosoft (paso 4) y por
-// EnlaceConMicrosoft (paso 7), y entonces estas clases se borran.
-class MicrosoftSinConectar : EntradaQueSeRetoma {
-    override suspend fun retomar(): Resultado? = null
-    override suspend fun entrar(): Resultado = Resultado.Fallo
-}
-
-class EnlaceSinConectar : Enlace {
-    override suspend fun enlazar(): ResultadoDeEnlace = ResultadoDeEnlace.Fallo
-}
