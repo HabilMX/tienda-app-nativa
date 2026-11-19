@@ -173,7 +173,15 @@ done
 if [ "$frescos" -ne 1 ]; then
   no "Las pruebas no llegaron a correr. Esto dijo Gradle:"
   grep -E '^e: |error:|What went wrong|SDK location|Java heap|No matching client found|google-services.json is missing|Could not (find|resolve)' "$salida" \
-    | sed -e 's|file://.*/||' -e 's| in /.*google-services.json| en tu app/google-services.json|' | head -8 | sed 's/^/     /'
+    | sed -e 's|file://.*/||' -e 's| in /.*google-services.json| en tu app/google-services.json|' | head -8 | sed 's/^/     /' \
+    > "$salida.causa"
+  if [ -s "$salida.causa" ]; then
+    cat "$salida.causa"
+  else
+    # Ninguna frase conocida: se muestran las últimas líneas, sin rutas de tu computadora.
+    grep -v '^[[:space:]]*$' "$salida" | tail -8 | sed -e "s|$HOME|~|g" -e 's/^/     /'
+  fi
+  rm -f "$salida.causa"
   if grep -q 'google-services.json is missing' "$salida"; then
     nota "Con el plugin aplicado, el proyecto no compila sin app/google-services.json: es el de TU proyecto de Firebase (lección 03)"
   fi

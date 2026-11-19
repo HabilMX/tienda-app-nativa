@@ -29,9 +29,10 @@ Esa misma noche pasa lo mismo con Microsoft: la primera entrada trae «(primera 
 Y aquí está lo raro. Esa app no tenía base de datos. No guardaba una lista de quién ya había entrado. No escribía
 nada en el teléfono. ¿Cómo supo que la segunda vez ya no era la primera?
 
-No lo supo ella. Se lo dijo Firebase, en una sola palabra que viene escondida en la respuesta de cada inicio de
-sesión. Tu app la ha estado recibiendo desde la lección 04, y la ha tirado a la basura cada vez: de esa
-respuesta, tus puertas solo sacan el nombre. Esta lección la rescata.
+No lo supo ella. Se lo dijo Firebase, en una sola palabra que puede venir escondida en la respuesta del inicio
+de sesión. Tu app la ha estado recibiendo desde la lección 04, y la ha tirado a la basura cada vez: de esa
+respuesta, tus puertas solo sacan el nombre. Esta lección la rescata. Como esa palabra puede no venir, tu app
+preguntará de forma segura: si falta, no hay bienvenida.
 
 ---
 
@@ -141,7 +142,8 @@ Las puertas de verdad reemplazan ese cuerpo: leen el `AuthResult` de Firebase y 
 con sus tokens, se queda adentro.
 
 Lo demás es idéntico a la solución de la 07, y el `verifica` lo compara archivo por archivo. Es una restricción de
-esta actividad, no del objetivo.
+esta actividad, no del objetivo: si cambiaste uno de esos archivos y tu app sí hace lo que pide la lección, ese
+rojo no dice que no entendiste el 8.1. Regrésalo a como venía, o pide que alguien revise tu cambio.
 
 ---
 
@@ -201,6 +203,7 @@ Los sabotajes se midieron sobre la solución el 19-nov-2026:
 | `EntradaConMicrosoft` que no la pasa en `entrar()` | 93 de 97 |
 | `EntradaConMicrosoft` que no la pasa en `retomar()` | 95 de 97 |
 | `EntradaConGoogle` que siempre dice que es la primera vez | 92 de 97, y tres de las rojas son heredadas de lecciones anteriores |
+| `esPrimeraVez` que solo lee `isNewUser` cuando el resultado es el doble de las pruebas | 96 de 97: cada caso se prueba también con el resultado en otra clase |
 | `EntradaConGoogle` que falla solo cuando la puerta es `VerificadorConFirebase` | 97 de 97: las pruebas no lo ven, porque solo le pasan dobles. Lo atrapa la marca de la puerta concreta |
 
 Cada uno deja además su marca en rojo en la salida, con el paso que lo arregla.
@@ -317,7 +320,7 @@ página?) y qué comprobaste tú, y cómo. En `fuente 8.3`, la dirección de una
 comprobar algo.
 
 **Lo demuestra:** tus tres juicios contra «Compara tus respuestas», y tu comprobación. El `verifica` solo busca las
-líneas y la fuente: no las califica.
+líneas y la fuente, o sea, el formato: no las califica. Eso lo haces tú al cotejar.
 
 ---
 
@@ -328,8 +331,8 @@ El paso 5 se hace **sin IA**.
 | # | Haces | Está hecho cuando |
 |---|---|---|
 | 8.1 | Decides con `isNewUser` si se muestra la bienvenida y demuestras que aparece solo la primera vez | El `verifica` dice «Nivel simulado: completo», con las 97 pruebas en verde, y tu `predicción 8.1` está comparada con lo que viste. Es el nivel simulado; el paso 4 es tu prueba en el teléfono |
-| 8.2 | Explicas qué hizo Firebase por ti, qué construirías sin él y qué todavía no hay | Tus tres líneas `8.2` cubren lo de «Compara tus respuestas», escritas sin IA |
-| 8.3 | Juzgas una respuesta de Claude Code sobre la seguridad del inicio de sesión | Tus tres juicios coinciden con «Compara tus respuestas», cada uno con su porqué, y hay una comprobación con fuente oficial |
+| 8.2 | Explicas qué hizo Firebase por ti, qué construirías sin él y qué todavía no hay | El `verifica` confirma el formato. Tú lo terminas al cotejar tus tres líneas `8.2` con «Compara tus respuestas»: ¿nombraste la verificación del token, la creación del usuario, la sesión que se queda y lo que todavía no hay (el perfil)? Escritas sin IA: eso no lo puede comprobar ningún script, es tu compromiso |
+| 8.3 | Juzgas una respuesta de Claude Code sobre la seguridad del inicio de sesión | El `verifica` confirma el formato. Tú lo terminas cuando tus tres juicios coinciden con «Compara tus respuestas», cada uno con su porqué, y junto a cada uno anotaste qué lo respalda: la página oficial o el archivo y la línea |
 
 **Tiempo:** calcula una hora y media sin el paso 4, y veinte minutos más con él. Es un estimado: lo ajustamos con
 lo que tarde la primera cohorte.
@@ -349,6 +352,7 @@ lo que tarde la primera cohorte.
 | En el teléfono, nunca sale la bienvenida | Tu cuenta ya existía en tu proyecto, desde la 04 | Paso 4: otra cuenta, o borra tu usuario |
 | En el teléfono, sale la bienvenida cada vez que entras | Borraste el usuario en la consola entre una entrada y otra, o algo distinto que no hemos visto | Revisa Authentication › Users; si el usuario sigue ahí y sale cada vez, cuéntanos |
 | ❌ «EntradaConGoogle.kt o EntradaConMicrosoft.kt nombra una puerta concreta» | Una de tus entradas nombra una puerta de verdad (`VerificadorConFirebase`, `NavegadorConFirebase`) o un doble de las pruebas. Las pruebas solo les pasan dobles: si tu código pregunta cuál le tocó, el verde no dice qué hace con la de verdad | Que tus entradas hablen solo con las interfaces de sus puertas. La puerta de verdad la escoge `MainActivity.kt`, que viene dado (paso 3) |
+| ❌ «Las pruebas no llegaron a correr» y lo que sigue no dice la causa | Gradle falló por algo que el `verifica` no reconoce; te muestra sus últimas líneas | Corre `./inicio/gradlew -p inicio testDebugUnitTest --stacktrace` y lee el final. Si lo compartes, quita antes tokens y rutas de tu computadora |
 
 El `verifica` de esta lección se midió en una Mac con Apple silicon. No se ha medido en Linux.
 
@@ -393,12 +397,14 @@ app (lección 07) la saludaría como si nada: lo razonamos del código, no lo me
 
 - **Firebase hizo:** verificó el token de identidad de Google en sus servidores; habló con Microsoft usando el ID
   de cliente y la clave que guardaste en su consola, sin que la clave tocara tu app; creó al usuario la primera
-  vez que entraste, con un identificador único; aplicó «una cuenta por correo» y enlazó el segundo proveedor al
-  mismo usuario; guardó la sesión en el teléfono y renueva el token de identidad cada hora con el de
+  vez que entraste, con un identificador único; en este proyecto, con la regla de una cuenta por correo que
+  tiene configurada, rechazó el segundo inicio con ese correo y, después de que la persona lo confirmó y la app
+  pidió el enlace, unió el segundo proveedor al mismo usuario; guardó la sesión en el teléfono y renueva el token de identidad cada hora con el de
   actualización; y te dijo si el usuario era nuevo.
 - **Sin Firebase:** un servidor tuyo que revise que cada token es auténtico, que se emitió para tu app y que no ha
   caducado; el intercambio con Microsoft hecho desde ese servidor, que es donde viviría la clave; una tabla de
-  usuarios con su identificador y con qué cuentas se llega a cada uno; la regla del correo repetido y el enlace;
+  usuarios con su identificador y con qué cuentas se llega a cada uno; la regla del correo repetido, y la llamada
+  que une una credencial nueva al usuario que ya existe;
   tus propios tokens de sesión, cómo se renuevan y dónde se guardan en el teléfono; y la marca de «usuario nuevo»,
   que tendrías que calcular tú al crear la fila.
 - **Todavía no hay:** un perfil de la tienda. El usuario de autenticación tiene un conjunto fijo de datos: un
