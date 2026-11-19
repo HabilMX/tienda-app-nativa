@@ -40,9 +40,6 @@ interface NavegadorDeProveedor {
 class NavegadorConFirebase(private val actividad: Activity) : NavegadorDeProveedor {
 
     override suspend fun pendiente(): String? {
-        // Si lo que quedó a medias fue un enlace, no es una entrada: lo
-        // recoge la otra puerta (PuertaDelEnlace.kt).
-        if (hayEnlaceEnCurso(actividad)) return null
         val tarea = FirebaseAuth.getInstance().pendingAuthResult ?: return null
         return suspendCancellableCoroutine { continuacion ->
             tarea

@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-// Pantalla nueva de la lección 05: la confirmación. Aparece solo cuando la
+// Pantalla nueva de la lección 06: la confirmación. Aparece solo cuando la
 // persona chocó con «ese correo ya entró con otro botón» y después entró con
 // el botón correcto. No enlaza nada por su cuenta: pregunta y avisa.
 // - enlazado: ya se hizo; solo queda continuar.

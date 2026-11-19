@@ -73,8 +73,8 @@ el proyecto ya trae su `.gitignore`. Junto está `solucion/`: puedes leerla sin 
 | Las pruebas instrumentadas, con una copia de los dobles, `androidx.test:runner` 1.7.0 y Espresso 3.7.0 | `app/src/androidTest` y el catálogo | Corren dentro de Android (paso 6). El Espresso que Compose trae por omisión no arrancó en Android 37: 0 de 4, con `NoSuchMethodException` (medido el 18-nov-2026) |
 | Un esqueleto de `EntradaConGoogle` | `EntradaConGoogle.kt` | Es el archivo que escribes tú |
 
-**Lo que no hace esta lección.** No se guarda la sesión ni se cierra (lección 06), y no se distingue la primera
-vez (lección 07).
+**Lo que no hace esta lección.** No se guarda la sesión ni se cierra (lección 07), y no se distingue la primera
+vez (lección 08).
 
 ---
 

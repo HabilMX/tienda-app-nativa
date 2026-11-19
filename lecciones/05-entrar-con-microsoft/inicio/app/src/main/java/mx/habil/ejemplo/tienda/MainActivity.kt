@@ -14,8 +14,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val entrada = crearEntrada()
         val entradaConMicrosoft = crearEntradaConMicrosoft()
-        val enlace = crearEnlaceConMicrosoft()
-        setContent { Tienda(entrada = entrada, entradaConMicrosoft = entradaConMicrosoft, enlace = enlace) }
+        setContent { Tienda(entrada = entrada, entradaConMicrosoft = entradaConMicrosoft) }
     }
 
     // Arma la Entrada de la app. Las dos puertas llegan por parámetro con su
@@ -38,9 +37,4 @@ class MainActivity : ComponentActivity() {
     fun crearEntradaConMicrosoft(
         navegador: NavegadorDeProveedor = NavegadorConFirebase(this),
     ): EntradaQueSeRetoma = armarEntradaConMicrosoft(navegador)
-
-    // Arma el Enlace con Microsoft, con su propia puerta.
-    fun crearEnlaceConMicrosoft(
-        enlazador: EnlazadorDeProveedor = EnlazadorConFirebase(this),
-    ): Enlace = armarEnlaceConMicrosoft(enlazador)
 }

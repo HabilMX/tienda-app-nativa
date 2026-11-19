@@ -1,0 +1,304 @@
+#!/usr/bin/env bash
+# Revisa la lección 06, en el nivel SIMULADO: corre las pruebas en tu computadora
+# (./gradlew testDebugUnitTest), sin emulador, sin navegador, sin cuenta y sin red hacia Microsoft, Google ni
+# Firebase, y lee el conteo de los informes de resultados (XML). Esta lección no tiene nivel instrumentado.
+# SÍ revisa, corriendo EnlaceConMicrosoftTest (le dan a tu EnlaceConMicrosoft una puerta de mentira, la de
+#   DoblesDeEnlace.kt, y miran qué le pidió y qué contestó): que pida el enlace una vez y con microsoft.com;
+#   que sin nadie adentro conteste «sin sesión»; que la cancelación y otra falla den cada una su resultado; y
+#   que retomar() traduzca un enlace que quedó a medias (enlazado, cancelado o falla) o regrese null. Y, con un
+#   proyecto de mentira (ProyectoFalso.kt) de dos personas y la regla «una cuenta por correo» escrita a mano:
+#   que antes de enlazar el mismo correo choque, que después de enlazar los dos accesos lleguen al mismo
+#   usuario y que otra persona siga siendo otro usuario.
+# SÍ revisa, corriendo RecorridoConEnlaceTest (dibujan Tienda en memoria con tus clases y tocan los botones),
+#   la confirmación: que en la colisión no se ofrezca enlazar, que tras entrar se pregunte sin enlazar, que
+#   solo el toque en «Enlazar Microsoft» enlace y que «Ahora no» no enlace. Y que la app, al abrirse con un
+#   enlace a medias, vaya a la confirmación con su desenlace y no lo trate como una entrada.
+# SÍ revisa, corriendo ArranqueConEnlaceTest (abren MainActivity): que el enlace que arma la app pida
+#   microsoft.com; que con la puerta de VERDAD y sin nadie adentro conteste «sin sesión» sin abrir nada; y que
+#   la nota «hay un enlace en curso» la borre solo la puerta del enlace.
+# SÍ revisa lo heredado: corre las 44 pruebas de la lección 05 (que incluyen las 20 de la 04) y compara,
+#   byte por byte, todo archivo que esta lección no cambia contra el de la solución de la 05. Los cuatro que
+#   SÍ cambian (Tienda.kt, PuertaDelNavegador.kt, MainActivity.kt y Armado.kt, por la confirmación, la nota y
+#   el armado del enlace) vienen dados y se comparan entre inicio/ y solucion/, salvo Armado.kt, que editas tú.
+# PRESENCIA TEXTUAL (busca palabras; no ejecuta ni valida que el código haga lo que dicen; los comentarios no
+#   cuentan): que EnlaceConMicrosoft.kt llame enlazador.enlazar( ; que Armado.kt nombre EnlaceConMicrosoft( ;
+#   que MainActivity.kt arme con Armado.kt y le pase el enlace a Tienda; que ningún .kt de la app nombre
+#   EnlaceSinConectar ni una pieza de pruebas; y que respuestas/06.md diga «una cuenta por correo: activa» y
+#   traiga pegado el rojo del ejercicio 6.2.
+# NO revisa: el navegador, a Microsoft ni a Firebase. «El mismo usuario» es el del proyecto de mentira:
+#   ninguna prueba enlaza dos cuentas en Firebase. «Quedó a medias» lo dice un doble: ninguna prueba cierra
+#   la app a medio enlace, y en tu computadora nunca hay un resultado pendiente de Firebase, así que la nota
+#   solo se ejercita sin nada que recoger. Que la puerta de entrar respete esa nota no lo ve ninguna prueba:
+#   lo respalda que PuertaDelNavegador.kt sea idéntico en inicio/ y en solucion/. No ve tu consola de
+#   Firebase: de «una cuenta por correo» solo busca la línea que tú anotas. Tampoco repite la búsqueda de la
+#   clave de Entra: esa es del verifica de la lección 05. Por eso no demuestra que Firebase enlace tus
+#   cuentas: eso es la prueba manual (paso 5). Ni califica tu explicación del 6.2.
+# Solo lee tu código y tus archivos: no los cambia. Gradle escribe sus resultados en build/, que no se sube.
+# Uso:  ./verifica             revisa tu trabajo en inicio/
+#       ./verifica solucion    revisa la solución de referencia. En un clon limpio sale en ROJO:
+#                              google-services.json no se sube, y sin él el proyecto no compila.
+set -uo pipefail
+cd "$(dirname "$0")"
+PROY="${1:-inicio}"
+ok=0
+si() { echo "✅ $1"; }
+no() { echo "❌ $1"; ok=1; }
+nota() { echo "ℹ️  $1"; }
+case "$PROY" in
+  inicio|solucion) ;;
+  *) echo "Uso: ./verifica [inicio|solucion]"; exit 2 ;;
+esac
+[ $# -le 1 ] || { echo "Uso: ./verifica [inicio|solucion]   (esta lección no tiene nivel instrumentado)"; exit 2; }
+PAQ="mx.habil.ejemplo.tienda"
+DIRM="app/src/main/java/mx/habil/ejemplo/tienda"
+DIRP="app/src/test/java/mx/habil/ejemplo/tienda"
+MAIN="$PROY/app/src/main"
+JSON="$PROY/app/google-services.json"
+L05="../05-entrar-con-microsoft/solucion"
+RESP=../../respuestas/06.md
+DIRX="$PROY/app/build/test-results/testDebugUnitTest"
+XMLG="$DIRX/TEST-$PAQ.EntradaConGoogleTest.xml"
+XMLR="$DIRX/TEST-$PAQ.RecorridoTest.xml"
+XMLA="$DIRX/TEST-$PAQ.ArranqueTest.xml"
+XMLM="$DIRX/TEST-$PAQ.EntradaConMicrosoftTest.xml"
+XMLRM="$DIRX/TEST-$PAQ.RecorridoConMicrosoftTest.xml"
+XMLAM="$DIRX/TEST-$PAQ.ArranqueConMicrosoftTest.xml"
+XMLE="$DIRX/TEST-$PAQ.EnlaceConMicrosoftTest.xml"
+XMLRE="$DIRX/TEST-$PAQ.RecorridoConEnlaceTest.xml"
+XMLAE="$DIRX/TEST-$PAQ.ArranqueConEnlaceTest.xml"
+MARCA_CORREO="una cuenta por correo: activa"
+MARCA_ROMPE="Nada se enlaza sin el toque de la persona"
+echo "Revisando $PROY/ — nivel simulado (sin emulador, sin navegador, sin cuenta, sin hablar con Microsoft ni con Firebase)"
+
+# --- Andamiaje -------------------------------------------------------------------------------
+grep -q '^org.gradle.jvmargs=.*-Xmx4g' "$PROY/gradle.properties" 2>/dev/null \
+  && si "Andamiaje: gradle.properties le da 4 GB de memoria a Gradle (-Xmx4g)" \
+  || no "gradle.properties ya no trae -Xmx4g: regresa la línea  org.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8"
+
+# Lo que esta lección trae dado, comparado entre inicio/ y solucion/ (vale para los dos).
+if [ -d inicio ] && [ -d solucion ]; then
+  cambiados=""
+  for t in "$DIRP/EnlaceConMicrosoftTest.kt" "$DIRP/RecorridoConEnlaceTest.kt" "$DIRP/ArranqueConEnlaceTest.kt" \
+           "$DIRP/ProyectoFalso.kt" "$DIRP/DoblesDeEnlace.kt" \
+           "$DIRM/Enlace.kt" "$DIRM/PuertaDelEnlace.kt" "$DIRM/PantallaEnlace.kt" \
+           "$DIRM/Tienda.kt" "$DIRM/PuertaDelNavegador.kt" "$DIRM/MainActivity.kt"; do
+    cmp -s "inicio/$t" "solucion/$t" || cambiados="$cambiados $t"
+  done
+  if [ -z "$cambiados" ]; then
+    si "Andamiaje: las pruebas del enlace, sus dobles, Enlace.kt, PuertaDelEnlace.kt, PantallaEnlace.kt, Tienda.kt, PuertaDelNavegador.kt y MainActivity.kt son los de la lección, sin cambios (11 archivos comparados). Con MainActivity.kt idéntico, onCreate le pasa a Tienda lo que arma Armado.kt"
+  else
+    no "Estos archivos ya no son iguales en inicio/ y en solucion/, y no se tocan:$cambiados"
+    nota "Mira qué cambió con  git diff -- <archivo>  y deshazlo a mano. Si vienes del ejercicio 6.2, regresa la línea de Tienda.kt (paso 4)."
+  fi
+fi
+
+# Lo heredado: todo archivo de app/src que la solución de la 05 tiene y esta lección no cambia.
+if [ -f "$L05/$DIRM/EntradaConMicrosoft.kt" ]; then
+  cambiados=""; comparados=0
+  while IFS= read -r t; do
+    case "$t" in
+      "$DIRM/Tienda.kt"|"$DIRM/PuertaDelNavegador.kt"|"$DIRM/MainActivity.kt"|"$DIRM/Armado.kt") continue ;;
+    esac
+    comparados=$((comparados + 1))
+    cmp -s "$PROY/$t" "$L05/$t" || cambiados="$cambiados $t"
+  done < <(cd "$L05" && find app/src -type f | sort)
+  if [ "$comparados" -lt 20 ]; then
+    no "Solo encontré $comparados archivos en la solución de la lección 05: no puedo decir que lo heredado siga igual"
+  elif [ -z "$cambiados" ]; then
+    si "Andamiaje: lo heredado es idéntico a la solución de la lección 05 ($comparados archivos comparados: sus pruebas, sus dobles, sus puertas, tu EntradaConMicrosoft y las pantallas que no cambian)"
+  else
+    no "Estos archivos ya no son los de la solución de la lección 05 y no se tocan:$cambiados"
+  fi
+else
+  no "No encontré la solución de la lección 05 ($L05): sin ella no puedo comparar que lo heredado siga igual"
+fi
+
+# --- Las piezas, buscadas como texto (no se ejecutan) ----------------------------------------
+# Se CUENTA en lugar de usar «grep -q» al final de la tubería: con pipefail, grep -q corta al primer acierto,
+# el grep de antes muere por SIGPIPE y la tubería contesta «no hay» habiendo encontrado (medido el 18-nov-2026).
+hay() { local n; n=$(grep -rh --include='*.kt' -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -cF -- "$1"); [ "${n:-0}" -gt 0 ]; }
+hayre() { local n; n=$(grep -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -cE -- "$1"); [ "${n:-0}" -gt 0 ]; }
+ENL="$PROY/$DIRM/EnlaceConMicrosoft.kt"
+ARM="$PROY/$DIRM/Armado.kt"
+ACT="$PROY/$DIRM/MainActivity.kt"
+# El «no hay» solo vale si la búsqueda sí lee: se comprueba con una palabra que seguro está.
+if ! hay 'class EnlaceConMicrosoft' "$ENL" || ! hay 'class MainActivity' "$ACT"; then
+  no "No pude leer $DIRM/EnlaceConMicrosoft.kt o MainActivity.kt (o ya no declaran su clase): sin ellos no reviso el texto"
+else
+  hay 'enlazador.enlazar(' "$ENL" \
+    && si "Texto: EnlaceConMicrosoft.kt llama enlazador.enlazar( (presencia textual: que enlace bien lo miden las pruebas, abajo)" \
+    || no "EnlaceConMicrosoft.kt no llama enlazador.enlazar( : es la función de la puerta que le suma un proveedor a quien ya entró (paso 3)"
+  hayre '(^|[^A-Za-z])EnlaceConMicrosoft\(' "$ARM" \
+    && si "Texto: Armado.kt nombra EnlaceConMicrosoft( (estructura mínima; que esa pieza funcione lo mide una prueba, abajo)" \
+    || no "Armado.kt no nombra EnlaceConMicrosoft( : la app todavía no arma tu enlace (paso 3)"
+  if hay 'armarEnlaceConMicrosoft(enlazador)' "$ACT" && hay 'enlace = enlace' "$ACT"; then
+    si "Texto: MainActivity.kt arma el enlace con Armado.kt y se lo pasa a Tienda (estructura mínima, no evidencia de integración: lo respalda que el archivo sea idéntico en inicio/ y en solucion/)"
+  else
+    no "MainActivity.kt ya no arma con armarEnlaceConMicrosoft(enlazador), o ya no le pasa el enlace a Tienda: ese archivo viene dado y no se cambia"
+  fi
+  sobran=""
+  for p in EnlaceSinConectar MicrosoftSinConectar ProyectoFalso EnlazadorFalso NavegadorFalso EntradaFalsa SelectorFalso VerificadorFalso AppDePruebas; do
+    hay "$p" "$MAIN" && sobran="$sobran $p"
+  done
+  [ -z "$sobran" ] \
+    && si "Texto: ningún .kt de la app nombra EnlaceSinConectar ni una pieza de pruebas" \
+    || no "La app todavía nombra:$sobran. EnlaceSinConectar se borra de Armado.kt en el paso 3; las piezas de pruebas viven solo en src/test"
+fi
+
+# --- Tu archivo de la lección 03 -------------------------------------------------------------
+if [ ! -f "$JSON" ]; then
+  no "No existe $JSON: copia ahí el google-services.json que descargaste en la lección 03 (sigue ignorado por git)"
+  [ "$PROY" = "solucion" ] && nota "Sobre solucion/ este rojo es el esperado en un clon limpio: el archivo no se sube. Copia el tuyo a solucion/app/ y retíralo al terminar."
+fi
+if [ -z "${ANDROID_HOME:-}" ] && [ ! -f "$PROY/local.properties" ]; then
+  no "ANDROID_HOME no está definido: sin él Gradle no encuentra el SDK (lección 00, paso 2)"
+  echo; echo "Resultado: no se corrieron las pruebas."; exit 1
+fi
+
+# --- Las pruebas simuladas -------------------------------------------------------------------
+# --rerun obliga a correr las pruebas aunque nada haya cambiado: así el resultado es de ESTA corrida.
+marca=$(mktemp)
+salida=$(mktemp)
+echo "Corriendo las pruebas… (la primera vez tarda y necesita red para bajar librerías)"
+"./$PROY/gradlew" -p "$PROY" -q testDebugUnitTest --rerun >"$salida" 2>&1
+rc=$?
+
+TODOS=("$XMLG" "$XMLR" "$XMLA" "$XMLM" "$XMLRM" "$XMLAM" "$XMLE" "$XMLRE" "$XMLAE")
+frescos=1
+for x in "${TODOS[@]}"; do
+  { [ -f "$x" ] && [ "$x" -nt "$marca" ]; } || frescos=0
+done
+if [ "$frescos" -ne 1 ]; then
+  no "Las pruebas no llegaron a correr. Esto dijo Gradle:"
+  grep -E '^e: |error:|What went wrong|SDK location|Java heap|No matching client found|google-services.json is missing|Could not (find|resolve)' "$salida" \
+    | sed -e 's|file://.*/||' -e 's| in /.*google-services.json| en tu app/google-services.json|' | head -8 | sed 's/^/     /'
+  if grep -q 'google-services.json is missing' "$salida"; then
+    nota "Con el plugin aplicado, el proyecto no compila sin app/google-services.json: es el de TU proyecto de Firebase (lección 03)"
+  fi
+  nota "Para ver todo:  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+  rm -f "$marca" "$salida"
+  echo; echo "Resultado: 0 pruebas corridas."; exit 1
+fi
+rm -f "$marca" "$salida"
+
+# El conteo se lee de los informes de resultados (XML), no del código de salida de Gradle.
+# Son nueve informes, uno por clase de pruebas, y se suman.
+attr() { sed -n 's/.*<testsuite [^>]*[[:space:]]'"$1"'="\([0-9]*\)".*/\1/p' "$2" | head -1; }
+suma() { a="$1"; shift; t=0; for x in "$@"; do v=$(attr "$a" "$x"); t=$((t + ${v:-0})); done; echo "$t"; }
+total=$(suma tests "${TODOS[@]}"); fallas=$(suma failures "${TODOS[@]}")
+errores=$(suma errors "${TODOS[@]}"); saltadas=$(suma skipped "${TODOS[@]}")
+verdes=$((total - fallas - errores - saltadas))
+
+# estado <nombre de la prueba> <informe> → paso | fallo | falta
+estado() {
+  awk -v n="$1" '
+    /<testcase / { enc = (index($0, "name=\"" n "\"") > 0); if (enc) { visto = 1; if ($0 ~ /\/>[[:space:]]*$/) { print "paso"; fin = 1; exit } } next }
+    enc && /<(failure|error|skipped)/ { print "fallo"; fin = 1; exit }
+    enc && /<\/testcase>/ { print "paso"; fin = 1; exit }
+    END { if (!fin) print (visto ? "fallo" : "falta") }' "$2"
+}
+# todas <informe> <prueba>… → cuántas de esas pruebas pasaron
+todas() { x="$1"; shift; n=0; for p in "$@"; do [ "$(estado "$p" "$x")" = "paso" ] && n=$((n + 1)); done; echo "$n"; }
+revisa() { # informe · nombre · qué demostró · qué falta
+  case "$(estado "$2" "$1")" in
+    paso)  si "$3" ;;
+    fallo) no "$4" ;;
+    *)     no "La prueba $2 no corrió: revisa que el archivo de pruebas esté completo" ;;
+  esac
+}
+
+# --- Lo heredado sigue en verde ---------------------------------------------------------------
+HER=("$XMLG" "$XMLR" "$XMLA" "$XMLM" "$XMLRM" "$XMLAM")
+th=$(suma tests "${HER[@]}")
+mh=$(( $(suma failures "${HER[@]}") + $(suma errors "${HER[@]}") + $(suma skipped "${HER[@]}") ))
+if [ "$th" -eq 44 ] && [ "$mh" -eq 0 ]; then
+  si "Simulado: las 44 pruebas heredadas de la lección 05 siguen en verde (incluyen las 20 de la 04): los dos botones, la entrada con Microsoft y retomar una entrada no cambiaron para ellas"
+else
+  no "De las 44 pruebas heredadas de la lección 05 hay $((th - mh)) en verde de $th corridas: esta lección no debía cambiar lo que ya funcionaba. Corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+fi
+
+# --- 6.1 · Enlazar, con confirmación ----------------------------------------------------------
+enl=$(todas "$XMLE" enlazaConElProveedorMicrosoft)
+arme=$(todas "$XMLAE" laAppArmaSuEnlacePidiendoEseProveedor)
+if [ "$enl" -eq 1 ] && [ "$arme" -eq 1 ]; then
+  si "Simulado: tu enlace pide el enlace una sola vez, con microsoft.com; y el que arma MainActivity.crearEnlaceConMicrosoft hace lo mismo (2 de 2)"
+else
+  no "Enlace: $((enl + arme)) de 2 pruebas en verde. EnlaceConMicrosoft debe llamar enlazador.enlazar con el proveedor microsoft.com, y Armado.kt debe armarlo (paso 3)"
+fi
+sin=$(todas "$XMLE" sinHaberEntradoContestaSinSesion enlazarSinHaberEntradoNoEnlazaNada)
+sinr=$(todas "$XMLAE" conLaPuertaDeVerdadYSinNadieAdentroElEnlaceContestaSinSesion)
+if [ "$sin" -eq 2 ] && [ "$sinr" -eq 1 ]; then
+  si "Simulado: sin haber entrado no se enlaza nada — tu enlace contesta «sin sesión», Microsoft sigue chocando, y con la puerta de verdad (sin ningún usuario en tu computadora) contesta lo mismo sin abrir nada (3 de 3)"
+else
+  no "Enlazar sin haber entrado primero: $((sin + sinr)) de 3 pruebas en verde. Cuando la puerta lanza NadieHaEntrado, tu enlace debe contestar ResultadoDeEnlace.SinSesion (paso 3)"
+fi
+otr=$(todas "$XMLE" laCancelacionContestaCancelado cualquierOtraFallaContestaFallo)
+[ "$otr" -eq 2 ] \
+  && si "Simulado: en el enlace, la cancelación y cualquier otra falla dan cada una su resultado (2 de 2)" \
+  || no "En el enlace, de la cancelación y la otra falla solo $otr dan su resultado (paso 3)"
+revisa "$XMLE" antesDeEnlazarElMismoCorreoChocaYNoCreaOtroUsuario \
+  "Simulado: en el proyecto de mentira, antes de enlazar, el mismo correo choca al entrar con Microsoft y no se crea un segundo usuario" \
+  "En el proyecto de mentira, antes de enlazar, el mismo correo debería chocar sin crear otro usuario: eso lo hace EntradaConMicrosoft, que viene de la lección 05"
+case "$(estado despuesDeEnlazarLosDosAccesosLleganAlMismoUsuario "$XMLE")" in
+  paso) si "Simulado: en el proyecto de mentira, después de enlazar, Google y Microsoft llegan al mismo usuario, y sigue habiendo uno solo" ;;
+  fallo) no "Después de enlazar, los dos accesos no llegan al mismo usuario del proyecto de mentira (paso 3)" ;;
+  *) no "La prueba despuesDeEnlazarLosDosAccesosLleganAlMismoUsuario no corrió: revisa que EnlaceConMicrosoftTest.kt esté completo" ;;
+esac
+revisa "$XMLE" otraPersonaSigueSiendoOtroUsuario \
+  "Simulado: en el proyecto de mentira, otra persona con otro correo sigue siendo otro usuario (dos usuarios distintos)" \
+  "En el proyecto de mentira, otra persona con otro correo debería quedar como otro usuario (paso 3)"
+conf=$(todas "$XMLRE" enLaColisionTodaviaNoSeOfreceEnlazar trasLaColisionYEntrarConGoogleSePideConfirmacionSinEnlazar \
+  conAhoraNoEntraSinEnlazarYMicrosoftSigueChocando sinColisionPreviaNoSePreguntaNada)
+[ "$conf" -eq 4 ] \
+  && si "Simulado: la confirmación — en la colisión no se ofrece enlazar; tras entrar con Google se pregunta sin enlazar nada; «Ahora no» entra sin enlazar; y sin colisión previa no se pregunta (4 de 4)" \
+  || no "La confirmación: $conf de 4 pruebas en verde. Nada se enlaza sin el toque de la persona, y solo se le ofrece a quien ya entró. Estas pruebas usan tus tres clases: siguen rojas hasta el paso 3. Tienda.kt y PantallaEnlace.kt vienen dados"
+revisa "$XMLRE" alConfirmarSeEnlazaYMicrosoftLlegaAlMismoUsuario \
+  "Simulado: al tocar «Enlazar Microsoft» se pide el enlace una vez, la pantalla lo confirma, y después Microsoft llega al usuario que creó Google" \
+  "Al tocar «Enlazar Microsoft» no se enlaza, o después Microsoft no llega al mismo usuario (paso 3)"
+
+# Un enlace que quedó a medias no es una entrada.
+rete=$(todas "$XMLE" sinEnlaceAMediasRetomarContestaNull unEnlaceAMediasQueTerminoBienSeRetomaComoEnlazado \
+  unEnlaceAMediasQueSeCanceloSeRetomaComoCancelado unEnlaceAMediasQueFalloSeRetomaComoFallo)
+retp=$(todas "$XMLRE" alAbrirConUnEnlaceAMediasQueTerminoBienAvisaQueQuedoEnlazado alAbrirConUnEnlaceAMediasQueSeCanceloLoDiceYVuelveAPreguntar)
+if [ "$rete" -eq 4 ] && [ "$retp" -eq 2 ]; then
+  si "Simulado: un enlace que quedó a medias se retoma como enlace, no como entrada — tu clase contesta enlazado, cancelado o falla, y la app abre en la confirmación con ese desenlace (6 de 6). Lo «a medias» lo dijo el doble: ninguna prueba cerró la app"
+else
+  no "Retomar el enlace: $((rete + retp)) de 6 pruebas en verde. retomar() de EnlaceConMicrosoft debe traducir lo que regresa enlazador.pendiente() a un EnlaceRetomado, o null si no hay nada (paso 3)"
+fi
+revisa "$XMLAE" laNotaDeEnlaceLaBorraSoloLaPuertaDelEnlace \
+  "Simulado: con las puertas de verdad, la nota «hay un enlace en curso» la borra solo la puerta del enlace. Esta prueba no ve si la puerta de entrar la respeta (en tu computadora nunca hay nada pendiente): eso lo respalda que PuertaDelNavegador.kt sea el de la lección" \
+  "Con las puertas de verdad, la nota «hay un enlace en curso» no se borra donde debe: PuertaDelNavegador.kt y PuertaDelEnlace.kt vienen dados y no se cambian"
+
+[ "$total" -eq 66 ] || no "Esperaba 66 pruebas (44 heredadas de la lección 05; 12 de EnlaceConMicrosoftTest, 7 de RecorridoConEnlaceTest y 3 de ArranqueConEnlaceTest) y los informes traen $total"
+[ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+
+# --- Lo escrito · presencia mínima --------------------------------------------------------------
+if [ "$PROY" = "inicio" ]; then
+  # La colisión solo existe con «una cuenta por correo». Esa opción vive en la consola de Firebase, que
+  # este guion no ve: solo busca que la hayas revisado y anotado.
+  if [ -f "$RESP" ] && grep -qiF "$MARCA_CORREO" "$RESP"; then
+    si "Escrito: respuestas/06.md dice «$MARCA_CORREO» (solo busco esa línea: no veo tu consola de Firebase)"
+  else
+    no "respuestas/06.md no dice «$MARCA_CORREO»: revisa esa opción en la consola de Firebase (paso 1) y anótala así. Sin ella no hay colisión que resolver"
+  fi
+  if [ -f "$RESP" ] && grep -qF "$MARCA_ROMPE" "$RESP"; then
+    si "Escrito: respuestas/06.md trae pegado el rojo del ejercicio 6.2 (solo busco esa línea: no sé si lo rompiste ni califico tu explicación)"
+  else
+    no "respuestas/06.md no trae pegado el rojo del ejercicio 6.2 (paso 4): la línea que contiene «$MARCA_ROMPE»"
+  fi
+else
+  nota "Lo escrito en respuestas/06.md solo se busca sobre inicio/"
+fi
+
+echo
+echo "Resultado: $verdes de $total pruebas en verde ($fallas en rojo, $errores con error, $saltadas saltadas), leído de"
+for x in "${TODOS[@]}"; do echo "  $x"; done
+nota "Nivel simulado: demuestra qué le pide tu EnlaceConMicrosoft a la puerta del enlace, qué contesta en cada caso,"
+nota "  que nada se enlaza sin el toque de la persona y que un enlace a medias se retoma como enlace."
+nota "«El mismo usuario» es el de un proyecto de mentira que sigue «una cuenta por correo» escrita a mano: ninguna"
+nota "  prueba enlazó dos cuentas en Firebase. «Quedó a medias» lo dijo un doble: ninguna prueba cerró la app."
+nota "No demuestra que Firebase enlace tus cuentas ni que tu proyecto tenga «una cuenta por correo»."
+nota "  Eso lo demuestra la prueba manual (paso 5), una vez, con tu registro de la lección 05 funcionando."
+nota "Las marcas «Texto:» son estructura mínima, no evidencia de integración."
+nota "No califica tu explicación del 6.2: compárala con «Compara tus respuestas»."
+exit $ok
