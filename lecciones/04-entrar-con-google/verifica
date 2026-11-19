@@ -1,0 +1,292 @@
+#!/usr/bin/env bash
+# Revisa la lección 04 en el nivel SIMULADO: corre las pruebas en tu computadora (./gradlew testDebugUnitTest),
+# sin emulador, sin cuenta de Google y sin red hacia Google ni Firebase, y lee el conteo de los informes de
+# resultados (XML).
+# SÍ revisa, corriendo las pruebas de EntradaConGoogleTest (le dan a tu EntradaConGoogle dos puertas de
+#   mentira, las de src/test/…/Dobles.kt, y miran qué les pidió y qué contestó): que la solicitud lleve una
+#   sola opción y sea GetSignInWithGoogleOption; que la audiencia de esa opción sea el ID que recibió tu clase;
+#   que el token que entrega la puerta del teléfono llegue tal cual a la puerta del verificador, y que el
+#   nombre sea el que contesta el verificador; que «sin cuentas» (NoCredentialException), la cancelación
+#   (GetCredentialCancellationException) y el error (otra excepción del teléfono, un token rechazado o una
+#   credencial que no es de Google) den tres resultados distintos.
+# SÍ revisa, con una prueba más de esa clase: que el recurso default_web_client_id de la app compilada sea el
+#   cliente web (tipo 3) que trae el TEXTO de tu app/google-services.json.
+# SÍ revisa, corriendo las pruebas de RecorridoTest (dibujan Tienda en memoria y tocan los botones): que con tu
+#   EntradaConGoogle y las puertas de mentira el botón «Entrar con Google» lleve al inicio con el nombre, y que
+#   cada uno de los tres casos deje en pantalla su mensaje, distinto de los otros dos, sin pasar al inicio.
+# SÍ revisa que sigan en verde las pruebas de las pantallas que el proyecto ya traía (3 de RecorridoTest con
+#   EntradaFalsa, la de los textos y 1 de ArranqueTest, que abre MainActivity sin tocar el botón de Google).
+# SÍ revisa, buscando texto en tus archivos (no los ejecuta; en los .kt las líneas de comentario no cuentan):
+#   que EntradaConGoogle.kt nombre GetSignInWithGoogleOption; que ningún .kt de la app nombre GetGoogleIdOption;
+#   que MainActivity.kt nombre EntradaConGoogle( y R.string.default_web_client_id; que ningún .kt de la app
+#   nombre EntradaSinProveedor ni una pieza de pruebas, ni traiga escrito un ID de cliente
+#   (….apps.googleusercontent.com); que el catálogo diga credentials 1.6.0, googleid 1.1.1 y el BoM 35.2.0; que
+#   el .gitignore traiga google-services.json; y que respuestas/04.md traiga pegado el rojo del «Rompe uno a
+#   propósito». Y le pregunta a git si rastrea algún google-services.json en el repo.
+# NO revisa: nada de lo que pasa en un teléfono. No abre la ventana de cuentas de Android, no le pide nada a
+#   Google y no le entrega nada a Firebase: las dos clases que sí lo hacen (SelectorConCredentialManager y
+#   VerificadorConFirebase, en Puertas.kt) NO se ejecutan aquí; solo se compara que ese archivo siga igual al de
+#   la lección. Por eso no demuestra que tu huella esté registrada, que Google esté habilitado, que el ID de
+#   cliente sea de tu proyecto ni que tú puedas entrar: eso es el nivel real (paso 6), una vez, a mano.
+#   Tampoco hay aquí nivel instrumentado. Ni califica tu diagrama (4.1), tu explicación (4.2) ni tu tabla (4.4).
+# Solo lee tu código y tu archivo: no los cambia. Gradle escribe sus resultados en build/, que no se sube.
+# Uso:  ./verifica             revisa tu trabajo en inicio/
+#       ./verifica solucion    revisa la solución de referencia. En un clon limpio sale en ROJO: el archivo
+#                              google-services.json no se sube, y sin él el proyecto no compila. Para
+#                              revisarla, copia tu archivo a solucion/app/ (sigue ignorado) y retíralo al terminar.
+set -uo pipefail
+cd "$(dirname "$0")"
+PROY="${1:-inicio}"
+ok=0
+si() { echo "✅ $1"; }
+no() { echo "❌ $1"; ok=1; }
+nota() { echo "ℹ️  $1"; }
+
+case "$PROY" in
+  inicio|solucion) ;;
+  *) echo "Uso: ./verifica [inicio|solucion]"; exit 2 ;;
+esac
+PAQ="mx.habil.ejemplo.tienda"
+DIRM="app/src/main/java/mx/habil/ejemplo/tienda"
+DIRP="app/src/test/java/mx/habil/ejemplo/tienda"
+MAIN="$PROY/app/src/main"
+JSON="$PROY/app/google-services.json"
+DIRX="$PROY/app/build/test-results/testDebugUnitTest"
+XMLG="$DIRX/TEST-$PAQ.EntradaConGoogleTest.xml"
+XMLR="$DIRX/TEST-$PAQ.RecorridoTest.xml"
+XMLA="$DIRX/TEST-$PAQ.ArranqueTest.xml"
+MARCA_ROMPE="y debe llevar GetSignInWithGoogleOption"
+echo "Revisando $PROY/ — nivel simulado (sin emulador, sin cuenta, sin hablar con Google ni con Firebase)"
+
+# --- Andamiaje · lo que el proyecto ya trae -------------------------------------------------
+grep -q '^org.gradle.jvmargs=.*-Xmx4g' "$PROY/gradle.properties" 2>/dev/null \
+  && si "Andamiaje: gradle.properties le da 4 GB de memoria a Gradle (-Xmx4g)" \
+  || no "gradle.properties ya no trae -Xmx4g: regresa la línea  org.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8"
+if [ "$PROY" = "inicio" ]; then
+  cambiados=""
+  for t in "$DIRP/EntradaConGoogleTest.kt" "$DIRP/RecorridoTest.kt" "$DIRP/ArranqueTest.kt" \
+           "$DIRP/EntradaFalsa.kt" "$DIRP/Dobles.kt" "$DIRM/Puertas.kt"; do
+    cmp -s "inicio/$t" "solucion/$t" || cambiados="$cambiados inicio/$t"
+  done
+  if [ -z "$cambiados" ]; then
+    si "Andamiaje: las pruebas, sus dobles y Puertas.kt son los de la lección, sin cambios (6 archivos comparados)"
+  else
+    no "Estos archivos cambiaron y no se tocan:$cambiados"
+    nota "Mira qué cambió con  git diff -- <archivo>  y deshazlo a mano. Restaurar con git descarta lo que tenga: revisa el diff antes."
+  fi
+fi
+
+# --- 4.2 · Las piezas, buscadas como texto (no se ejecutan) ---------------------------------
+# hay <texto> <carpeta o archivo>: ¿algún .kt lo contiene en una línea que no sea comentario (//)?
+# Los comentarios no cuentan: una pieza nombrada en un comentario no existe, y tampoco estorba.
+hay() { grep -rh --include='*.kt' -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -qF -- "$1"; }
+ECG="$PROY/$DIRM/EntradaConGoogle.kt"
+ACT="$PROY/$DIRM/MainActivity.kt"
+# El «no hay» solo vale si la búsqueda sí lee: se comprueba con una palabra que seguro está.
+if ! hay 'class EntradaConGoogle' "$ECG" || ! hay 'class MainActivity' "$ACT"; then
+  no "No pude leer $DIRM/EntradaConGoogle.kt o MainActivity.kt (o ya no declaran su clase): sin ellos no reviso el texto"
+else
+  hay 'GetSignInWithGoogleOption' "$ECG" \
+    && si "Texto: EntradaConGoogle.kt nombra GetSignInWithGoogleOption, la opción del botón" \
+    || no "EntradaConGoogle.kt no nombra GetSignInWithGoogleOption: es la opción que abre la ventana de cuentas (paso 3)"
+  if hay 'GetGoogleIdOption' "$MAIN"; then
+    no "Algún .kt de la app nombra GetGoogleIdOption: es la opción del inicio automático, no la del botón. Si vienes del «Rompe uno», regrésala (paso 5)"
+  else
+    si "Texto: ningún .kt de la app nombra GetGoogleIdOption"
+  fi
+  hay 'EntradaConGoogle(' "$ACT" \
+    && si "Texto: MainActivity.kt nombra EntradaConGoogle(" \
+    || no "MainActivity.kt no nombra EntradaConGoogle( : la app instalada todavía no usa tu entrada (paso 3)"
+  hay 'R.string.default_web_client_id' "$ACT" \
+    && si "Texto: MainActivity.kt nombra R.string.default_web_client_id (solo busco el nombre: no sé a quién se lo pasa)" \
+    || no "MainActivity.kt no nombra R.string.default_web_client_id: la audiencia sale de ese recurso, que el plugin genera con tu archivo (paso 3)"
+  sobran=""
+  for p in EntradaSinProveedor EntradaFalsa SelectorFalso VerificadorFalso; do
+    hay "$p" "$MAIN" && sobran="$sobran $p"
+  done
+  [ -z "$sobran" ] \
+    && si "Texto: ningún .kt de la app nombra EntradaSinProveedor ni una pieza de pruebas" \
+    || no "La app todavía nombra:$sobran. EntradaSinProveedor se borra al conectar Google (paso 3) y las piezas de pruebas viven solo en src/test"
+  if hay '.apps.googleusercontent.com' "$MAIN"; then
+    no "Algún .kt de la app trae escrito un ID de cliente (….apps.googleusercontent.com): se lee del recurso, no se copia al código (paso 3)"
+  else
+    si "Texto: ningún .kt de la app trae escrito un ID de cliente"
+  fi
+fi
+CAT="$PROY/gradle/libs.versions.toml"
+vers=""
+grep -qE '^credentials[[:space:]]*=[[:space:]]*"1\.6\.0"' "$CAT" 2>/dev/null || vers="$vers credentials=1.6.0"
+grep -qE '^googleid[[:space:]]*=[[:space:]]*"1\.1\.1"' "$CAT" 2>/dev/null || vers="$vers googleid=1.1.1"
+grep -qE '^firebaseBom[[:space:]]*=[[:space:]]*"35\.2\.0"' "$CAT" 2>/dev/null || vers="$vers firebaseBom=35.2.0"
+[ -z "$vers" ] \
+  && si "Texto: el catálogo dice credentials 1.6.0, googleid 1.1.1 y firebaseBom 35.2.0, las versiones de la serie" \
+  || no "gradle/libs.versions.toml ya no dice:$vers. La serie está probada con esas versiones"
+
+# --- Lo que no se sube (lección 03) ----------------------------------------------------------
+if grep -qxE '[[:space:]]*/?(app/)?google-services\.json[[:space:]]*' "$PROY/.gitignore" 2>/dev/null; then
+  si "Texto: $PROY/.gitignore trae la línea google-services.json"
+else
+  no "$PROY/.gitignore no existe o no trae una línea que diga  google-services.json  (lección 03, paso 2)"
+fi
+# El cero de rastreados solo vale si git sí contesta por un archivo que seguro rastrea.
+if git ls-files --error-unmatch "$PROY/gradle.properties" >/dev/null 2>&1; then
+  rastreados=$(git ls-files "$(git rev-parse --show-toplevel)" | grep -E '(^|/)google-services\.json$' || true)
+  [ -z "$rastreados" ] \
+    && si "Git: el repo no rastrea ningún archivo llamado google-services.json (git ls-files)" \
+    || no "Git sí rastrea un google-services.json: $(echo $rastreados). Sácalo con  git rm --cached <archivo>  (no borra tu copia)"
+else
+  nota "No pude preguntarle a git (¿bajaste el repo sin git?): no revisé si algún google-services.json está rastreado"
+fi
+
+# --- Tu archivo de la lección 03 -------------------------------------------------------------
+if [ ! -f "$JSON" ]; then
+  no "No existe $JSON: copia ahí el google-services.json que descargaste en la lección 03 (sigue ignorado por git)"
+  [ "$PROY" = "solucion" ] && nota "Sobre solucion/ este rojo es el esperado en un clon limpio: el archivo no se sube. Copia el tuyo a solucion/app/ y retíralo al terminar."
+fi
+if [ -z "${ANDROID_HOME:-}" ] && [ ! -f "$PROY/local.properties" ]; then
+  no "ANDROID_HOME no está definido: sin él Gradle no encuentra el SDK (lección 00, paso 2)"
+  echo; echo "Resultado: no se corrieron las pruebas."; exit 1
+fi
+
+# --- Las pruebas simuladas -------------------------------------------------------------------
+# --rerun obliga a correr las pruebas aunque nada haya cambiado: así el resultado es de ESTA corrida.
+marca=$(mktemp)
+salida=$(mktemp)
+echo "Corriendo las pruebas… (la primera vez tarda y necesita red para bajar librerías)"
+"./$PROY/gradlew" -p "$PROY" -q testDebugUnitTest --rerun >"$salida" 2>&1
+rc=$?
+
+frescos=1
+for x in "$XMLG" "$XMLR" "$XMLA"; do
+  { [ -f "$x" ] && [ "$x" -nt "$marca" ]; } || frescos=0
+done
+if [ "$frescos" -ne 1 ]; then
+  no "Las pruebas no llegaron a correr. Esto dijo Gradle:"
+  grep -E '^e: |error:|What went wrong|SDK location|Java heap|No matching client found|google-services.json is missing|Could not (find|resolve)' "$salida" \
+    | sed -e 's|file://.*/||' -e 's| in /.*google-services.json| en tu app/google-services.json|' | head -8 | sed 's/^/     /'
+  if grep -q 'google-services.json is missing' "$salida"; then
+    nota "Con el plugin aplicado, el proyecto no compila sin app/google-services.json: es el de TU proyecto de Firebase (lección 03)"
+  fi
+  if grep -q 'Unresolved reference.*default_web_client_id' "$salida"; then
+    nota "«Unresolved reference … default_web_client_id»: tu archivo no trae cliente web (tipo 3), así que el plugin no generó ese recurso. Descárgalo otra vez después de la huella y de habilitar Google (lección 03, paso 3)"
+  fi
+  nota "Para ver todo:  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+  rm -f "$marca" "$salida"
+  echo; echo "Resultado: 0 pruebas corridas."; exit 1
+fi
+rm -f "$marca" "$salida"
+
+# El conteo se lee de los informes de resultados (XML), no del código de salida de Gradle.
+# Son tres informes, uno por clase de pruebas, y se suman.
+attr() { sed -n 's/.*<testsuite [^>]*[[:space:]]'"$1"'="\([0-9]*\)".*/\1/p' "$2" | head -1; }
+suma() { t=0; for x in "$XMLG" "$XMLR" "$XMLA"; do v=$(attr "$1" "$x"); t=$((t + ${v:-0})); done; echo "$t"; }
+total=$(suma tests); fallas=$(suma failures); errores=$(suma errors); saltadas=$(suma skipped)
+verdes=$((total - fallas - errores - saltadas))
+
+# estado <nombre de la prueba> <informe> → paso | fallo | falta
+estado() {
+  awk -v n="$1" '
+    /<testcase / { enc = (index($0, "name=\"" n "\"") > 0); if (enc) { visto = 1; if ($0 ~ /\/>[[:space:]]*$/) { print "paso"; fin = 1; exit } } next }
+    enc && /<(failure|error|skipped)/ { print "fallo"; fin = 1; exit }
+    enc && /<\/testcase>/ { print "paso"; fin = 1; exit }
+    END { if (!fin) print (visto ? "fallo" : "falta") }' "$2"
+}
+# todas <informe> <prueba>… → cuántas de esas pruebas pasaron
+todas() { x="$1"; shift; n=0; for p in "$@"; do [ "$(estado "$p" "$x")" = "paso" ] && n=$((n + 1)); done; echo "$n"; }
+revisa() { # informe · nombre · qué demostró · qué falta
+  case "$(estado "$2" "$1")" in
+    paso)  si "$3" ;;
+    fallo) no "$4" ;;
+    *)     no "La prueba $2 no corrió: revisa que el archivo de pruebas esté completo" ;;
+  esac
+}
+
+# --- Andamiaje · las pantallas que el proyecto ya traía -------------------------------------
+pant=$(todas "$XMLR" empiezaEnLaBienvenida laEntradaTieneElBotonDeGoogleYNingunMensaje laEntradaSeConsultaSoloAlTocarElBoton)
+arr=$(todas "$XMLA" laAppArrancadaLlegaALaEntradaSinQueNadieHayaEntrado)
+if [ "$pant" -eq 3 ] && [ "$arr" -eq 1 ]; then
+  si "Simulado: las pantallas siguen funcionando (3 pruebas con una entrada de mentira y 1 que abre MainActivity sin tocar el botón de Google)"
+else
+  no "De las 4 pruebas de las pantallas pasaron $((pant + arr)): esta lección no debía cambiar Tienda.kt ni las pantallas. Corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+fi
+
+# --- 4.2 · Qué le pide tu entrada al teléfono, y a dónde lleva el token ----------------------
+case "$(estado pideLaOpcionDelBoton "$XMLG")" in
+  paso) si "Simulado: tu entrada le pide al teléfono una sola opción, y es GetSignInWithGoogleOption" ;;
+  fallo)
+    fue=$(awk '/name="pideLaOpcionDelBoton"/{e=1} e && /y fue /{print; exit}' "$XMLG" | sed -n 's/.*y fue \([A-Za-z]*\).*/\1/p')
+    if [ -n "$fue" ]; then
+      no "Tu entrada pidió otra opción: la solicitud llevó $fue $MARCA_ROMPE"
+    else
+      no "Tu entrada todavía no le pide al teléfono la opción del botón (GetSignInWithGoogleOption), o pide más de una (paso 3)"
+    fi ;;
+  *) no "La prueba pideLaOpcionDelBoton no corrió: revisa que EntradaConGoogleTest.kt esté completo" ;;
+esac
+revisa "$XMLG" laAudienciaEsElIdQueRecibio \
+  "Simulado: la audiencia de esa opción es el ID de cliente que recibió EntradaConGoogle" \
+  "La audiencia de la solicitud no es el ID de cliente que recibió EntradaConGoogle (o la opción no es la del botón y no se le puede leer) (paso 3)"
+if [ -f "$JSON" ]; then
+  revisa "$XMLG" elRecursoDeLaAppEsElClienteWebDeTuArchivo \
+    "Simulado: el recurso default_web_client_id de la app compilada es el cliente web (tipo 3) de tu archivo" \
+    "El recurso default_web_client_id de la app no es el cliente web (tipo 3) de tu archivo, o tu archivo no lo trae: descárgalo otra vez después de la huella y de habilitar Google (lección 03, paso 3)"
+else
+  no "elRecursoDeLaAppEsElClienteWebDeTuArchivo depende de que exista app/google-services.json: consigue primero tu archivo"
+fi
+tok=$(todas "$XMLG" elTokenQueEntregaElTelefonoLlegaAlVerificador elNombreLoPoneElVerificador)
+[ "$tok" -eq 2 ] \
+  && si "Simulado: el token que entrega la puerta del teléfono llega tal cual a la puerta del verificador, y el nombre es el que este contesta (2 de 2)" \
+  || no "El token de la credencial no llega tal cual al verificador, o el nombre no es el que el verificador contesta ($tok de 2) (paso 3)"
+revisa "$XMLR" conUnaCuentaElegidaLlegaAlInicioConElNombre \
+  "Simulado: con las puertas de mentira, tocar «Entrar con Google» lleva al inicio con el nombre («Hola, Ana»)" \
+  "Con las puertas de mentira, tocar «Entrar con Google» no llega al inicio con el nombre (paso 3)"
+
+# --- 4.3 · Los tres casos: cada uno con su resultado y su mensaje ----------------------------
+caso() { # nombre del caso · pasaron de tu entrada · de cuántas · pasó la de la pantalla (0 o 1) · qué atrapar
+  if [ "$2" -eq "$3" ] && [ "$4" -eq 1 ]; then
+    si "Simulado: $1 — tu entrada contesta su propio resultado y la pantalla muestra su mensaje, sin pasar al inicio ($(($2 + $4)) de $(($3 + 1)))"
+  elif [ "$2" -eq "$3" ]; then
+    no "$1: tu entrada contesta bien su resultado ($2 de $3), pero la pantalla no muestra su mensaje. Tienda.kt viene dado y no se cambia"
+  else
+    no "$1: $(($2 + $4)) de $(($3 + 1)) pruebas en verde. Falta atrapar $5 y contestar su resultado (paso 4)"
+  fi
+}
+caso "sin cuentas (NoCredentialException)" \
+  "$(todas "$XMLG" sinCuentasContestaSinCuentas)" 1 "$(todas "$XMLR" sinCuentasMuestraSuMensajeYNoPasa)" "NoCredentialException"
+caso "cancelación (GetCredentialCancellationException)" \
+  "$(todas "$XMLG" laCancelacionContestaCancelada)" 1 "$(todas "$XMLR" laCancelacionMuestraSuMensajeYNoPasa)" "GetCredentialCancellationException"
+caso "error (otra excepción del teléfono, token rechazado o credencial que no es de Google)" \
+  "$(todas "$XMLG" otraFallaDelTelefonoContestaFallo siElVerificadorRechazaElTokenContestaFallo unaCredencialQueNoEsDeGoogleContestaFallo)" 3 \
+  "$(todas "$XMLR" elErrorMuestraSuMensajeYNoPasa)" "cualquier otra excepción"
+revisa "$XMLR" cadaResultadoTieneSuPropioMensaje \
+  "Simulado: los tres mensajes son los de la lección y son distintos entre sí" \
+  "Los tres mensajes ya no son los de la lección o dos son iguales: Tienda.kt viene dado y no se cambia"
+
+[ "$total" -eq 19 ] || no "Esperaba 19 pruebas (10 de EntradaConGoogleTest, 8 de RecorridoTest y 1 de ArranqueTest) y los informes traen $total"
+[ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
+
+# --- «Rompe uno a propósito» · presencia mínima de la evidencia escrita ----------------------
+if [ "$PROY" = "inicio" ]; then
+  R=../../respuestas/04.md
+  if [ -f "$R" ] && grep -qF "$MARCA_ROMPE" "$R"; then
+    si "Escrito: respuestas/04.md trae pegado el rojo del «Rompe uno a propósito» (solo busco esa línea: no sé si lo rompiste ni califico tu explicación)"
+  else
+    no "respuestas/04.md no trae pegado el rojo del «Rompe uno a propósito» (paso 5): la línea que contiene «$MARCA_ROMPE»"
+  fi
+else
+  nota "El rojo pegado en respuestas/04.md solo se busca sobre inicio/"
+fi
+
+echo
+echo "Resultado: $verdes de $total pruebas en verde ($fallas en rojo, $errores con error, $saltadas saltadas), leído de"
+echo "  $XMLG"
+echo "  $XMLR"
+echo "  $XMLA"
+nota "Nivel simulado: demuestra qué le pide tu EntradaConGoogle a la puerta del teléfono (la opción y la audiencia),"
+nota "  que el token pasa a la puerta del verificador, y qué resultado y qué mensaje da cada caso."
+nota "Las dos puertas eran de mentira. No se abrió la ventana de cuentas, no se le pidió nada a Google y no se le"
+nota "  entregó nada a Firebase: el código que sí lo hace (Puertas.kt) no se ejecutó."
+nota "No demuestra que tu huella esté registrada, que Google esté habilitado, que el ID de cliente sea de tu"
+nota "  proyecto ni que puedas entrar. Eso lo demuestra el nivel real: entrar a mano con tu cuenta (paso 6)."
+nota "Las marcas «Texto:» solo buscan palabras en tus archivos: no demuestran que el código haga lo que dicen."
+nota "No califica tu diagrama (4.1), tu explicación (4.2) ni tu tabla (4.4): compáralos con «Compara tus respuestas»."
+exit $ok
