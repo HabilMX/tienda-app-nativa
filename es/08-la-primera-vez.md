@@ -356,7 +356,7 @@ lo que tarde la primera cohorte.
 | ❌ «EntradaConGoogle.kt o EntradaConMicrosoft.kt nombra una puerta concreta» | Una de tus entradas nombra una puerta de verdad (`VerificadorConFirebase`, `NavegadorConFirebase`) o un doble de las pruebas. Las pruebas solo les pasan dobles: si tu código pregunta cuál le tocó, el verde no dice qué hace con la de verdad | Que tus entradas hablen solo con las interfaces de sus puertas. La puerta de verdad la escoge `MainActivity.kt`, que viene dado (paso 3) |
 | ❌ «Las pruebas no llegaron a correr» y lo que sigue no dice la causa | Gradle falló por algo que el `verifica` no reconoce; te muestra sus últimas líneas | Corre `./inicio/gradlew -p inicio testDebugUnitTest --stacktrace` y lee el final. Si lo compartes, quita antes tokens y rutas de tu computadora |
 
-El `verifica` de esta lección se midió en una Mac con Apple silicon. No se ha medido en Linux.
+El `verifica` de esta lección se midió en una Mac con Apple silicon y en Linux Mint 22.3, el 19-nov-2026: con la solución, 97 de 97 en las dos.
 
 ---
 

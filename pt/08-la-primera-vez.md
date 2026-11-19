@@ -378,7 +378,7 @@ o tempo que a primeira turma levar.
 | ❌ «EntradaConGoogle.kt o EntradaConMicrosoft.kt nombra una puerta concreta» (EntradaConGoogle.kt ou EntradaConMicrosoft.kt nomeia uma porta concreta) | Uma das entradas nomeia uma porta de verdade (`VerificadorConFirebase`, `NavegadorConFirebase`) ou um dublê dos testes. Os testes só lhes passam dublês: se o código pergunta qual lhe coube, o verde não diz o que ele faz com a de verdade | Que as entradas falem só com as interfaces das portas. A porta de verdade é escolhida pela `MainActivity.kt`, que vem dada (passo 3) |
 | ❌ «Las pruebas no llegaron a correr» (os testes não chegaram a rodar) e o que vem depois não diz a causa | O Gradle falhou por algo que o `verifica` não reconhece; ele mostra as últimas linhas | Rode `./inicio/gradlew -p inicio testDebugUnitTest --stacktrace` e leia o final. Se for compartilhar, tire antes tokens e caminhos do computador |
 
-O `verifica` desta lição foi medido em um Mac com Apple silicon. Não foi medido no Linux.
+O `verifica` desta lição foi medido em um Mac com Apple silicon e no Linux Mint 22.3, em 19/11/2026: com a solução, 97 de 97 nos dois.
 
 ---
 

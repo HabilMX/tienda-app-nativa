@@ -371,7 +371,7 @@ https://…)*
 | ❌ „EntradaConGoogle.kt o EntradaConMicrosoft.kt nombra una puerta concreta“ (EntradaConGoogle.kt или EntradaConMicrosoft.kt назовава конкретна врата) | Един от вашите входове назовава истинска врата (`VerificadorConFirebase`, `NavegadorConFirebase`) или дубльор от тестовете. Тестовете им подават само дубльори: ако кодът ви пита коя му се е паднала, зеленото не казва какво прави с истинската | Входовете ви да говорят само с интерфейсите на своите врати. Истинската врата я избира `MainActivity.kt`, който е даден (стъпка 3) |
 | ❌ „Las pruebas no llegaron a correr“ (тестовете не се изпълниха) и онова, което следва, не казва причината | Gradle се е провалил по нещо, което `verifica` не разпознава; показва ви последните си редове | Пуснете `./inicio/gradlew -p inicio testDebugUnitTest --stacktrace` и прочетете края. Ако го споделяте, махнете преди това токените и пътищата от вашия компютър |
 
-`verifica` на този урок е измерен на Mac с Apple silicon. Не е измерен на Linux.
+`verifica` на този урок е измерен на Mac с Apple silicon и на Linux Mint 22.3 на 19 ноември 2026 г.: с решението — 97 от 97 и на двете.
 
 ---
 

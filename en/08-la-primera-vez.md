@@ -371,7 +371,7 @@ with how long the first cohort takes.
 | ❌ «EntradaConGoogle.kt o EntradaConMicrosoft.kt nombra una puerta concreta» (EntradaConGoogle.kt or EntradaConMicrosoft.kt names a specific gate) | One of your sign-ins names a real gate (`VerificadorConFirebase`, `NavegadorConFirebase`) or a test double. The tests only hand them doubles: if your code asks which one it got, the green does not say what it does with the real one | Make your sign-ins talk only to their gates' interfaces. The real gate is chosen by `MainActivity.kt`, which comes given (step 3) |
 | ❌ «Las pruebas no llegaron a correr» (The tests did not run) and what follows does not say the cause | Gradle failed for something the `verifica` does not recognize; it shows you its last lines | Run `./inicio/gradlew -p inicio testDebugUnitTest --stacktrace` and read the end. If you share it, remove tokens and your computer's paths first |
 
-This lesson's `verifica` was measured on a Mac with Apple silicon. It has not been measured on Linux.
+This lesson's `verifica` was measured on a Mac with Apple silicon and on Linux Mint 22.3, on Nov 19, 2026: with the solution, 97 of 97 on both.
 
 ---
 
