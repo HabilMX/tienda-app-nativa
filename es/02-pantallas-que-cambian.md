@@ -217,7 +217,10 @@ fun Tienda() {
 
 **Compruébalo en la app.** `./gradlew installDebug`, ábrela y toca «Entrar»: debe quedar la pantalla «Entra a tu
 cuenta» y la bienvenida ya no debe verse. «Continuar» todavía no hace nada.
-[pendiente: capturas de las tres pantallas en el emulador]
+Con la solución terminada, en el emulador de la prueba (Pixel 9, Android 37, 18-nov-2026) se vio esto: la bienvenida
+con «La tienda», «Tus órdenes, en tu bolsillo» y «Entrar»; al tocar «Entrar», «Entra a tu cuenta» y «Continuar»; y al
+tocar «Continuar», el aviso «Todavía no se puede entrar». La pantalla de inicio no aparece en la app instalada: solo
+llegan a ella las pruebas.
 
 **Qué acabas de hacer.** El estado no quedó en ninguna pantalla: lo subiste a la función que las llama. Eso es
 **elevar el estado**, y la documentación de Android lo recomienda: el estado vive en el ancestro común más cercano
@@ -454,7 +457,9 @@ está terminado cuando puedes marcar las cuatro:
 
 **Un límite.** Según la documentación de Android, `remember` no conserva el valor en un cambio de configuración,
 como girar el teléfono; para eso existe `rememberSaveable`. Esta lección no lo usa ni lo prueba.
-[pendiente: medir en el emulador qué hace el recorrido al girar el teléfono y al tocar «atrás»]
+En el emulador de la prueba (18-nov-2026), al girar el teléfono estando en «Entra a tu cuenta», la app regresó a la
+bienvenida: el estado se perdió, como dice la documentación. Y «atrás», desde cualquiera de las dos pantallas, cerró la
+app y regresó al inicio del teléfono: el recorrido de esta lección no maneja «atrás».
 
 **Lo demuestra:** «Rompe uno a propósito» (objetivo 2.3).
 

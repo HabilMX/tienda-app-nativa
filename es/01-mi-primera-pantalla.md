@@ -122,7 +122,8 @@ Para predecir, lee la función de afuera hacia adentro:
 ```
 
 Ábrela desde el cajón de apps y compara con tus tres líneas. Si una predicción falló, no la borres: escribe debajo
-qué línea del código te habría dado la respuesta. [pendiente: captura de esta pantalla en el emulador]
+qué línea del código te habría dado la respuesta. En el emulador de la prueba (Pixel 9, Android 37, 18-nov-2026) se
+vieron dos textos, «Aquí va tu pantalla» y debajo «Lección 01», a media altura y pegados a la izquierda.
 
 **Segunda predicción.** ¿Y si quitas el `Column` y dejas los dos `Text` sueltos? Según la documentación de
 Android, Compose encima un texto sobre el otro. Pruébalo, anota lo que ves y regresa el `Column`.
