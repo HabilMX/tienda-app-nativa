@@ -14,7 +14,7 @@ RAM for the emulator (with less, you use your Android phone). Windows is not cov
 
 ## The project
 
-The same invented store from [«Ni una orden perdida»](https://github.com/HabilMX/ni-una-orden-perdida) now has an
+The same invented store from [«Ni una orden perdida»](https://www.habil.mx/en/courses/ni-una-orden-perdida/) now has an
 app. In this first stage you get as far as sign-in: the customer signs in with Google or with Microsoft and the app
 recognizes them. In the following ones, the app consumes the store's API and moves to iOS.
 
@@ -46,9 +46,9 @@ gets your environment ready.
 | 02 | [Screens that change](02-pantallas-que-cambian.md) |
 | 02-B | Store component catalog (practice) |
 | 03 | [The app meets Firebase](03-la-app-conoce-a-firebase.md) |
-| 04 | Signing in with Google |
-| 05 | Signing in with Microsoft |
-| 06 | Two buttons, one account |
+| 04 | [Signing in with Google](04-entrar-con-google.md) |
+| 05 | [Signing in with Microsoft](05-entrar-con-microsoft.md) |
+| 06 | [Two buttons, one account](06-dos-botones-una-cuenta.md) |
 | 07 | The session stays |
 | 08 | The first time |
 

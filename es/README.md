@@ -14,7 +14,7 @@ emulador (con menos, usas tu teléfono Android). Windows no está cubierto. La p
 
 ## El proyecto
 
-La misma tienda inventada de [«Ni una orden perdida»](https://github.com/HabilMX/ni-una-orden-perdida) ahora tiene
+La misma tienda inventada de [«Ni una orden perdida»](https://www.habil.mx/es/cursos/ni-una-orden-perdida/) ahora tiene
 app. En este primer tramo llegas hasta el inicio de sesión: el cliente entra con Google o con Microsoft y la app lo
 reconoce. En los siguientes, la app consume la API de la tienda y se pasa a iOS.
 

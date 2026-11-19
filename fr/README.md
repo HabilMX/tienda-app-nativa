@@ -15,7 +15,7 @@ partie iOS se fait uniquement sur Mac.
 
 ## Le projet
 
-La même boutique inventée de [« Ni una orden perdida »](https://github.com/HabilMX/ni-una-orden-perdida) a maintenant
+La même boutique inventée de [« Ni una orden perdida »](https://www.habil.mx/fr/cours/ni-una-orden-perdida/) a maintenant
 une application. Dans ce premier tronçon, vous arrivez jusqu'à la connexion : le client se connecte avec Google ou avec
 Microsoft et l'application le reconnaît. Dans les suivants, l'application consomme l'API de la boutique et passe à iOS.
 
@@ -48,9 +48,9 @@ qui prépare votre environnement.
 | 02 | [Des écrans qui changent](02-pantallas-que-cambian.md) |
 | 02-B | Catalogue des composants de la boutique (pratique) |
 | 03 | [L'application rencontre Firebase](03-la-app-conoce-a-firebase.md) |
-| 04 | Se connecter avec Google |
-| 05 | Se connecter avec Microsoft |
-| 06 | Deux boutons, un seul compte |
+| 04 | [Se connecter avec Google](04-entrar-con-google.md) |
+| 05 | [Se connecter avec Microsoft](05-entrar-con-microsoft.md) |
+| 06 | [Deux boutons, un seul compte](06-dos-botones-una-cuenta.md) |
 | 07 | La session reste ouverte |
 | 08 | La première fois |
 

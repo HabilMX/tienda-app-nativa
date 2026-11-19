@@ -14,7 +14,7 @@ emulador (com menos, usa-se um telefone Android). O Windows não é coberto. A p
 
 ## O projeto
 
-A mesma loja inventada de [«Ni una orden perdida»](https://github.com/HabilMX/ni-una-orden-perdida) agora tem
+A mesma loja inventada de [«Ni una orden perdida»](https://www.habil.mx/pt/cursos/ni-una-orden-perdida/) agora tem
 app. Neste primeiro trecho chega-se até o login: o cliente entra com o Google ou com a Microsoft e o app o
 reconhece. Nos seguintes, o app consome a API da loja e passa para o iOS.
 
@@ -46,9 +46,9 @@ o ambiente pronto.
 | 02 | [Telas que mudam](02-pantallas-que-cambian.md) |
 | 02-B | Catálogo de componentes da loja (prática) |
 | 03 | [O app conhece o Firebase](03-la-app-conoce-a-firebase.md) |
-| 04 | Entrar com o Google |
-| 05 | Entrar com a Microsoft |
-| 06 | Dois botões, uma conta |
+| 04 | [Entrar com o Google](04-entrar-con-google.md) |
+| 05 | [Entrar com a Microsoft](05-entrar-con-microsoft.md) |
+| 06 | [Dois botões, uma conta](06-dos-botones-una-cuenta.md) |
 | 07 | A sessão permanece |
 | 08 | A primeira vez |
 
