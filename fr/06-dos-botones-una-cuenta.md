@@ -33,8 +33,8 @@ Microsoft a la même adresse e-mail.
 Pour elle, c'est la même personne qui entre dans la même boutique. Pour votre projet, ce sont deux identifiants
 différents qui prétendent avoir la même adresse e-mail.
 
-Cela a été essayé lors de l'essai de cette série, le 13 novembre 2026, avec un compte Microsoft dont l'adresse e-mail
-était déjà entrée avec Google. Firebase ne l'a pas laissée passer, et a répondu : « An account already exists with the
+C'est ce qui s'est passé lors de l'essai de cette série, le 13 novembre 2026, avec un compte Microsoft dont l'adresse e-mail
+avait déjà servi à se connecter avec Google. Firebase ne l'a pas laissée passer, et a répondu : « An account already exists with the
 same email address but different sign-in credentials ».
 
 Il y a deux mauvaises fins. Dans l'une, l'application crée un second utilisateur, et les commandes d'Ana se retrouvent

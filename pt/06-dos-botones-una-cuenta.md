@@ -30,7 +30,7 @@ Para ela é a mesma pessoa entrando na mesma loja. Para o projeto são duas cred
 dizem ter o mesmo e-mail.
 
 Isso foi testado no ensaio desta série, em 13 de novembro de 2026, com uma conta da Microsoft cujo e-mail já
-tinha entrado com o Google. O Firebase não a deixou passar, e respondeu: «An account already exists with the same email
+tinha sido usado para entrar com o Google. O Firebase não a deixou passar, e respondeu: «An account already exists with the same email
 address but different sign-in credentials».
 
 Há dois finais ruins. Em um, o app cria um segundo usuário, e os pedidos da Ana ficam repartidos entre duas

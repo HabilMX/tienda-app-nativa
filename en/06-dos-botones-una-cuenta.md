@@ -8,10 +8,10 @@
 - **One account per email address:** the option in your Firebase project that makes the collision exist.
 
 **What you take away:** a person with the same email in Google and in Microsoft who ends up with **one** user in
-your store, reached with either of the two buttons, because she confirmed it.
+your store, reached with either of the two buttons, because they confirmed it.
 
 **This lesson's new idea:** one person, two providers. With "one account per email address", the second one is
-linked to the account that already exists, and only with her confirmation. The rest —the screen that asks, the
+linked to the account that already exists, and only with their confirmation. The rest —the screen that asks, the
 linking gate and the note that tells a link from a sign-in— comes ready-made and explained, and is not assessed
 here.
 
@@ -31,8 +31,8 @@ same email.
 For her it is the same person signing in to the same store. For your project they are two different credentials
 that claim to have the same email.
 
-That was tried in this series' trial, on November 13, 2026, with a Microsoft account whose email had already
-signed in with Google. Firebase did not let it through, and answered: "An account already exists with the same
+This happened in the series trial, on November 13, 2026, with a Microsoft account whose email had already
+been used to sign in with Google. Firebase did not let it through, and answered: "An account already exists with the same
 email address but different sign-in credentials".
 
 There are two bad endings. In one, the app creates a second user, and Ana's orders end up split between two
@@ -247,7 +247,7 @@ Resultado: 63 de 66 pruebas en verde (3 en rojo, 0 con error, 0 saltadas), leíd
 
 *(In English the marks say: restriction of this activity (not of the objective): these files come given and are no
 longer equal … `Tienda.kt`; the confirmation: 2 of 4 tests green, nothing is linked without the person's tap, and
-it is only offered to her …; on tapping «Enlazar Microsoft» nothing is linked, or afterwards Microsoft does not
+it is only offered to them …; on tapping «Enlazar Microsoft» nothing is linked, or afterwards Microsoft does not
 arrive at the same user (step 3). Result: 63 of 66 tests green, 3 red.)*
 
 Copy into `respuestas/06.md` the line that says «La confirmación» (The confirmation).
@@ -315,7 +315,7 @@ Step 4 is done **without AI**.
 
 | # | You do | It is done when |
 |---|---|---|
-| 6.1 | You resolve the collision: the person signs in with the provider she already had and links the other, with confirmation | Three pieces of evidence, and all three are needed. The line «una cuenta por correo: activa» in `respuestas/06.md`, after checking it in your console. Simulated: «Estado del objetivo 6.1» says simulated level complete, with a fake project of two people; it validates the order, the confirmation, the link left halfway and that the two accesses arrive at the **fake** same user. Real: the manual test from step 5, with your record written down; it is the only thing that validates that Firebase linked your accounts, and we have not yet run it with a real account |
+| 6.1 | You resolve the collision: the person signs in with the provider they already had and links the other, with confirmation | Three pieces of evidence, and all three are needed. The line «una cuenta por correo: activa» in `respuestas/06.md`, after checking it in your console. Simulated: «Estado del objetivo 6.1» says simulated level complete, with a fake project of two people; it validates the order, the confirmation, the link left halfway and that the two accesses arrive at the **fake** same user. Real: the manual test from step 5, with your record written down; it is the only thing that validates that Firebase linked your accounts, and we have not yet run it with a real account |
 | 6.2 | You explain why the app asks for confirmation before linking and what would happen if it linked on its own | Your prediction, the pasted red and your explanation are in `respuestas/06.md`, and they match "Compare your answers". You compare the explanation yourself |
 
 **Time:** allow an hour and a half without the manual test, and half an hour more with it. It is an estimate: we

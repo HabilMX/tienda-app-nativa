@@ -683,7 +683,7 @@ simulated level and with a test file that carried that computer's fingerprint: o
 4. Why is "Don't keep activities" no good for testing `retomar()`?
 
 **What comes next:** in [06](06-dos-botones-una-cuenta.md), the person with the same email in both providers ends up
-with a single user, and only if she confirms it.
+with a single user, and only if they confirm it.
 
 ---
 
