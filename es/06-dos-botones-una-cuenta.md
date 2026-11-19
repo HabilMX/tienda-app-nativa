@@ -310,6 +310,7 @@ ajustamos con lo que tarde la primera cohorte.
 | ❌ «Retomar el enlace» | `retomar()` no usa lo que regresa `enlazador.pendiente()`, o contesta siempre lo mismo | Paso 3 |
 | Entraste con Microsoft con un correo que ya había entrado con Google, y no salió el mensaje de la colisión | Tu proyecto permite varias cuentas por correo: Firebase creó otro usuario | Paso 1. No enlaces dos usuarios creados por separado como si fuera el caso de la lección |
 | «Primero entra con el botón que ya usabas…» | Se pidió enlazar sin nadie adentro | Entra primero; el enlace es sobre un usuario que ya entró |
+| ❌ «EnlaceConMicrosoft.kt nombra una puerta concreta» | Tu código nombra la puerta de verdad (`EnlazadorConFirebase`) o un doble de las pruebas. Las pruebas solo le pasan dobles: si tu código pregunta cuál le tocó, el verde no dice qué hace con la de verdad | Que tu código hable solo con `EnlazadorDeProveedor`. La puerta de verdad la escoge `MainActivity.kt`, que viene dado (paso 3) |
 
 En Linux Mint 22.3 (x86_64), el `verifica` de esta lección salió igual que en la Mac (18-nov-2026), en el nivel
 simulado y con un archivo de prueba que traía la huella de esa computadora: sobre `inicio/`, 46 de 66 en verde;

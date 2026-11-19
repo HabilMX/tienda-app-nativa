@@ -133,6 +133,16 @@ ACT="$PROY/$DIRM/MainActivity.kt"
 if ! hay 'class EnlaceConMicrosoft' "$ENL" || ! hay 'class MainActivity' "$ACT"; then
   no "No pude leer $DIRM/EnlaceConMicrosoft.kt o MainActivity.kt (o ya no declaran su clase): sin ellos no reviso el texto"
 else
+  # Tu código solo conoce la interfaz de la puerta (EnlazadorDeProveedor). Si nombra una puerta concreta, la de
+  # producción o un doble, puede portarse distinto con cada una, y las pruebas, que solo le pasan dobles, no
+  # verían lo que hace con la de verdad. Se busca la palabra completa, fuera de los comentarios.
+  PUERTAS='EnlazadorConFirebase|EnlazadorFalso|ProyectoFalso|NavegadorConFirebase|NavegadorFalso'
+  n_puertas=$(grep -v '^[[:space:]]*//' "$ENL" 2>/dev/null | grep -cE -- "(^|[^A-Za-z])($PUERTAS)([^A-Za-z]|$)")
+  if [ "${n_puertas:-0}" -gt 0 ]; then
+    no "EnlaceConMicrosoft.kt nombra una puerta concreta (de producción o de prueba): solo debe conocer EnlazadorDeProveedor. Si pregunta cuál le tocó, las pruebas no ven lo que hace con la de verdad (paso 3)"
+  else
+    si "Texto: EnlaceConMicrosoft.kt no nombra ninguna puerta concreta, ni la de producción ni los dobles: solo su interfaz"
+  fi
   hay 'enlazador.enlazar(' "$ENL" \
     && si "Texto: EnlaceConMicrosoft.kt llama enlazador.enlazar( (presencia textual: que enlace bien lo miden las pruebas, abajo)" \
     || no "EnlaceConMicrosoft.kt no llama enlazador.enlazar( : es la función de la puerta que le suma un proveedor a quien ya entró (paso 3)"
