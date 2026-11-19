@@ -49,5 +49,3 @@ listo tu ambiente.
 | 06 | [Dos botones, una cuenta](06-dos-botones-una-cuenta.md) |
 | 07 | [La sesión se queda](07-la-sesion-se-queda.md) |
 | 08 | [La primera vez](08-la-primera-vez.md) |
-
-Las lecciones sin enlace están en preparación y se publican en orden.
