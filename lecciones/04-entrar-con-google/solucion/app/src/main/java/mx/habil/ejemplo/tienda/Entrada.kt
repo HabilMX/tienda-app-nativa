@@ -7,7 +7,9 @@ sealed interface Resultado {
     // Entró: trae el nombre con el que la app saluda.
     data class Entro(val nombre: String) : Resultado
 
-    // El teléfono no ofreció ninguna cuenta con la cual entrar.
+    // El teléfono no ofreció ninguna credencial con la cual entrar. No dice
+    // por qué: puede no haber cuenta, o haber una que necesita volver a
+    // iniciar sesión.
     data object SinCuentas : Resultado
 
     // La persona cerró la ventana sin elegir cuenta.

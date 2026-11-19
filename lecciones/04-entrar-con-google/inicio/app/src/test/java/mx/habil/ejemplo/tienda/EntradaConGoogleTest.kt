@@ -59,8 +59,7 @@ class EntradaConGoogleTest {
     // El plugin google-services convierte el cliente web (tipo 3) de tu
     // archivo en el recurso default_web_client_id. Aquí se compara el recurso
     // de la app compilada contra el texto de tu archivo.
-    // No revisa que MainActivity use ese recurso: eso lo busca el verifica
-    // como texto.
+    // No revisa que MainActivity use ese recurso: eso lo mide ArranqueTest.
     @Test
     fun elRecursoDeLaAppEsElClienteWebDeTuArchivo() {
         val archivo = File("google-services.json")

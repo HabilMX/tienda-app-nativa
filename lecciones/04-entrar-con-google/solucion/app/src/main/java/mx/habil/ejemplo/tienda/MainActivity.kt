@@ -11,13 +11,21 @@ import androidx.activity.compose.setContent
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val entrada = EntradaConGoogle(
-            // La audiencia: el ID de cliente web que el plugin google-services
-            // sacó de tu google-services.json al compilar.
-            idDeClienteWeb = getString(R.string.default_web_client_id),
-            selector = SelectorConCredentialManager(this),
-            verificador = VerificadorConFirebase(),
-        )
+        val entrada = crearEntrada()
         setContent { Tienda(entrada = entrada) }
     }
+
+    // Arma la Entrada de la app. Las dos puertas llegan por parámetro con su
+    // valor de verdad por omisión: la app llama crearEntrada() a secas, y una
+    // prueba puede pasarle puertas de mentira para leer qué audiencia se pidió.
+    fun crearEntrada(
+        selector: SelectorDeCuentas = SelectorConCredentialManager(this),
+        verificador: VerificadorDeToken = VerificadorConFirebase(),
+    ): Entrada = EntradaConGoogle(
+        // La audiencia: el ID de cliente web que el plugin google-services
+        // sacó de tu google-services.json al compilar.
+        idDeClienteWeb = getString(R.string.default_web_client_id),
+        selector = selector,
+        verificador = verificador,
+    )
 }

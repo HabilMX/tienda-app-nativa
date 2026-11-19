@@ -1,39 +1,49 @@
 #!/usr/bin/env bash
-# Revisa la lección 04 en el nivel SIMULADO: corre las pruebas en tu computadora (./gradlew testDebugUnitTest),
-# sin emulador, sin cuenta de Google y sin red hacia Google ni Firebase, y lee el conteo de los informes de
-# resultados (XML).
-# SÍ revisa, corriendo las pruebas de EntradaConGoogleTest (le dan a tu EntradaConGoogle dos puertas de
-#   mentira, las de src/test/…/Dobles.kt, y miran qué les pidió y qué contestó): que la solicitud lleve una
+# Revisa la lección 04. Sin más, en el nivel SIMULADO: corre las pruebas en tu computadora
+# (./gradlew testDebugUnitTest), sin emulador, sin cuenta de Google y sin red hacia Google ni Firebase, y lee
+# el conteo de los informes de resultados (XML). Con la palabra «instrumentado» corre ADEMÁS las pruebas
+# instrumentadas dentro de un emulador o teléfono conectado.
+# Nivel simulado. SÍ revisa, corriendo las pruebas de EntradaConGoogleTest (le dan a tu EntradaConGoogle dos
+#   puertas de mentira, las de Dobles.kt, y miran qué les pidió y qué contestó): que la solicitud lleve una
 #   sola opción y sea GetSignInWithGoogleOption; que la audiencia de esa opción sea el ID que recibió tu clase;
 #   que el token que entrega la puerta del teléfono llegue tal cual a la puerta del verificador, y que el
 #   nombre sea el que contesta el verificador; que «sin cuentas» (NoCredentialException), la cancelación
 #   (GetCredentialCancellationException) y el error (otra excepción del teléfono, un token rechazado o una
-#   credencial que no es de Google) den tres resultados distintos.
-# SÍ revisa, con una prueba más de esa clase: que el recurso default_web_client_id de la app compilada sea el
-#   cliente web (tipo 3) que trae el TEXTO de tu app/google-services.json.
+#   credencial que no es de Google) den tres resultados distintos; y que el recurso default_web_client_id de
+#   la app compilada sea el cliente web (tipo 3) que trae el TEXTO de tu app/google-services.json.
+# SÍ revisa, corriendo las pruebas de ArranqueTest (abren MainActivity, como al tocar el ícono): que por ese
+#   camino se llegue a la pantalla de entrada sin que nadie haya entrado; y que la Entrada que arma
+#   MainActivity.crearEntrada, con las puertas de mentira que le pasa la prueba, pida el token con el cliente
+#   web de tu archivo como audiencia.
 # SÍ revisa, corriendo las pruebas de RecorridoTest (dibujan Tienda en memoria y tocan los botones): que con tu
 #   EntradaConGoogle y las puertas de mentira el botón «Entrar con Google» lleve al inicio con el nombre, y que
-#   cada uno de los tres casos deje en pantalla su mensaje, distinto de los otros dos, sin pasar al inicio.
-# SÍ revisa que sigan en verde las pruebas de las pantallas que el proyecto ya traía (3 de RecorridoTest con
-#   EntradaFalsa, la de los textos y 1 de ArranqueTest, que abre MainActivity sin tocar el botón de Google).
-# SÍ revisa, buscando texto en tus archivos (no los ejecuta; en los .kt las líneas de comentario no cuentan):
-#   que EntradaConGoogle.kt nombre GetSignInWithGoogleOption; que ningún .kt de la app nombre GetGoogleIdOption;
-#   que MainActivity.kt nombre EntradaConGoogle( y R.string.default_web_client_id; que ningún .kt de la app
-#   nombre EntradaSinProveedor ni una pieza de pruebas, ni traiga escrito un ID de cliente
-#   (….apps.googleusercontent.com); que el catálogo diga credentials 1.6.0, googleid 1.1.1 y el BoM 35.2.0; que
-#   el .gitignore traiga google-services.json; y que respuestas/04.md traiga pegado el rojo del «Rompe uno a
-#   propósito». Y le pregunta a git si rastrea algún google-services.json en el repo.
-# NO revisa: nada de lo que pasa en un teléfono. No abre la ventana de cuentas de Android, no le pide nada a
-#   Google y no le entrega nada a Firebase: las dos clases que sí lo hacen (SelectorConCredentialManager y
-#   VerificadorConFirebase, en Puertas.kt) NO se ejecutan aquí; solo se compara que ese archivo siga igual al de
-#   la lección. Por eso no demuestra que tu huella esté registrada, que Google esté habilitado, que el ID de
-#   cliente sea de tu proyecto ni que tú puedas entrar: eso es el nivel real (paso 6), una vez, a mano.
-#   Tampoco hay aquí nivel instrumentado. Ni califica tu diagrama (4.1), tu explicación (4.2) ni tu tabla (4.4).
+#   cada uno de los tres casos deje en pantalla su mensaje, distinto de los otros dos, sin pasar al inicio. Y
+#   que sigan en verde las pantallas que el proyecto ya traía.
+# PRESENCIA TEXTUAL (busca palabras en tus archivos; no los ejecuta y no valida que el código haga lo que
+#   dicen; en los .kt las líneas de comentario no cuentan): que EntradaConGoogle.kt nombre
+#   GetSignInWithGoogleOption; que ningún .kt de la app nombre GetGoogleIdOption; que MainActivity.kt nombre
+#   crearEntrada(), EntradaConGoogle( y R.string.default_web_client_id; que ningún .kt de la app nombre
+#   EntradaSinProveedor ni una pieza de pruebas, ni traiga escrito un ID de cliente
+#   (….apps.googleusercontent.com); que el catálogo diga las versiones de la serie; que el .gitignore traiga
+#   google-services.json; y que respuestas/04.md traiga pegado el rojo del «Rompe uno a propósito». Y le
+#   pregunta a git si rastrea algún google-services.json en el repo.
+# Nivel instrumentado (solo si lo pides). SÍ revisa, corriendo BotonEnAndroidTest dentro de Android
+#   (./gradlew connectedDebugAndroidTest): que ahí, con tu EntradaConGoogle y las mismas puertas de mentira,
+#   el toque en «Entrar con Google» lleve al inicio con el nombre y cada uno de los tres casos muestre su
+#   mensaje. Instala en el dispositivo la app y su app de pruebas.
+# NO revisa, en ningún nivel: la ventana de cuentas de Android, a Google ni a Firebase. Las dos clases que sí
+#   hablan con ellos (SelectorConCredentialManager y VerificadorConFirebase, en Puertas.kt) NO se ejecutan
+#   aquí; solo se compara que ese archivo siga igual al de la lección. Tampoco ve si onCreate le pasa a Tienda
+#   la entrada de crearEntrada(): eso es presencia textual. Por eso no demuestra que tu huella esté registrada,
+#   que Google esté habilitado, que el ID de cliente sea de tu proyecto ni que tú puedas entrar: eso es el
+#   nivel real (paso 7), una vez, a mano. Ni califica tu diagrama (4.1), tu explicación (4.2) ni tu tabla (4.4).
 # Solo lee tu código y tu archivo: no los cambia. Gradle escribe sus resultados en build/, que no se sube.
-# Uso:  ./verifica             revisa tu trabajo en inicio/
-#       ./verifica solucion    revisa la solución de referencia. En un clon limpio sale en ROJO: el archivo
-#                              google-services.json no se sube, y sin él el proyecto no compila. Para
-#                              revisarla, copia tu archivo a solucion/app/ (sigue ignorado) y retíralo al terminar.
+# Uso:  ./verifica                          revisa tu trabajo en inicio/, nivel simulado
+#       ./verifica solucion                 revisa la solución de referencia. En un clon limpio sale en ROJO:
+#                                           google-services.json no se sube, y sin él el proyecto no compila.
+#                                           Copia tu archivo a solucion/app/ (sigue ignorado) y retíralo al terminar.
+#       ./verifica inicio instrumentado     además corre el nivel instrumentado (pide un emulador abierto o un
+#       ./verifica solucion instrumentado   teléfono conectado; si no hay, sale en rojo y lo dice)
 set -uo pipefail
 cd "$(dirname "$0")"
 PROY="${1:-inicio}"
@@ -42,13 +52,19 @@ si() { echo "✅ $1"; }
 no() { echo "❌ $1"; ok=1; }
 nota() { echo "ℹ️  $1"; }
 
+NIVEL="${2:-simulado}"
 case "$PROY" in
   inicio|solucion) ;;
-  *) echo "Uso: ./verifica [inicio|solucion]"; exit 2 ;;
+  *) echo "Uso: ./verifica [inicio|solucion] [instrumentado]"; exit 2 ;;
+esac
+case "$NIVEL" in
+  simulado|instrumentado) ;;
+  *) echo "Uso: ./verifica [inicio|solucion] [instrumentado]"; exit 2 ;;
 esac
 PAQ="mx.habil.ejemplo.tienda"
 DIRM="app/src/main/java/mx/habil/ejemplo/tienda"
 DIRP="app/src/test/java/mx/habil/ejemplo/tienda"
+DIRA="app/src/androidTest/java/mx/habil/ejemplo/tienda"
 MAIN="$PROY/app/src/main"
 JSON="$PROY/app/google-services.json"
 DIRX="$PROY/app/build/test-results/testDebugUnitTest"
@@ -65,16 +81,21 @@ grep -q '^org.gradle.jvmargs=.*-Xmx4g' "$PROY/gradle.properties" 2>/dev/null \
 if [ "$PROY" = "inicio" ]; then
   cambiados=""
   for t in "$DIRP/EntradaConGoogleTest.kt" "$DIRP/RecorridoTest.kt" "$DIRP/ArranqueTest.kt" \
-           "$DIRP/EntradaFalsa.kt" "$DIRP/Dobles.kt" "$DIRM/Puertas.kt"; do
+           "$DIRP/EntradaFalsa.kt" "$DIRP/Dobles.kt" "$DIRM/Puertas.kt" \
+           "$DIRA/BotonEnAndroidTest.kt" "$DIRA/Dobles.kt"; do
     cmp -s "inicio/$t" "solucion/$t" || cambiados="$cambiados inicio/$t"
   done
   if [ -z "$cambiados" ]; then
-    si "Andamiaje: las pruebas, sus dobles y Puertas.kt son los de la lección, sin cambios (6 archivos comparados)"
+    si "Andamiaje: las pruebas, sus dobles y Puertas.kt son los de la lección, sin cambios (8 archivos comparados)"
   else
     no "Estos archivos cambiaron y no se tocan:$cambiados"
     nota "Mira qué cambió con  git diff -- <archivo>  y deshazlo a mano. Restaurar con git descarta lo que tenga: revisa el diff antes."
   fi
 fi
+
+cmp -s "$PROY/$DIRP/Dobles.kt" "$PROY/$DIRA/Dobles.kt" \
+  && si "Andamiaje: los dobles de src/androidTest son copia idéntica de los de src/test" \
+  || no "Dobles.kt de src/androidTest ya no es igual al de src/test: los dos niveles deben usar los mismos dobles"
 
 # --- 4.2 · Las piezas, buscadas como texto (no se ejecutan) ---------------------------------
 # hay <texto> <carpeta o archivo>: ¿algún .kt lo contiene en una línea que no sea comentario (//)?
@@ -90,15 +111,18 @@ else
     && si "Texto: EntradaConGoogle.kt nombra GetSignInWithGoogleOption, la opción del botón" \
     || no "EntradaConGoogle.kt no nombra GetSignInWithGoogleOption: es la opción que abre la ventana de cuentas (paso 3)"
   if hay 'GetGoogleIdOption' "$MAIN"; then
-    no "Algún .kt de la app nombra GetGoogleIdOption: es la opción del inicio automático, no la del botón. Si vienes del «Rompe uno», regrésala (paso 5)"
+    no "Algún .kt de la app nombra GetGoogleIdOption: es la opción de la hoja de Credential Manager, no la del botón. Si vienes del «Rompe uno», regrésala (paso 5)"
   else
     si "Texto: ningún .kt de la app nombra GetGoogleIdOption"
   fi
+  hay 'crearEntrada()' "$ACT" \
+    && si "Texto: MainActivity.kt llama crearEntrada() (presencia textual: no sé si lo que regresa llega a Tienda)" \
+    || no "MainActivity.kt ya no llama crearEntrada(): onCreate viene dado y arma la entrada con esa función"
   hay 'EntradaConGoogle(' "$ACT" \
-    && si "Texto: MainActivity.kt nombra EntradaConGoogle(" \
+    && si "Texto: MainActivity.kt nombra EntradaConGoogle( (presencia textual)" \
     || no "MainActivity.kt no nombra EntradaConGoogle( : la app instalada todavía no usa tu entrada (paso 3)"
   hay 'R.string.default_web_client_id' "$ACT" \
-    && si "Texto: MainActivity.kt nombra R.string.default_web_client_id (solo busco el nombre: no sé a quién se lo pasa)" \
+    && si "Texto: MainActivity.kt nombra R.string.default_web_client_id (presencia textual: que llegue a la solicitud lo mide una prueba, abajo)" \
     || no "MainActivity.kt no nombra R.string.default_web_client_id: la audiencia sale de ese recurso, que el plugin genera con tu archivo (paso 3)"
   sobran=""
   for p in EntradaSinProveedor EntradaFalsa SelectorFalso VerificadorFalso; do
@@ -118,8 +142,10 @@ vers=""
 grep -qE '^credentials[[:space:]]*=[[:space:]]*"1\.6\.0"' "$CAT" 2>/dev/null || vers="$vers credentials=1.6.0"
 grep -qE '^googleid[[:space:]]*=[[:space:]]*"1\.1\.1"' "$CAT" 2>/dev/null || vers="$vers googleid=1.1.1"
 grep -qE '^firebaseBom[[:space:]]*=[[:space:]]*"35\.2\.0"' "$CAT" 2>/dev/null || vers="$vers firebaseBom=35.2.0"
+grep -qE '^testRunner[[:space:]]*=[[:space:]]*"1\.7\.0"' "$CAT" 2>/dev/null || vers="$vers testRunner=1.7.0"
+grep -qE '^espresso[[:space:]]*=[[:space:]]*"3\.7\.0"' "$CAT" 2>/dev/null || vers="$vers espresso=3.7.0"
 [ -z "$vers" ] \
-  && si "Texto: el catálogo dice credentials 1.6.0, googleid 1.1.1 y firebaseBom 35.2.0, las versiones de la serie" \
+  && si "Texto: el catálogo dice credentials 1.6.0, googleid 1.1.1, firebaseBom 35.2.0, testRunner 1.7.0 y espresso 3.7.0, las versiones de la serie" \
   || no "gradle/libs.versions.toml ya no dice:$vers. La serie está probada con esas versiones"
 
 # --- Lo que no se sube (lección 03) ----------------------------------------------------------
@@ -232,6 +258,13 @@ if [ -f "$JSON" ]; then
 else
   no "elRecursoDeLaAppEsElClienteWebDeTuArchivo depende de que exista app/google-services.json: consigue primero tu archivo"
 fi
+if [ -f "$JSON" ]; then
+  revisa "$XMLA" laAppArmaSuEntradaConElClienteWebDeTuArchivo \
+    "Simulado: la Entrada que arma MainActivity.crearEntrada pide el token con el cliente web (tipo 3) de tu archivo como audiencia" \
+    "La Entrada que arma MainActivity.crearEntrada no pide el token con el cliente web de tu archivo como audiencia: en crearEntrada, idDeClienteWeb debe ser getString(R.string.default_web_client_id) (paso 3)"
+else
+  no "laAppArmaSuEntradaConElClienteWebDeTuArchivo depende de que exista app/google-services.json: consigue primero tu archivo"
+fi
 tok=$(todas "$XMLG" elTokenQueEntregaElTelefonoLlegaAlVerificador elNombreLoPoneElVerificador)
 [ "$tok" -eq 2 ] \
   && si "Simulado: el token que entrega la puerta del teléfono llega tal cual a la puerta del verificador, y el nombre es el que este contesta (2 de 2)" \
@@ -261,7 +294,7 @@ revisa "$XMLR" cadaResultadoTieneSuPropioMensaje \
   "Simulado: los tres mensajes son los de la lección y son distintos entre sí" \
   "Los tres mensajes ya no son los de la lección o dos son iguales: Tienda.kt viene dado y no se cambia"
 
-[ "$total" -eq 19 ] || no "Esperaba 19 pruebas (10 de EntradaConGoogleTest, 8 de RecorridoTest y 1 de ArranqueTest) y los informes traen $total"
+[ "$total" -eq 20 ] || no "Esperaba 20 pruebas (10 de EntradaConGoogleTest, 8 de RecorridoTest y 2 de ArranqueTest) y los informes traen $total"
 [ "$rc" -eq 0 ] || [ $((fallas + errores)) -gt 0 ] || no "Gradle terminó con error sin pruebas en rojo: corre  ./$PROY/gradlew -p $PROY testDebugUnitTest"
 
 # --- «Rompe uno a propósito» · presencia mínima de la evidencia escrita ----------------------
@@ -276,17 +309,71 @@ else
   nota "El rojo pegado en respuestas/04.md solo se busca sobre inicio/"
 fi
 
+
+# --- Nivel instrumentado (solo si lo pides) ------------------------------------------------
+# Corre dentro de Android. El conteo se lee del informe (XML) que deja Gradle, no de su código de salida.
+linea_inst=""
+if [ "$NIVEL" = "instrumentado" ]; then
+  echo "Nivel instrumentado: pruebas dentro de Android, con las puertas de mentira"
+  ADB="${ANDROID_HOME:+$ANDROID_HOME/platform-tools/adb}"
+  [ -n "$ADB" ] && [ -x "$ADB" ] || ADB="$(command -v adb || true)"
+  listos=0
+  [ -n "$ADB" ] && listos=$("$ADB" devices 2>/dev/null | awk 'NR > 1 && $2 == "device"' | wc -l | tr -d ' ')
+  if [ "$listos" -lt 1 ]; then
+    no "Instrumentado: no hay ningún emulador abierto ni teléfono conectado (adb devices no lista ninguno en estado «device»): no se corrió"
+    linea_inst="Instrumentado: 0 pruebas corridas (sin dispositivo)."
+  else
+    DIRI="$PROY/app/build/outputs/androidTest-results/connected/debug"
+    marca=$(mktemp); salida=$(mktemp)
+    echo "Corriendo las pruebas instrumentadas… (instala la app y su app de pruebas en el dispositivo)"
+    "./$PROY/gradlew" -p "$PROY" -q connectedDebugAndroidTest >"$salida" 2>&1
+    rci=$?
+    # El informe se llama como el dispositivo (trae espacios): se toma el más nuevo que sea de ESTA corrida.
+    xmli=""
+    for x in "$DIRI"/TEST-*.xml; do
+      [ -f "$x" ] && [ "$x" -nt "$marca" ] && xmli="$x"
+    done
+    if [ -z "$xmli" ]; then
+      no "Instrumentado: las pruebas no llegaron a correr. Esto dijo Gradle:"
+      grep -E '^e: |error:|What went wrong|No connected devices|INSTALL_FAILED|Could not (find|resolve)' "$salida" | head -6 | sed 's/^/     /'
+      nota "Para ver todo:  ./$PROY/gradlew -p $PROY connectedDebugAndroidTest"
+      linea_inst="Instrumentado: 0 pruebas corridas."
+    else
+      it=$(attr tests "$xmli"); ifa=$(attr failures "$xmli"); ie=$(attr errors "$xmli"); isk=$(attr skipped "$xmli")
+      it=${it:-0}; ifa=${ifa:-0}; ie=${ie:-0}; isk=${isk:-0}
+      revisa "$xmli" enAndroidConUnaCuentaElegidaLlegaAlInicioConElNombre \
+        "Instrumentado: dentro de Android, con las puertas de mentira, tocar «Entrar con Google» lleva al inicio con el nombre" \
+        "Dentro de Android, con las puertas de mentira, tocar «Entrar con Google» no llega al inicio con el nombre (paso 3)"
+      casos_i=$(todas "$xmli" enAndroidSinCuentasMuestraSuMensajeYNoPasa enAndroidLaCancelacionMuestraSuMensajeYNoPasa enAndroidElErrorMuestraSuMensajeYNoPasa)
+      [ "$casos_i" -eq 3 ] \
+        && si "Instrumentado: dentro de Android, cada uno de los tres casos muestra su mensaje sin pasar al inicio (3 de 3)" \
+        || no "Dentro de Android, de los tres casos solo $casos_i muestran su mensaje sin pasar al inicio (paso 4)"
+      [ "$it" -eq 4 ] || no "Esperaba 4 pruebas instrumentadas y el informe trae $it"
+      [ "$rci" -eq 0 ] || [ $((ifa + ie)) -gt 0 ] || no "Gradle terminó con error sin pruebas instrumentadas en rojo: corre  ./$PROY/gradlew -p $PROY connectedDebugAndroidTest"
+      linea_inst="Instrumentado: $((it - ifa - ie - isk)) de $it pruebas en verde ($ifa en rojo, $ie con error, $isk saltadas), leído de $xmli"
+    fi
+    rm -f "$marca" "$salida"
+  fi
+fi
+
 echo
 echo "Resultado: $verdes de $total pruebas en verde ($fallas en rojo, $errores con error, $saltadas saltadas), leído de"
 echo "  $XMLG"
 echo "  $XMLR"
 echo "  $XMLA"
+if [ -n "$linea_inst" ]; then
+  echo "$linea_inst"
+  nota "Nivel instrumentado: demuestra que las pantallas, el toque y tu EntradaConGoogle funcionan dentro de Android."
+  nota "  Las puertas también eran de mentira ahí: tampoco se habló con Google ni con Firebase."
+else
+  nota "El nivel instrumentado no se corrió. Con un emulador abierto:  ./verifica $PROY instrumentado"
+fi
 nota "Nivel simulado: demuestra qué le pide tu EntradaConGoogle a la puerta del teléfono (la opción y la audiencia),"
 nota "  que el token pasa a la puerta del verificador, y qué resultado y qué mensaje da cada caso."
 nota "Las dos puertas eran de mentira. No se abrió la ventana de cuentas, no se le pidió nada a Google y no se le"
 nota "  entregó nada a Firebase: el código que sí lo hace (Puertas.kt) no se ejecutó."
 nota "No demuestra que tu huella esté registrada, que Google esté habilitado, que el ID de cliente sea de tu"
-nota "  proyecto ni que puedas entrar. Eso lo demuestra el nivel real: entrar a mano con tu cuenta (paso 6)."
-nota "Las marcas «Texto:» solo buscan palabras en tus archivos: no demuestran que el código haga lo que dicen."
+nota "  proyecto ni que puedas entrar. Eso lo demuestra el nivel real: entrar a mano con tu cuenta (paso 7)."
+nota "Las marcas «Texto:» son presencia textual: buscan palabras en tus archivos y no validan que el código haga lo que dicen."
 nota "No califica tu diagrama (4.1), tu explicación (4.2) ni tu tabla (4.4): compáralos con «Compara tus respuestas»."
 exit $ok

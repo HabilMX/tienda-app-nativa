@@ -15,7 +15,8 @@ enum class Pantalla { BIENVENIDA, ENTRADA, INICIO }
 // Si la persona entró no hay mensaje (null).
 fun mensajeDe(resultado: Resultado): String? = when (resultado) {
     is Resultado.Entro -> null
-    Resultado.SinCuentas -> "No encontré una cuenta de Google en este teléfono. Agrega una en Ajustes y vuelve a intentar."
+    Resultado.SinCuentas ->
+        "No encontré una cuenta de Google disponible para entrar. Agrega una o vuelve a iniciar sesión en Google y prueba otra vez."
     Resultado.Cancelada -> "Cerraste la ventana sin elegir cuenta. Toca el botón cuando quieras intentar otra vez."
     Resultado.Fallo -> "No se pudo entrar. Revisa tu conexión y vuelve a intentar."
 }

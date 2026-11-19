@@ -35,7 +35,8 @@ class RecorridoTest {
     val pantalla = createComposeRule()
 
     // Los tres textos que pide el objetivo 4.3, uno por caso.
-    private val sinCuentas = "No encontré una cuenta de Google en este teléfono. Agrega una en Ajustes y vuelve a intentar."
+    private val sinCuentas =
+        "No encontré una cuenta de Google disponible para entrar. Agrega una o vuelve a iniciar sesión en Google y prueba otra vez."
     private val cancelada = "Cerraste la ventana sin elegir cuenta. Toca el botón cuando quieras intentar otra vez."
     private val fallo = "No se pudo entrar. Revisa tu conexión y vuelve a intentar."
 

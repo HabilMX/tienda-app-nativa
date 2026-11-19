@@ -6,7 +6,11 @@ plugins {
 android {
     namespace = "mx.habil.ejemplo.tienda"
     compileSdk = 37
-    defaultConfig { applicationId = "mx.habil.ejemplo.tienda"; minSdk = 26; targetSdk = 37 }
+    defaultConfig {
+        applicationId = "mx.habil.ejemplo.tienda"; minSdk = 26; targetSdk = 37
+        // Quién corre las pruebas instrumentadas (src/androidTest) dentro de Android.
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
     buildFeatures { compose = true }
     testOptions { unitTests.isIncludeAndroidResources = true }
 }
@@ -24,5 +28,10 @@ dependencies {
     testImplementation(libs.compose.ui.test.junit4)
     testImplementation(libs.robolectric)
     testImplementation(libs.junit)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    androidTestImplementation(libs.test.runner)
+    // Compose trae un Espresso anterior que no arranca en Android 37: se fija uno reciente.
+    androidTestImplementation(libs.espresso.core)
     debugImplementation(libs.compose.ui.test.manifest)
 }

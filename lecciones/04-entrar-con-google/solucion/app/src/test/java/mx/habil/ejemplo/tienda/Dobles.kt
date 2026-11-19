@@ -6,8 +6,12 @@ import androidx.credentials.GetCredentialResponse
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 
 // Dobles de las dos puertas (Puertas.kt), para las pruebas. Viven en
-// src/test: la app no puede usarlos. Ninguno abre una ventana, ni toca una
-// cuenta, ni sale a la red.
+// src/test, con una copia idéntica en src/androidTest para las pruebas
+// instrumentadas: la app no puede usarlos. Ninguno abre una ventana, ni toca
+// una cuenta, ni sale a la red.
+// Estos dobles sí guardan el token en una lista, para que la prueba lo
+// revise. Es un token inventado y es código de pruebas: en la app, un token
+// de identidad nunca se guarda ni se imprime.
 
 // Un token inventado. No es un token de Google: es un texto cualquiera que
 // sirve para seguirle la pista de una puerta a la otra.
