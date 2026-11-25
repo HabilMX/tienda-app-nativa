@@ -1,0 +1,61 @@
+name: Verificar el curso
+
+# En cada cambio se corre el verifica de cada lección contra su solución de
+# referencia, en el nivel simulado (sin emulador), como lo corre el alumno:
+# ./verifica solucion. Solo se compila y se prueba: no se publica nada. Esta corrida
+# es pública: cualquiera puede abrirla y ver el resultado de cada paso.
+#
+# Dos lecciones no entran, y no es un olvido:
+# - La 00 revisa la máquina del alumno (el emulador y su imagen): aquí no hay emulador.
+# - La 03 exige que el google-services.json traiga la huella de depuración de LA
+#   computadora donde corre. Con el archivo de ejemplo sale roja a propósito, en
+#   cualquier máquina que no sea la del alumno.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - uses: android-actions/setup-android@v3
+
+      - name: El SDK que piden los proyectos (Android 37)
+        run: sdkmanager "platforms;android-37.0" "build-tools;37.0.0" > /dev/null
+
+      - name: El verifica de cada lección contra su solución
+        run: |
+          set -uo pipefail
+          corridas=0; rojas=0
+          for d in lecciones/*/; do
+            n="$(basename "$d")"
+            case "$n" in 00-*|03-*) echo "ℹ️  $n no entra (ver la nota al inicio del archivo)"; continue ;; esac
+            [ -d "$d/solucion" ] || continue
+            [ -f "$d/solucion/app/google-services.json.example" ] && \
+              cp "$d/solucion/app/google-services.json.example" "$d/solucion/app/google-services.json"
+            echo "::group::$n"
+            if (cd "$d" && ./verifica solucion); then corridas=$((corridas + 1)); else rojas=$((rojas + 1)); echo "❌ $n"; fi
+            echo "::endgroup::"
+          done
+          echo "Lecciones verdes: $corridas · rojas: $rojas"
+          [ "$corridas" -gt 0 ] || { echo "❌ No se corrió ningún verifica: este paso no verificó nada."; exit 1; }
+          [ "$rojas" -eq 0 ]
+
+      - name: Nota sobre la revisión previa a publicar
+        run: |
+          echo "La revisión de material no publicable (rutas internas, nombres reservados,"
+          echo "direcciones de la infraestructura) se corre ANTES de publicar, con la lista"
+          echo "de patrones que vive en el repositorio de trabajo y no se publica."
