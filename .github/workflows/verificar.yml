@@ -12,9 +12,9 @@ name: Verificar el curso
 #   cualquier máquina que no sea la del alumno.
 on:
   push:
-    branches: [main]
+    branches: [develop]
   pull_request:
-    branches: [main]
+    branches: [develop]
   workflow_dispatch:
 
 permissions:
@@ -31,10 +31,17 @@ jobs:
           distribution: temurin
           java-version: "25"
 
-      - uses: android-actions/setup-android@v3
-
+      # El SDK ya viene en la máquina de GitHub ($ANDROID_HOME). No se usa la acción
+      # setup-android: con cmdline-tools 16.0 intenta instalar el paquete viejo «tools»,
+      # que ya no existe, y se cae antes de verificar nada (medido el 25-nov-2026).
       - name: El SDK que piden los proyectos (Android 37)
-        run: sdkmanager "platforms;android-37.0" "build-tools;37.0.0" > /dev/null
+        run: |
+          set -euo pipefail
+          bin="$(ls -d "$ANDROID_HOME"/cmdline-tools/*/bin | sort -V | tail -1)"
+          echo "sdkmanager: $bin"
+          (yes || true) | "$bin/sdkmanager" --licenses > /dev/null
+          "$bin/sdkmanager" "platforms;android-37.0" "build-tools;37.0.0" > /dev/null
+          ls -d "$ANDROID_HOME/platforms/android-37.0" "$ANDROID_HOME/build-tools/37.0.0"
 
       - name: El verifica de cada lección contra su solución
         run: |
