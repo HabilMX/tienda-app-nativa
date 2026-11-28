@@ -147,7 +147,7 @@ if [ "$frescos" -ne 1 ]; then
   grep -E '^e: |error:|What went wrong|SDK location|Java heap|'"$ERR_PAQUETE"'|google-services.json is missing|Could not (find|resolve)' "$salida" \
     | sed -e 's|file://.*/||' -e 's| in /.*google-services.json| en tu app/google-services.json|' | head -8 | sed 's/^/     /'
   if grep -q "$ERR_PAQUETE" "$salida"; then
-    nota "«$ERR_PAQUETE»: el plugin buscó en tu archivo una app con el paquete de esta y no la halló (objetivo 3.4)"
+    nota "«${ERR_PAQUETE}»: el plugin buscó en tu archivo una app con el paquete de esta y no la halló (objetivo 3.4)"
   fi
   if grep -q 'google-services.json is missing' "$salida"; then
     nota "Con el plugin aplicado, el proyecto no compila sin app/google-services.json: es el de TU proyecto de Firebase (paso 3)"
@@ -256,7 +256,7 @@ if [ "$PROY" = "inicio" ]; then
   if [ -f "$R" ] && grep -qF "$ERR_PAQUETE" "$R"; then
     si "Escrito: respuestas/03.md trae pegado el error del «Rompe uno a propósito» (solo busco esa línea: no sé si lo rompiste ni califico tu diagnóstico)"
   else
-    no "respuestas/03.md no trae pegado el error del «Rompe uno a propósito» (paso 5): la línea que contiene «$ERR_PAQUETE»"
+    no "respuestas/03.md no trae pegado el error del «Rompe uno a propósito» (paso 5): la línea que contiene «${ERR_PAQUETE}»"
   fi
 else
   nota "El error pegado en respuestas/03.md solo se busca sobre inicio/"

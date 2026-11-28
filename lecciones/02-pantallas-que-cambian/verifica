@@ -202,7 +202,7 @@ if [ "$PROY" = "inicio" ]; then
   if [ -f "$R" ] && grep -qF "$ROJO_CAMBIO" "$R"; then
     si "Escrito: respuestas/02.md trae pegado el rojo del «Rompe uno a propósito» (no califico tu explicación)"
   else
-    no "respuestas/02.md no trae pegada la línea roja del «Rompe uno a propósito» (paso 4): la que empieza con «$ROJO_CAMBIO»"
+    no "respuestas/02.md no trae pegada la línea roja del «Rompe uno a propósito» (paso 4): la que empieza con «${ROJO_CAMBIO}»"
   fi
 else
   nota "El rojo pegado en respuestas/02.md solo se busca sobre inicio/"

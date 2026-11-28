@@ -315,7 +315,7 @@ if [ "$PROY" = "inicio" ]; then
   if [ -f "$R" ] && grep -qF "$MARCA_ROMPE" "$R"; then
     si "Escrito: respuestas/04.md trae pegado el rojo del «Rompe uno a propósito» (solo busco esa línea: no sé si lo rompiste ni califico tu explicación)"
   else
-    no "respuestas/04.md no trae pegado el rojo del «Rompe uno a propósito» (paso 5): la línea que contiene «$MARCA_ROMPE»"
+    no "respuestas/04.md no trae pegado el rojo del «Rompe uno a propósito» (paso 5): la línea que contiene «${MARCA_ROMPE}»"
   fi
 else
   nota "El rojo pegado en respuestas/04.md solo se busca sobre inicio/"

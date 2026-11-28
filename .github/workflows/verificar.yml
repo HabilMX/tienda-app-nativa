@@ -26,6 +26,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Va primero porque no necesita nada: la máquina de CI trae un bash moderno y
+      # nunca vería el error que el bash de la Mac (3.2) sí tiene. Por eso se revisa
+      # el texto de los verifica, no su ejecución.
+      - name: Los verifica corren con el bash de la Mac
+        run: ./verificar-bash32.sh
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin

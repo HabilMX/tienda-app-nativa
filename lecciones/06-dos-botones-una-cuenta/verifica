@@ -295,14 +295,14 @@ if [ "$PROY" = "inicio" ]; then
   # La colisión solo existe con «una cuenta por correo». Esa opción vive en la consola de Firebase, que
   # este guion no ve: solo busca que la hayas revisado y anotado.
   if [ -f "$RESP" ] && grep -qiF "$MARCA_CORREO" "$RESP"; then
-    si "Escrito: respuestas/06.md dice «$MARCA_CORREO» (solo busco esa línea: no veo tu consola de Firebase)"
+    si "Escrito: respuestas/06.md dice «${MARCA_CORREO}» (solo busco esa línea: no veo tu consola de Firebase)"
   else
-    no "respuestas/06.md no dice «$MARCA_CORREO»: revisa esa opción en la consola de Firebase (paso 1) y anótala así. Sin ella no hay colisión que resolver"
+    no "respuestas/06.md no dice «${MARCA_CORREO}»: revisa esa opción en la consola de Firebase (paso 1) y anótala así. Sin ella no hay colisión que resolver"
   fi
   if [ -f "$RESP" ] && grep -qF "$MARCA_ROMPE" "$RESP"; then
     si "Escrito: respuestas/06.md trae pegado el rojo del ejercicio 6.2 (solo busco esa línea: no sé si lo rompiste ni califico tu explicación)"
   else
-    no "respuestas/06.md no trae pegado el rojo del ejercicio 6.2 (paso 4): la línea que contiene «$MARCA_ROMPE»"
+    no "respuestas/06.md no trae pegado el rojo del ejercicio 6.2 (paso 4): la línea que contiene «${MARCA_ROMPE}»"
   fi
 else
   nota "Lo escrito en respuestas/06.md solo se busca sobre inicio/"
@@ -324,7 +324,7 @@ if [ "$PROY" = "inicio" ]; then
   fecha=""
   [ -f "$RESP" ] && fecha=$(grep -oE "$MARCA_MANUAL" "$RESP" | head -1)
   if [ -n "$fecha" ]; then
-    echo "  ⏳ Nivel real: anotaste «$fecha» en respuestas/06.md. Yo no vi esa prueba: no veo tu teléfono ni tu consola. Vale lo que tú observaste (paso 5)."
+    echo "  ⏳ Nivel real: anotaste «${fecha}» en respuestas/06.md. Yo no vi esa prueba: no veo tu teléfono ni tu consola. Vale lo que tú observaste (paso 5)."
   else
     echo "  ⏳ Nivel real: PENDIENTE. Falta la prueba manual del paso 5: un solo usuario con los dos proveedores. Al hacerla, anota en respuestas/06.md  prueba manual: AAAA-MM-DD"
   fi

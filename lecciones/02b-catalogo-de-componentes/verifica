@@ -69,8 +69,8 @@ grep -cF "$COLOR_BIEN" "$MAIN/$PKG/Tema.kt" >/dev/null 2>&1 \
 hay() { grep -rh --include='*.kt' -v '^[[:space:]]*//' "$2" 2>/dev/null | grep -cF -- "$1" >/dev/null; }
 for pieza in 'fun BotonPrincipal(' 'fun TarjetaProducto(' 'enum class EstadoOrden' 'fun EtiquetaEstado('; do
   hay "$pieza" "$MAIN" \
-    && si "Texto: en src/main hay un «$pieza»" \
-    || no "No encontré «$pieza» en src/main (pasos 1 y 2)"
+    && si "Texto: en src/main hay un «${pieza}»" \
+    || no "No encontré «${pieza}» en src/main (pasos 1 y 2)"
 done
 INI="$MAIN/$PKG/Inicio.kt"
 usa=""
